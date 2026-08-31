@@ -640,7 +640,20 @@ set -e
 DEPLOY_URL="$(grep -Eo 'https://[A-Za-z0-9._-]+\.vercel\.app' "$deploy_log" | tail -n 1 || true)"
 [ -n "$DEPLOY_URL" ] && ok "נפרס אל $DEPLOY_URL"
 
-if [ -n "$PROJECT_NAME" ]; then
+# הכתובת הציבורית האמיתית היא ה-alias של הפרודקשן, ושואלים עליה את וורסל במקום
+# לנחש: שם פרויקט שתפוס גלובלית מקבל alias עם סיומת אקראית (למשל
+# name-fawn-kappa.vercel.app), וכתובות ה--projects מוגנות SSO ולא מתאימות
+# לחיווט מול מטא או ל-GitHub Actions. אומת אמפירית 31.08.2026.
+PROD_ALIAS=""
+if [ -n "$DEPLOY_URL" ]; then
+  PROD_ALIAS="$(vercel inspect "$DEPLOY_URL" 2>/dev/null \
+    | grep -Eo 'https://[A-Za-z0-9._-]+\.vercel\.app' \
+    | grep -v -- '-projects\.vercel\.app' | head -n 1 || true)"
+fi
+
+if [ -n "$PROD_ALIAS" ]; then
+  DEFAULT_DOMAIN="${PROD_ALIAS#https://}"
+elif [ -n "$PROJECT_NAME" ]; then
   DEFAULT_DOMAIN="$PROJECT_NAME.vercel.app"
 elif [ -n "$DEPLOY_URL" ]; then
   DEFAULT_DOMAIN="${DEPLOY_URL#https://}"
@@ -749,6 +762,7 @@ patch_domain() {
   ok "הדומיין עודכן בקובץ ${file#$CODE_DIR/}"
 }
 patch_domain "$CODE_DIR/.github/workflows/poll.yml"
+patch_domain "$CODE_DIR/.github/workflows/refresh.yml"
 patch_domain "$CODE_DIR/scripts/ig-poll-ping.sh"
 
 # ---------------------------------------------------------------------------
