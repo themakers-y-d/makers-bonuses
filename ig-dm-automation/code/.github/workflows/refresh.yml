@@ -1,0 +1,31 @@
+name: IG token refresh (daily, keeps the 60-day token alive)
+
+# מרענן את טוקן ה-Graph מהענן, בלי תלות במחשב מקומי דלוק. רץ פעם ביום;
+# רוב הימים התשובה היא "עוד רחוק מהתפוגה" וזו ריצה מוצלחת. כשנשארו פחות
+# מ-10 ימים, נקודת הקצה מחליפה את הטוקן בטבלה והמערכת ממשיכה בלי מגע יד.
+# משתמש באותו סוד של הסורק: IG_POLL_SECRET כ-repo secret.
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ig-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping refresh endpoint
+        env:
+          POLL_SECRET: ${{ secrets.IG_POLL_SECRET }}
+        run: |
+          code=$(curl -s -o /tmp/out.json -w "%{http_code}" \
+            -H "x-poll-secret: ${POLL_SECRET}" \
+            https://<VERCEL_PROJECT>.vercel.app/api/ig-refresh)
+          cat /tmp/out.json
+          [ "$code" = "200" ] || exit 1
+          # כשל פנימי (אין שורת טוקן, רענון נכשל) חוזר 200 עם ok:false; מפילים כדי שיהיה נראה
+          grep -q '"ok":true' /tmp/out.json || exit 1

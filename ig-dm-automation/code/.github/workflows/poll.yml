@@ -1,0 +1,31 @@
+name: IG comment poll (reels lane until App Review approval)
+
+# מפעיל את הסורק כל 5 דקות מכל מקום (לא תלוי במחשב מקומי דלוק).
+# בפועל GitHub מריץ schedule בעצלתיים, לרוב כל 5-15 דקות. שכבת ה-launchd
+# המקומית (60 שניות) היא המסלול המהיר כשהמק ער; זה גיבוי-ענן.
+# הסוד IG_POLL_SECRET חייב להיות repo secret זהה ל-env בוורסל.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ig-poll
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping poller endpoint
+        env:
+          POLL_SECRET: ${{ secrets.IG_POLL_SECRET }}
+        run: |
+          code=$(curl -s -o /tmp/out.json -w "%{http_code}" \
+            -H "x-poll-secret: ${POLL_SECRET}" \
+            https://<VERCEL_PROJECT>.vercel.app/api/ig-poll)
+          cat /tmp/out.json
+          [ "$code" = "200" ] || exit 1
+          # כשל פנימי (טוקן מת, חוקים לא נטענו) חוזר 200 עם ok:false, מפילים את הג'וב כדי שיהיה נראה
+          grep -q '"ok":true' /tmp/out.json || exit 1

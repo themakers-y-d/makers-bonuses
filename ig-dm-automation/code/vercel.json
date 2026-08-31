@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/ig-webhook.js": {
+      "maxDuration": 60
+    },
+    "api/ig-poll.js": {
+      "maxDuration": 60
+    },
+    "api/ig-refresh.js": {
+      "maxDuration": 30
+    }
+  }
+}
