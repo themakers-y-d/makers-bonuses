@@ -1,0 +1,75 @@
+{
+  "_comment": "Copy this file to automations.json and edit it. Anything still saying REPLACE_ME stops the tool before it sends a single call, so you cannot accidentally message real people with placeholder text.",
+
+  "accountUsername": "REPLACE_ME_your_instagram_username",
+  "profileId": null,
+
+  "automations": [
+    {
+      "_note": "Rule one: the magnet. Account-wide on purpose, so every future reel is covered without touching this file again.",
+      "name": "מגנט ראשי",
+      "trigger": "comment",
+      "keywords": ["REPLACE_ME_your_keyword"],
+      "matchMode": "contains",
+      "excludeKeywords": [],
+      "platformPostId": null,
+
+      "_note_audience": "Remove this whole audience block and the followGate block if you want everyone to get the link, follower or not.",
+      "audience": {
+        "followerStatus": "follower",
+        "minFollowerCount": 0,
+        "whenUnknown": "verify"
+      },
+      "followGate": {
+        "message": "היי, שמח שהגבת. הכנתי לך בדיוק את מה שחיפשת. לחץ כאן ואני שולח.",
+        "buttonLabel": "שלח לי",
+        "notFollowingMessage": "רגע לפני ששולח, אני רואה שאתה עדיין לא עוקב. שים עוקב ותלחץ שוב על הכפתור, ואני שולח לך הכל. ואם זה לא מתאים לך, תוריד עוקב אחר כך בכיף."
+      },
+
+      "dmMessage": "הנה זה. תגיד לי אם משהו לא ברור, אני קורא כאן הכל.",
+      "dmMessageVariations": [
+        "שלחתי. אם נתקעת או יש שאלה, תכתוב לי כאן.",
+        "זה אצלך. מוזמן לכתוב לי מה יצא מזה."
+      ],
+      "buttons": [
+        { "type": "url", "title": "REPLACE_ME_button_text", "url": "https://REPLACE_ME.example.com" }
+      ],
+
+      "commentReply": "שלחתי לך בפרטי. אם לא רואים, שווה להציץ בתיקיית הבקשות.",
+      "commentReplyVariations": [
+        "זה מחכה לך בהודעות",
+        "יצא אליך עכשיו"
+      ],
+
+      "alsoMatchInDms": true,
+      "linkTracking": true,
+      "clickTag": "magnet-main"
+    },
+
+    {
+      "_note": "Rule two: the same magnet on story replies. Stories vanish after a day, so this one is always account-wide. It fires on a text reply containing the word, not on a sticker or an emoji reaction.",
+      "name": "מגנט בסטורי",
+      "trigger": "story_reply",
+      "keywords": ["REPLACE_ME_your_keyword"],
+      "matchMode": "contains",
+      "platformPostId": null,
+      "audience": {
+        "followerStatus": "follower",
+        "minFollowerCount": 0,
+        "whenUnknown": "verify"
+      },
+      "followGate": {
+        "message": "היי, שמח שכתבת. הכנתי לך בדיוק את מה שחיפשת. לחץ כאן ואני שולח.",
+        "buttonLabel": "שלח לי",
+        "notFollowingMessage": "רגע לפני ששולח, אני רואה שאתה עדיין לא עוקב. שים עוקב ותלחץ שוב על הכפתור, ואני שולח לך הכל. ואם זה לא מתאים לך, תוריד עוקב אחר כך בכיף."
+      },
+      "dmMessage": "הנה זה. תגיד לי אם משהו לא ברור, אני קורא כאן הכל.",
+      "buttons": [
+        { "type": "url", "title": "REPLACE_ME_button_text", "url": "https://REPLACE_ME.example.com" }
+      ],
+      "alsoMatchInDms": false,
+      "linkTracking": true,
+      "clickTag": "magnet-story"
+    }
+  ]
+}
