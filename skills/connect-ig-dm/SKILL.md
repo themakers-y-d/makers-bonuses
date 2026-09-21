@@ -1,6 +1,6 @@
 ---
 name: connect-ig-dm
-description: Sets up the automation where someone replies a keyword on a reel, a post or a story and gets a DM with the link seconds later, optionally only once they follow. Use this whenever the owner says "תגיבו מילה ותקבלו", "אני רוצה מאני צ'אט", "תחבר לי DM אוטומטי באינסטגרם", "אוטומציית תגובות", "מישהו מגיב ומקבל לינק", "set up comment to DM", "replace ManyChat", or asks for a word in a comment to send someone a link. Always use this instead of connect-a-tool on its own. That skill covers connecting any account in general, while this one carries the Instagram rules that decide between a system that delivers and one that reports success and delivers nothing.
+description: Sets up the automation where someone replies a keyword on a reel, a post or a story and gets a DM with the link seconds later, optionally only once they follow. Use this whenever the owner says "תגיבו מילה ותקבלו", "אני רוצה מאני צ'אט", "תחבר לי DM אוטומטי באינסטגרם", "אוטומציית תגובות", "מישהו מגיב ומקבל לינק", "set up comment to DM", "replace ManyChat", "תשנה לי את מילת המפתח של אוטומציית ה-DM", "תריץ את הבדיקה של אוטומציית ה-DM", or asks for a word in a comment to send someone a link. Always use this instead of connect-a-tool on its own. That skill covers connecting any account in general, while this one carries the Instagram rules that decide between a system that delivers and one that reports success and delivers nothing.
 ---
 
 # Connect Instagram comment-to-DM
