@@ -8,7 +8,9 @@
 
 ## איך מתקינים
 
-פותחים את [`INSTALL-makers.md`](INSTALL-makers.md), מעתיקים את כל הקובץ, ומדביקים אותו למורטי בתוך תיקיית MAKERS שאתה פותח בכל יום.
+פותחים את [`INSTALL-makers.md`](INSTALL-makers.md), לוחצים על כפתור ההעתקה שבראש הקובץ, ומדביקים למורטי בתוך תיקיית MAKERS שאתה פותח בכל יום.
+
+ההסבר המלא, בלי גיטהאב: [themakers.co.il/bonus/transcripts](https://themakers.co.il/bonus/transcripts).
 
 זה הכל. משם הוא לוקח, שלב אחרי שלב.
 
