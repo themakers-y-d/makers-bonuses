@@ -1,0 +1,35 @@
+# הצהרות פטור למדריך הזה. פטור בלי סיבה כתובה הוא פטור שאף אחד לא יבדוק שוב.
+
+[stale]
+launchd  # מנגנון התזמון של מק, והדרך שבה הצינור הזה באמת רץ פעמיים ביום. ירד מהסטאק של מתנת ה-DM, לא מכאן.
+
+[external]
+# נתיבים שהמדריך מזכיר והם חיים במערכת MAKERS של הקורא. לא אמורים להיות בתיקייה הזאת.
+CLAUDE.md
+system.md
+tools.md
+morty.md
+2-makers/morty/morty.md
+2-makers/vibecoder/refs/transcript-infrastructure.md
+.claude/rules/records.md
+4-learned/state.md
+4-learned/log.md
+state.md
+log.md
+3-work/now/transcript-absorption/_process/proposed-rules.md
+_process/proposed-rules.md
+config.sh
+absorber-state.txt
+
+# נתיבים שחיים בערכה המשוכפלת, לא כאן.
+INSTALL-MAKERS.md
+config.example.sh
+apply-to-vault.py
+transcript-absorber.sh
+transcript-uploader.sh
+proposed-rules.md
+absorber-heartbeat.txt
+uploader-heartbeat.txt
+uploader-state.txt
+.claude/skills/absorb-transcript/SKILL.md
+3-work/now/transcript-absorption/_process/INSTALL-makers.md
