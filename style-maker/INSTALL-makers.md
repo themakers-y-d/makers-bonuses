@@ -51,17 +51,17 @@ Vibecoder: Morty has already told the owner in one paragraph what is about to ha
 ls ~/.claude/skills/style-maker 2>/dev/null; find ~/.claude/skills -maxdepth 1 -name 'reel-style-*' 2>/dev/null
 ```
 
-Nothing printed is a fresh install, the usual case. An existing `style-maker` means the owner once installed the free version: step 3 updates it, and a failed update leaves the working version in place. Personal styles, `reel-style-...`, belong to the owner and are never touched.
+Nothing printed is a fresh install, the usual case. An existing `style-maker` means the owner once installed the free version: step 3 downloads over its four files, which is the update. Personal styles, `reel-style-...`, belong to the owner and are never touched.
 
 ### שלב 3. The install
 
-Download into a staging folder first. Create it and enter it:
+Create the skill folder and enter it. Download straight into it: moving or deleting folders inside `~/.claude/skills` is blocked by Claude Code's own protection of its settings folder, so this install never does either.
 
 ```bash
-mkdir -p ~/.claude/skills/.style-maker-new && cd ~/.claude/skills/.style-maker-new
+mkdir -p ~/.claude/skills/style-maker && cd ~/.claude/skills/style-maker
 ```
 
-(On Windows in Git Bash the same line works. Without Git Bash: `mkdir %USERPROFILE%\.claude\skills\.style-maker-new` and `cd` into it.) Then download four files into it, with exactly these names:
+(On Windows in Git Bash the same line works. Without Git Bash: `mkdir %USERPROFILE%\.claude\skills\style-maker` and `cd` into it.) Then download four files into it, with exactly these names:
 
 ```
 SKILL.md   https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/skills/style-maker/SKILL.md
@@ -74,12 +74,12 @@ On Mac: `curl -fsSL -o <file name> <url>`. On Windows: `curl.exe -fsSL -o <file 
 
 The fourth file is saved as `makers.md`, not under the name in its URL. That is the name the skill looks for.
 
-### שלב 4. Check the download, then put it in place
+### שלב 4. Check the download
 
 Run each line on its own, so one failing does not hide the others:
 
 ```bash
-cd ~/.claude/skills/.style-maker-new
+cd ~/.claude/skills/style-maker
 head -1 SKILL.md; head -1 makers.md
 grep -c 'makers.md' SKILL.md
 wc -c SKILL.md axes.md kit.py makers.md
@@ -88,9 +88,7 @@ grep -l '^404' SKILL.md axes.md kit.py makers.md
 
 Expected: the line `---`, then `# MAKERS layer for style-maker`, then a number of at least 2 (the skill knows about the layer), then a size for each of the four files and a total, none of them zero, and the last line printing nothing.
 
-All good: replace the old folder with the new one, `rm -rf ~/.claude/skills/style-maker && mv ~/.claude/skills/.style-maker-new ~/.claude/skills/style-maker`.
-
-Anything wrong: download the bad file once more. If it fails again, delete only the staging folder `~/.claude/skills/.style-maker-new`. Any earlier working `style-maker` stays as it was. Report back in one line that the download from GitHub does not go through, and stop.
+Anything wrong: download the bad file once more. If it fails again, report back in one line that the download from GitHub does not go through, and stop. Nothing is deleted: pasting the install message again later finishes the job, and an older working version keeps working until then except for the file that failed.
 
 Report to Morty in one line; the owner does not need the numbers.
 
