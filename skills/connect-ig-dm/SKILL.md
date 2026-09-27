@@ -29,9 +29,11 @@ They also need the kit: the `ig-dm-automation` folder from the MAKERS bonuses re
 
 4) **On the Instagram permission screen, two switches go off**: publish content, and insights. Leave on: profile and media, comments, messages. Least access that does the job.
 
-5) **The API key shows once**, right after signup. Tell them that *before* they sign up so they copy it when it appears. It goes to `~/.config/ig-dm/zernio.env` as `ZERNIO_API_KEY=sk_...`, chmod 600.
+5) **The API key shows once**, right after signup. Tell them that *before* they sign up so they copy it when it appears. It goes to `~/.config/ig-dm/zernio.env` as `ZERNIO_API_KEY=sk_...`, chmod 600 (on Windows skip chmod: the user profile is already private). On Windows without Git Bash, create it in PowerShell with `$d="$HOME\.config\ig-dm"; New-Item -ItemType Directory -Force $d | Out-Null; if (!(Test-Path "$d\zernio.env")) { New-Item -ItemType File "$d\zernio.env" | Out-Null }` (no `-Force` on the file, so a re-run never empties an existing key).
 
-   Never into the chat, never into a repo, and never into iCloud, Dropbox or an external drive. A scheduled run is blocked from synced drives and fails silently, which looks exactly like a bug in the code.
+   Open it for them in a text editor, `open -e ~/.config/ig-dm/zernio.env` on a Mac or `notepad "$HOME/.config/ig-dm/zernio.env"` on Windows, and tell them an empty window will open. They paste the line, save with Cmd+S on a Mac or Ctrl+S on Windows, and close it.
+
+   Never into the chat, never into a repo, and never into iCloud, OneDrive, Dropbox or an external drive. A scheduled run is blocked from synced drives and fails silently, which looks exactly like a bug in the code.
 
 6) **Prove the connection with one visible read before building anything.** Run `node kit/zernio.mjs doctor`. It must come back with their own Instagram handle. Their handle on the screen is proof. The word "connected" is a claim.
 
@@ -51,7 +53,7 @@ They also need the kit: the `ig-dm-automation` folder from the MAKERS bonuses re
 
     Until that row exists, the configuration is right and delivery is unproven. Those two look identical from the inside.
 
-11) **Record it.** `tools.md` already exists at the root of their system with a table and the rules around it. Add **one row**: Instagram comment-to-DM, access read and write, the date, and `node kit/zernio.mjs pause <id> --apply` as the off switch. ⛔ Never rewrite that file. The sections around the table are what tell them how to switch things off.
+11) **Record it.** `tools.md` already exists at the root of their system with a table and the rules around it. Add **one row**: Instagram comment-to-DM, access read and write, the date, and the off switch as `node <absolute path of the ig-dm-automation folder>/kit/zernio.mjs pause <real automation id> --apply`, with the real path and id written in, so a later session started from the system root can run it as written. ⛔ Never rewrite that file. The sections around the table are what tell them how to switch things off.
 
 12) **Save the asset.** The keywords and the copy go to `3-work/now/ig-dm/` with a dated name, and the owner is told where it is. Run `/ship-it-live`, because this touched a live account and sent messages to real people. Run `/final-pass` before handing anything back. Anything learned goes to the Archivist as a proposed line, never written directly.
 

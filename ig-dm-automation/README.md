@@ -36,6 +36,7 @@ https://github.com/themakers-y-d/makers-bonuses
 שכפל את הריפו הזה ולך לפי ig-dm-automation/INSTALL-solo.md שבתוכו,
 שלב אחרי שלב:
 https://github.com/themakers-y-d/makers-bonuses
+אם אין git במחשב, אל תתקין כלום: הורד את הריפו כזיפ מ-https://github.com/themakers-y-d/makers-bonuses/archive/refs/heads/main.zip ופתח אותו.
 לפני כל שלב תסביר לי במשפט מה עומד לקרות ומה יידרש ממני.
 ```
 

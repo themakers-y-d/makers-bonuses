@@ -34,11 +34,29 @@
 
 ודא שהשכפול נחת בתיקייה משלו ולא בתוך משהו אחר. תגיד לו בשורה אחת באיזו תיקייה הערכה יושבת, כדי שידע לאן לחזור בפעם הבאה.
 
+אם אין git במחשב, אל תתקין אותו ואל תשלח אותו להתקין. הורד את הריפו כזיפ ופתח אותו בעצמך, זה לוקח כמה שניות. שום דבר בערכה לא צריך את `.git`.
+
+בווינדוס ב-PowerShell:
+
+```powershell
+curl.exe -L -o makers-bonuses.zip https://github.com/themakers-y-d/makers-bonuses/archive/refs/heads/main.zip; tar -xf makers-bonuses.zip
+```
+
+במק או ב-Git Bash:
+
+```bash
+curl -L -o makers-bonuses.zip https://github.com/themakers-y-d/makers-bonuses/archive/refs/heads/main.zip && unzip makers-bonuses.zip
+```
+
+התיקייה שנפתחת נקראת `makers-bonuses-main`, ומשם ממשיכים בדיוק כמו אחרי שכפול.
+
+כל פקודות `node kit/...` בקובץ הזה רצות מתוך `<השכפול>/ig-dm-automation`. אם המעטפת חוזרת לתיקייה אחרת, הרץ אותן עם הנתיב המלא.
+
 ### שלב 0.1, מה לקרוא ומה לבדוק
 
 קרא את `04-gotchas.md` עד הסוף. אלה הכללים שמונעים את התקלות, ורובן לא מחזירות שגיאה.
 
-ובדוק `node --version`. אם חסר או מתחת ל-18, **אל תשלח אותו לחפש**. תגיד לו במשפט אחד שזה מנוע חינמי שהכלי רץ עליו, תן לו nodejs.org, ותחכה שיגיד שסיים. ואז תבדוק שוב.
+ובדוק `node --version`. אם חסר או מתחת ל-18, **אל תשלח אותו לחפש**. תגיד לו במשפט אחד שזה מנוע חינמי שהכלי רץ עליו, תן לו nodejs.org, ותחכה שיגיד שסיים. ואז תבדוק שוב. בווינדוס חלון פתוח לא רואה תוכנה שהותקנה אחריו: תגיד לו מראש לסגור לגמרי את קלוד קוד, לפתוח מחדש באותה תיקייה ולכתוב "ממשיכים בהתקנת ה-DM לפי ig-dm-automation/INSTALL-solo.md משלב 0.1", ורק אז תבדוק.
 
 ### שלב 1, שלוש שאלות בבת אחת
 
@@ -60,7 +78,17 @@
 mkdir -p ~/.config/ig-dm && touch ~/.config/ig-dm/zernio.env && chmod 600 ~/.config/ig-dm/zernio.env
 ```
 
+בווינדוס בלי Git Bash, ב-PowerShell:
+
+```powershell
+$d="$HOME\.config\ig-dm"; New-Item -ItemType Directory -Force $d | Out-Null; if (!(Test-Path "$d\zernio.env")) { New-Item -ItemType File "$d\zernio.env" | Out-Null }
+```
+
+שם אין צורך ב-chmod, כי תיקיית המשתמש בווינדוס כבר פרטית לו.
+
 שורה אחת בקובץ: `ZERNIO_API_KEY=sk_...`
+
+פתח לו את הקובץ בעורך טקסט: במק `open -e ~/.config/ig-dm/zernio.env`, בווינדוס `notepad "$HOME/.config/ig-dm/zernio.env"` (עובד גם ב-Git Bash וגם ב-PowerShell). תגיד לו מראש שייפתח חלון ריק. הוא מדביק את השורה, שומר עם Cmd+S במק או Ctrl+S בווינדוס, וסוגר.
 
 לא ב-iCloud, לא ב-Dropbox, לא בכונן חיצוני. הרצה מתוזמנת נחסמת משם ונכשלת בשקט, וזה נראה בדיוק כמו באג בקוד.
 

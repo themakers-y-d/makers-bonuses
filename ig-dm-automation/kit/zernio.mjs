@@ -12,7 +12,7 @@
 //   - writes are dry-run by default. --apply is required to touch the live account.
 //   - placeholders in automations.json abort any real call.
 
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, realpathSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -402,7 +402,13 @@ config: ${CONFIG_FILE}
 `;
 
 // only run the CLI when this file is the entry point, so selfcheck.mjs can import audit().
-const INVOKED_DIRECTLY = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+// both sides go through realpath, so a symlinked or junctioned path (/tmp on a Mac) still runs.
+const norm = (p) => {
+  let r = p;
+  try { r = realpathSync(p); } catch {}
+  return process.platform === 'win32' ? r.toLowerCase() : r;
+};
+const INVOKED_DIRECTLY = !!process.argv[1] && norm(process.argv[1]) === norm(fileURLToPath(import.meta.url));
 if (INVOKED_DIRECTLY) {
   if (!cmd || !commands[cmd]) {
     console.log(HELP);
