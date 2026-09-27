@@ -1,6 +1,6 @@
 # Morty, this one is for you
 
-The owner brought a MAKERS gift to install: the reel style builder (style-maker). This file is written to you so you do not have to work out what to do. The owner does not need to read it. Speak to the owner in Hebrew, as always; the lines in quotation blocks below are theirs word for word.
+The owner brought a MAKERS gift to install: the reel style builder (style-maker). This file is written to you so you do not have to work out what to do. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done; it is not part of their vault. Speak to the owner in Hebrew, as always; the lines in quotation blocks below are theirs word for word.
 
 ## What it is, in one line
 
@@ -12,7 +12,7 @@ Inside a MAKERS system it does one more thing. It reads what the system already 
 
 Do not spend questions on them.
 
-**The install:** the Vibecoder, because it runs commands and writes outside the system folder. It needs no conversation, so its own window suits it: you say the lines to the owner before and after (steps 1 and 5), and hand it steps 2 to 4 of this file.
+**The install:** the Vibecoder runs steps 2 to 4, because they run commands and write outside the system folder. They need no conversation, so its own window suits it. You say the lines to the owner before and after, and you write the button in step 5, because `.claude/` inside the system is yours and not the Vibecoder's.
 
 **Every run after it:** the Designer, in the main conversation. The job is how a video looks, and the skill is a conversation that stops for the owner several times. The Vibecoder works in its own window and cannot hold that conversation, and nothing here touches a live system or money. No chain.
 
@@ -39,11 +39,13 @@ If this is the owner's first session and your own file asks for a first-session 
 Then send this, and hand steps 2 to 4 to the Vibecoder:
 
 ```
-מתקין לך את בונה הסגנון לרילס, דרך ה-Vibecoder. זה לוקח דקה: ארבעה קבצים שיורדים מגיטהאב וכפתור אחד בתפריט.
-תוך כדי ייתכן שתתבקש לאשר כתיבה לתיקיית ההגדרות של Claude Code ולהריץ פקודות. זה רגיל, אשר.
+מתקין לך את בונה הסגנון לרילס, דרך ה-Vibecoder. זה לוקח כמה דקות: ארבעה קבצים שיורדים מגיטהאב לתיקיית הסקילים שלך, וכפתור אחד בתפריט. זה לא נוגע בשום דבר חי.
+תוך כדי יופיעו כמה בקשות לאשר כתיבה לתיקיית ההגדרות של Claude Code ולהריץ פקודות. זה רגיל, אשר. אם תרצה להסיר את זה אחר כך, אגיד לך איך בסוף.
 ```
 
 ### שלב 2. What is already installed
+
+Vibecoder: Morty has already told the owner in one paragraph what is about to happen and that nothing live is touched, and step 5 gives them the undo. Pasting the install message was the owner's yes. Do not stop to ask again; go through steps 2 to 4 and report back to Morty in one line.
 
 ```bash
 ls ~/.claude/skills/style-maker 2>/dev/null; find ~/.claude/skills -maxdepth 1 -name 'reel-style-*' 2>/dev/null
@@ -53,7 +55,13 @@ Nothing printed is a fresh install, the usual case. An existing `style-maker` me
 
 ### שלב 3. The install
 
-Download into a staging folder first, `~/.claude/skills/.style-maker-new` (on Windows: `%USERPROFILE%\.claude\skills\.style-maker-new`), four files with exactly these names:
+Download into a staging folder first. Create it and enter it:
+
+```bash
+mkdir -p ~/.claude/skills/.style-maker-new && cd ~/.claude/skills/.style-maker-new
+```
+
+(On Windows in Git Bash the same line works. Without Git Bash: `mkdir %USERPROFILE%\.claude\skills\.style-maker-new` and `cd` into it.) Then download four files into it, with exactly these names:
 
 ```
 SKILL.md   https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/skills/style-maker/SKILL.md
@@ -65,20 +73,6 @@ makers.md  https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/s
 On Mac: `curl -fsSL -o <file name> <url>`. On Windows: `curl.exe -fsSL -o <file name> <url>`.
 
 The fourth file is saved as `makers.md`, not under the name in its URL. That is the name the skill looks for.
-
-Then write the button, `.claude/commands/reel-style.md` in the system folder, with exactly this content:
-
-```
----
-description: בונה לך סגנון אנימציה משלך לרילס, או מלביש את הסגנון שלך על סרטון חדש
----
-
-Open `2-makers/designer/designer.md` and become that agent for this request, in this conversation. Do not hand it to the Vibecoder subagent: it cannot hold the back-and-forth this needs.
-
-Then open `~/.claude/skills/style-maker/SKILL.md` and follow it from step 1. It sends you to the MAKERS layer in `makers.md` beside it.
-
-$ARGUMENTS
-```
 
 ### שלב 4. Check the download, then put it in place
 
@@ -96,13 +90,27 @@ Expected: the line `---`, then `# MAKERS layer for style-maker`, then a number o
 
 All good: replace the old folder with the new one, `rm -rf ~/.claude/skills/style-maker && mv ~/.claude/skills/.style-maker-new ~/.claude/skills/style-maker`.
 
-Anything wrong: download the bad file once more. If it fails again, delete only the staging folder `~/.claude/skills/.style-maker-new`, and also the button file if you wrote it on a fresh install. Any earlier working `style-maker` stays as it was. Report back in one line that the download from GitHub does not go through, and stop.
+Anything wrong: download the bad file once more. If it fails again, delete only the staging folder `~/.claude/skills/.style-maker-new`. Any earlier working `style-maker` stays as it was. Report back in one line that the download from GitHub does not go through, and stop.
 
 Report to Morty in one line; the owner does not need the numbers.
 
-### שלב 5. What you tell the owner
+### שלב 5. The button, and what you tell the owner
 
-Morty says this, after the Vibecoder reports success:
+After the Vibecoder reports success, and only then, write the button yourself: `.claude/commands/reel-style.md` in the system folder, with exactly this content:
+
+```
+---
+description: בונה לך סגנון אנימציה משלך לרילס, או מלביש את הסגנון שלך על סרטון חדש
+---
+
+Open `2-makers/designer/designer.md` and become that agent for this request, in this conversation. Do not hand it to the Vibecoder subagent: it cannot hold the back-and-forth this needs.
+
+Then open `~/.claude/skills/style-maker/SKILL.md` and follow it from step 1. It sends you to the MAKERS layer in `makers.md` beside it.
+
+$ARGUMENTS
+```
+
+Then say this:
 
 ```
 בונה הסגנון לרילס מותקן אצלך.

@@ -30,7 +30,7 @@ Run:
 find . -maxdepth 6 -name '*.css' -not -path './.claude/*' -not -path './3-work/done/*' -not -path '*/node_modules/*' -exec grep -l ':root' {} + 2>/dev/null; ls 5-library/design-brief 2>/dev/null
 ```
 
-A CSS file with `:root` and `--` variables is a design brief's colour file. The brief itself is the `.md` file in the same folder whose name contains `brief` and that holds at least one hex colour (`#` and six characters), if there is one. A `5-library/design-brief/` folder holding only such a `.md`, with no CSS, is also a brief. When the same brief shows up in `5-library/design-brief/` and somewhere else, use the one in `5-library/design-brief/` and do not ask.
+A CSS file with `:root` and `--` variables is a design brief's colour file. The brief itself is the `.md` file in the same folder whose name contains `brief`, if there is one. It usually holds rules and no hex values at all, because the numbers live in the colour file, and it is still the brief: read it. A `5-library/design-brief/` folder holding only a `.md` with hex colours in it, with no CSS, is also a brief. When the same brief shows up in `5-library/design-brief/` and somewhere else, use the one in `5-library/design-brief/` and do not ask.
 
 • One found: read it and the brief beside it. Say in one line: "מצאתי את בריף העיצוב שלך, ב-<התיקייה>. הצבעים והצורות של האנימציה ייבנו ממנו."
 • More than one: ask in one line which to use, with the paths, and wait.
@@ -49,9 +49,9 @@ A CSS file with `:root` and `--` variables is a design brief's colour file. The 
 Then, by the answer:
 • Gave files (dragged, or a path): read them. A brief with only the `.md` and no CSS file is still a brief; take the hex values written in it.
 • Continue without: go to step 3 with no brief.
-• Stop and fill it first: send "מעולה. כשתסיים, שמור את הבריף ואת קובץ הצבעים במערכת, בתיקייה 5-library/design-brief (אם יש לך רק אחד מהם, גם זה מספיק), ולחץ שוב /reel-style. שם אמצא אותם לבד." and stop.
+• Stop and fill it first: send "מעולה. כשתסיים, שמור את הבריף ואת קובץ הצבעים במערכת, בתיקייה 5-library/design-brief (אם יש לך רק אחד מהם, גם זה מספיק), ולחץ שוב /reel-style, או כתוב שוב 'תבנה לי סגנון לרילס'. שם אמצא אותם לבד." and stop.
 
-Whenever the brief in use sits anywhere other than `5-library/design-brief/` (outside the system, or inside a project folder that will later move to `done/`), the wave in step 5 ends with one extra line: "ואגב: להעתיק את הבריף ל-5-library/design-brief, כדי שכל הצוות ימצא אותו גם בפעם הבאה? (כן / לא)". On yes, `mkdir -p` and `cp -n`, never overwriting, and add the Designer line to the Archivist proposals in step 10. On no, use it where it is.
+Whenever the brief in use sits anywhere other than `5-library/design-brief/` (outside the system, or inside a project folder that will later move to `done/`), the wave in step 5 ends with one extra line: "ואגב: להעתיק את הבריף ל-5-library/design-brief, כדי שכל הצוות ימצא אותו גם בפעם הבאה? (כן / לא)". On yes, `mkdir -p` and `cp -n`, never overwriting, and add the Designer line to the Archivist proposals in step 10. On no, or no answer to that line, use it where it is and do not ask again.
 
 ## שלב 3. What the system already knows
 
@@ -89,7 +89,7 @@ The system allows at most three questions per request, in one wave. Build the wa
 
 1) Drop every question that steps 3 and 4 answered.
 2) From the rest, in this order, keep the first three: 1, 4, 5, 3, 6, 7, 2. Copy each one word for word from step 2 of SKILL.md, keeping its original number, so the derivation rules in axes.md still apply. When step 3 found the field, the audience and the ending, question 1 shrinks to "1) על מה הסרטון הזה, במשפט?" and moves to the end of the order.
-3) Every question left out takes the safe option from "לא יודע" in axes.md.
+3) Every question left out takes the safe option from "לא יודע" in axes.md, with one exception: a shrunk question 1 left out takes nothing from there. Its topic comes from the transcript in step 9 of SKILL.md, and the field and the ending stay as step 3 found them.
 
 The top block holds one line for every question that is not in the wave, and only those. A line answered from the system reads as below. A line left out by the cap reads "<הנושא>: בחרתי <האפשרות, במילים> כברירת מחדל. אפשר לשנות בהמשך." For colours without a brief: "צבעים: אין לי בריף שלך, אז בחרתי פלטה בהירה ונקייה. אפשר לשנות, או לכתוב לי קודי צבע." Nothing is chosen for the owner without a line.
 
@@ -121,8 +121,8 @@ Do not send the extra-tuning line from SKILL.md step 2 in a MAKERS system. Tunin
 Run steps 3, 4 and 5 of SKILL.md, with these changes, the ones marked "with a brief" only when there is one:
 
 1) Step 3 there, with a brief: question 3 is answered. Do not run `palette` and do not offer palettes, not in step 3 and not in item 6 of step 6 there.
-2) Step 4 there: write each of the twelve lines in plain words the owner uses ("איך אתה מופיע", "איך הדברים זזים"), not the axis names. After them and before the question about changes, one short paragraph. With a brief: "מהבריף שלך: <הצבעים, הרדיוס, ומה מהכללים נכנס>. לא נכנס: הגופן, כי האנימציה כותבת ב-Assistant שנבדק לעברית<, ועוד מה שלא נכנס ולמה>. בחרתי לבד, כי הבריף לא הגדיר: <רשימה, או 'כלום'>." Without a brief: "את הצבעים בחרתי בלי בריף. כשיהיה לך, אפשר לבנות את הסגנון מחדש ממנו."
-3) Step 5 there, with a brief: in the style's "נבנה ב-" line add "מהבריף שב-<הנתיב>". This replaces SKILL.md's instruction that "הערות שנשמרו" stays empty: after its explanation line, add one line per brief rule that entered the style, both "אסור" lines and "never text / never a word" rules, and only rules about colour, shape, motion or the mark: `• <תאריך> מהבריף: "<הכלל כלשונו>"`. Inside the quoted rule, a long dash becomes a comma, double quotes become single quotes, and `<` or `>` become words, because step 5's check counts all of them.
+2) Step 4 there: keep each line's number and option letter, as SKILL.md does, so "2ב" can be answered, and describe it in plain words the owner uses ("איך אתה מופיע", "איך הדברים זזים"), not the axis names. Right above the lines say once: "המספרים כאן הם של השורות למטה, לא של השאלות מקודם." After them and before the question about changes, one short paragraph. With a brief: "מהבריף שלך: <הצבעים, הרדיוס, ומה מהכללים נכנס>. לא נכנס: הגופן, כי האנימציה כותבת ב-Assistant שנבדק לעברית<, ועוד מה שלא נכנס ולמה>. בחרתי לבד, כי הבריף לא הגדיר: <רשימה, או 'כלום'>." Without a brief: "את הצבעים בחרתי בלי בריף. כשיהיה לך, אפשר לבנות את הסגנון מחדש ממנו."
+3) Step 5 there, with a brief: in the style's "נבנה ב-" line add "מהבריף שב-<הנתיב>". This replaces SKILL.md's instruction that "הערות שנשמרו" stays empty: after its explanation line, add one line per brief rule that entered the style, both "אסור" lines and "never text / never a word" rules, and only rules about colour, shape, motion or the mark: `• <תאריך> מהבריף, בכפוף ל-14 החוקים הקבועים: "<הכלל כלשונו>"`. These lines never override the fixed rules, on this run or any later one. A brief rule that could not enter only because a file was missing (a mark with no image) gets a line too: `• <תאריך> מהבריף, ממתין לקובץ: "<הכלל כלשונו>"`, so a later run picks it up once the file exists. Inside the quoted rule, a long dash becomes a comma, double quotes become single quotes, and `<` or `>` become words, because step 5's check counts all of them.
 
 ## שלב 7. From installation to the file
 
