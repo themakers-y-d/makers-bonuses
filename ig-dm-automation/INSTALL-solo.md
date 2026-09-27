@@ -50,7 +50,7 @@ curl -L -o makers-bonuses.zip https://github.com/themakers-y-d/makers-bonuses/ar
 
 התיקייה שנפתחת נקראת `makers-bonuses-main`, ומשם ממשיכים בדיוק כמו אחרי שכפול.
 
-כל פקודות `node kit/...` בקובץ הזה רצות מתוך `<השכפול>/ig-dm-automation`. אם המעטפת חוזרת לתיקייה אחרת, הרץ אותן עם הנתיב המלא.
+כל פקודות `node kit/...` בקובץ הזה רצות מתוך `<השכפול>/ig-dm-automation`, אז היכנס אליה עכשיו: `cd makers-bonuses/ig-dm-automation`, או `cd makers-bonuses-main/ig-dm-automation` אם הורדת זיפ (אותה פקודה במק, ב-Git Bash וב-PowerShell). אם המעטפת חוזרת לתיקייה אחרת, הרץ אותן עם הנתיב המלא.
 
 ### שלב 0.1, מה לקרוא ומה לבדוק
 
@@ -70,9 +70,9 @@ curl -L -o makers-bonuses.zip https://github.com/themakers-y-d/makers-bonuses/ar
 
 ### שלב 2, חשבון Zernio ומפתח
 
-שלח אותו ל-zernio.com/signup. גוגל הוא המהיר ביותר.
+קודם הכן את הקובץ שהמפתח ייכנס אליו, ורק אחר כך שלח אותו להירשם. המפתח מוצג פעם אחת בלבד, וצריך מקום להדביק אותו ברגע שהוא מופיע.
 
-תגיד לו **לפני** שהוא נרשם שמיד אחרי ההרשמה מוצג מפתח פעם אחת בלבד, ושיעתיק אותו ברגע שהוא מופיע.
+במק או ב-Git Bash:
 
 ```bash
 mkdir -p ~/.config/ig-dm && touch ~/.config/ig-dm/zernio.env && chmod 600 ~/.config/ig-dm/zernio.env
@@ -88,9 +88,11 @@ $d="$HOME\.config\ig-dm"; New-Item -ItemType Directory -Force $d | Out-Null; if 
 
 שורה אחת בקובץ: `ZERNIO_API_KEY=sk_...`
 
-פתח לו את הקובץ בעורך טקסט: במק `open -e ~/.config/ig-dm/zernio.env`, בווינדוס `notepad "$HOME/.config/ig-dm/zernio.env"` (עובד גם ב-Git Bash וגם ב-PowerShell). תגיד לו מראש שייפתח חלון ריק. הוא מדביק את השורה, שומר עם Cmd+S במק או Ctrl+S בווינדוס, וסוגר.
+פתח לו את הקובץ בעורך טקסט: במק `open -e ~/.config/ig-dm/zernio.env`, בווינדוס `notepad "$HOME/.config/ig-dm/zernio.env"` (עובד גם ב-Git Bash וגם ב-PowerShell). תגיד לו מראש שייפתח חלון ריק, ושישאיר אותו פתוח.
 
-לא ב-iCloud, לא ב-Dropbox, לא בכונן חיצוני. הרצה מתוזמנת נחסמת משם ונכשלת בשקט, וזה נראה בדיוק כמו באג בקוד.
+עכשיו שלח אותו ל-zernio.com/signup. גוגל הוא המהיר ביותר. תגיד לו **לפני** שהוא נרשם שמיד אחרי ההרשמה מוצג מפתח פעם אחת בלבד: ברגע שהוא מופיע הוא מעתיק אותו לחלון הפתוח, בשורה אחת בצורה `ZERNIO_API_KEY=sk_...`, שומר עם Cmd+S במק או Ctrl+S בווינדוס, וסוגר.
+
+לא ב-iCloud, לא ב-OneDrive, לא ב-Dropbox, לא בכונן חיצוני. הרצה מתוזמנת נחסמת משם ונכשלת בשקט, וזה נראה בדיוק כמו באג בקוד.
 
 ### שלב 3, חיבור אינסטגרם
 
@@ -110,7 +112,7 @@ node kit/zernio.mjs doctor
 
 ### שלב 5, בניית החוקים
 
-העתק את `kit/automations.example.json` ל-`kit/automations.json` ומלא לפי התשובות.
+העתק את `kit/automations.example.json` ל-`kit/automations.json` ומלא לפי התשובות. במק או ב-Git Bash: `cp kit/automations.example.json kit/automations.json`. ב-PowerShell: `Copy-Item kit\automations.example.json kit\automations.json`.
 
 קרא את `02-rules.md` לפני בחירת מצב התאמה, ואת `03-copy.md` לפני כתיבת נוסח. הנוסחים נכתבים **איתו**, לא בשבילו. זה הטקסט שזרים יקראו בשמו.
 
@@ -121,9 +123,11 @@ node kit/selfcheck.mjs
 node kit/zernio.mjs plan
 ```
 
-הראה לו את התוכנית, ורק אז `sync --apply`.
+הראה לו את התוכנית, ורק אז `node kit/zernio.mjs sync --apply`.
 
 ### שלב 6, אימות שהחוקים נקלטו
+
+ה-id של כל חוק מופיע ב-`node kit/zernio.mjs list`, וממנו לוקחים את `<id>` בפקודות למטה ובשורת הכיבוי.
 
 ```bash
 node kit/zernio.mjs get <id>
