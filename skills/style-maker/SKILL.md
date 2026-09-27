@@ -1,6 +1,6 @@
 ---
 name: style-maker
-description: Builds the owner a personal animation style for talking-head reels, saves it as their own skill, and applies it to a video they filmed, producing an MP4 with animation and sound. Use whenever the owner says things like "תבנה לי סגנון לרילס", "סגנון אנימציה", "תלביש אנימציה על הסרטון", "אנימציה לסרטון שלי", "סאונד ואנימציה לריל", "style-maker", "build my reel style", "animate my reel". Always use this instead of animating a video freehand, because it asks the style questions first, writes the style as a reusable skill, checks the face and timing rules frame by frame, and keeps the owner's notes for next time. Not for editing cuts or subtitles only, and not for videos without a person talking to camera.
+description: Builds the owner a personal animation style for talking-head reels, saves it as their own skill, and applies it to a video they filmed, producing an MP4 with animation and sound. Use whenever the owner says things like "תבנה לי סגנון לרילס", "סגנון אנימציה", "תלביש אנימציה על הסרטון", "אנימציה לסרטון שלי", "סאונד ואנימציה לריל", "style-maker", "build my reel style", "animate my reel". Always use this instead of animating a video freehand, because it asks the style questions first, writes the style as a reusable skill, checks the face and timing rules frame by frame, and keeps the owner's notes for next time. Not for editing cuts or subtitles only, and not for videos without a person talking to camera. In a MAKERS system the Designer runs this skill in the main conversation, never the Vibecoder subagent.
 ---
 
 # בונה הסגנון לרילס
@@ -12,6 +12,10 @@ description: Builds the owner a personal animation style for talking-head reels,
 עבוד לפי השלבים הממוספרים, לפי הסדר. אל תדלג על שלב 10 (טבלת הסיפור, שהבעלים מאשר) ועל שלב 12 (בדיקת הסטילס).
 
 ## שלב 1. לבדוק מה כבר יש, ולהגיד מראש מה יקרה
+
+לפני הכל: אם אתה על ווינדוס, בדוק שכלי הפקודות שלך הוא bash (`echo $BASH_VERSION` מדפיס מספר גרסה). אם הכלי שלך הוא PowerShell, או ש-bash לא נמצא, חסר Git for Windows, והסקיל הזה צריך אותו. אמור לבעלים בשורה אחת: "כדי להלביש אנימציה אני צריך את Git for Windows, כלי חינמי שקלוד קוד משתמש בו כדי להריץ פקודות. מאשר שאתקין?" אחרי אישור הרץ ב-PowerShell: `winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements`. אחרי שההתקנה מסתיימת, אמור לבעלים לסגור ולפתוח מחדש את Claude Code, ולכתוב שוב "תבנה לי סגנון לרילס". עצור כאן.
+
+אם בתיקייה של הסקיל הזה יש קובץ `makers.md`, ובתיקייה שבה אתה עובד יש `1-me/summary.md`, אתה בתוך מערכת MAKERS. קרא את `~/.claude/skills/style-maker/makers.md` ועבוד לפיו. הוא אומר מתי לחזור לשלבים של הקובץ הזה.
 
 הרץ:
 
@@ -408,6 +412,8 @@ bash ~/reel-studio/kit verify "<הנתיב של ה-MP4>" --at <3 עד 6 זמני
 
 ## שלב 16. הדיווח, במילים של הסיפור
 
+לפני הדיווח: אם בתיקייה של הסקיל הזה יש `makers.md`, ובתיקייה שבה אתה עובד יש `1-me/summary.md`, ועוד לא עשית בריצה הזו את שלב 8 של makers.md, עשה אותו עכשיו.
+
 כתוב לבעלים, בלי מונחים טכניים:
 
 ```
@@ -444,7 +450,7 @@ bash ~/reel-studio/kit verify "<הנתיב של ה-MP4>" --at <3 עד 6 זמני
 ````markdown
 ---
 name: reel-style-<שם>
-description: The personal reel animation style of <שם>. Use whenever the owner says "תלביש את הסגנון שלי", "הסגנון שלי על הסרטון", "אנימציה בסגנון שלי", "apply my style", "reel-style-<שם>", together with a video. Always use this instead of animating a video freehand, because it holds the owner's chosen style, the fixed rules and every note the owner gave. Needs the style-maker skill and the reel-studio folder.
+description: The personal reel animation style of <שם>. Use whenever the owner says "תלביש את הסגנון שלי", "הסגנון שלי על הסרטון", "אנימציה בסגנון שלי", "apply my style", "reel-style-<שם>", together with a video. Always use this instead of animating a video freehand, because it holds the owner's chosen style, the fixed rules and every note the owner gave. Needs the style-maker skill and the reel-studio folder. In a MAKERS system the Designer runs this skill in the main conversation, never the Vibecoder subagent.
 ---
 
 # הסגנון של <שם>
