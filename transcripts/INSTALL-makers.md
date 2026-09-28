@@ -510,7 +510,7 @@ esac
 for i in $(seq 1 36); do
   AFTER="$(cat "$HB" 2>/dev/null)"; [ "$AFTER" != "$BEFORE" ] && break; /bin/sleep 15
 done
-if [ "$AFTER" = "$BEFORE" ]; then echo "לא השתנה אחרי תשע דקות: הג'וב לא התחיל. במק בדוק PATH ותווית, בווינדוס ראה את האבחון מתחת לבלוק"
+if [ "$AFTER" = "$BEFORE" ]; then echo "לא השתנה אחרי תשע דקות. קודם בדוק אם הג'וב עדיין רץ (במק launchctl print, בווינדוס -Action status): רץ = חכה עוד, לא רץ = לא התחיל, ואז במק בדוק PATH ותווית, בווינדוס ראה את האבחון מתחת לבלוק"
 elif printf '%s' "$AFTER" | grep -q "LAST RUN FAILED"; then echo "רץ ונכשל. קרא את השורה ואת הלוג"
 else echo "רץ והצליח דרך המתזמן"; fi
 ```
@@ -558,7 +558,7 @@ for i in $(seq 1 36); do
   [ "$AFTER" != "$BEFORE" ] && break
   /bin/sleep 15
 done
-if [ "$AFTER" = "$BEFORE" ]; then echo "לא השתנה אחרי תשע דקות: הג'וב לא התחיל. במק בדוק PATH ותווית, בווינדוס ראה את האבחון מתחת לבלוק"
+if [ "$AFTER" = "$BEFORE" ]; then echo "לא השתנה אחרי תשע דקות. קודם בדוק אם הג'וב עדיין רץ (במק launchctl print, בווינדוס -Action status): רץ = חכה עוד, לא רץ = לא התחיל, ואז במק בדוק PATH ותווית, בווינדוס ראה את האבחון מתחת לבלוק"
 elif printf '%s' "$AFTER" | grep -q "LAST RUN FAILED"; then echo "רץ ונכשל. קרא את השורה ואת הלוג"
 else echo "רץ והצליח דרך המתזמן"; fi
 ```
