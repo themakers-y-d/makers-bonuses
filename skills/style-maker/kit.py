@@ -46,6 +46,7 @@ STUDIO = Path(os.environ.get("REEL_STUDIO", Path.home() / "reel-studio"))
 KIT_DIR = Path(__file__).resolve().parent
 os.environ.setdefault("HF_HOME", str(STUDIO / "models"))       # keep every download inside the studio folder
 os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+os.environ.setdefault("OPENCV_LOG_LEVEL", "SILENT")                # no alarming log line when the face finder loads from memory
 
 MODEL_REVISIONS = {"ivrit-ai/whisper-large-v3-turbo-ct2": "72ad623a37947395efcc3933132353790e5a12f5"}
 MODELS = {

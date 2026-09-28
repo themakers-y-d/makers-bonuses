@@ -79,11 +79,10 @@ The fourth file is saved as `makers.md`, not under the name in its URL. That is 
 Run each line on its own, so one failing does not hide the others:
 
 ```bash
-cd ~/.claude/skills/style-maker
-head -1 SKILL.md; head -1 makers.md
-grep -c 'makers.md' SKILL.md
-wc -c SKILL.md axes.md kit.py makers.md
-grep -l '^404' SKILL.md axes.md kit.py makers.md
+cd ~/.claude/skills/style-maker && head -1 SKILL.md; head -1 makers.md
+cd ~/.claude/skills/style-maker && grep -c 'makers.md' SKILL.md
+cd ~/.claude/skills/style-maker && wc -c SKILL.md axes.md kit.py makers.md
+cd ~/.claude/skills/style-maker && grep -l '^404' SKILL.md axes.md kit.py makers.md
 ```
 
 Expected: the line `---`, then `# MAKERS layer for style-maker`, then a number of at least 2 (the skill knows about the layer), then a size for each of the four files and a total, none of them zero, and the last line printing nothing.

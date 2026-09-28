@@ -66,6 +66,7 @@ echo "uname: $(uname -sm)   HOME=$HOME"
   cp ~/reel-studio/model.log "$LOGD/"
   # item 5: doctor
   run doctor bash ~/reel-studio/kit doctor
+  rec studio-path INFO "$(sed -n 's/^studio   //p' "$LOGD/doctor.log")"
   grep -q "ALL GOOD" "$LOGD/doctor.log" && rec doctor-marker PASS "ALL GOOD" || rec doctor-marker FAIL "$(tail -1 "$LOGD/doctor.log")"
   grep -q "x264=yes" "$LOGD/doctor.log" && rec x264 PASS yes || rec x264 FAIL "x264 missing"
   # step 5 check command, on a small fake style file with Hebrew
@@ -87,6 +88,7 @@ echo "uname: $(uname -sm)   HOME=$HOME"
     grep -q "NO FACE FOUND" "$LOGD/face.log" && rec face-kind INFO "clean NO FACE FOUND" || rec face-kind FAIL "crash, not the clean NO FACE FOUND path"
     run face-manual bash ~/reel-studio/kit face "$VIDEO" --manual 360 220 680 520
   fi
+  grep -q "ERROR:0" "$LOGD/face.log" && rec opencv-log INFO "ERROR:0 line still printed" || rec opencv-log INFO "no ERROR:0 line"
   run sheet bash ~/reel-studio/kit sheet "$VIDEO"
   run band bash ~/reel-studio/kit band "$VIDEO" --captions-top 75
   # step 9: transcribe (short video: directly)
