@@ -23,7 +23,8 @@ jobs:
       - name: INSTALL.md steps 1-3 (Mac line, full target path, run from another folder)
         shell: bash
         run: |
-          for f in SKILL.md axes.md kit.py; do curl -fsSL --create-dirs -o ~/.claude/skills/style-maker/$f "$RAW/$f"; done
+          mkdir -p ~/.claude/skills/style-maker
+          for f in SKILL.md axes.md kit.py; do curl -fsSL -o ~/.claude/skills/style-maker/$f "$RAW/$f"; done
           ls -la ~/.claude/skills/style-maker; head -1 ~/.claude/skills/style-maker/SKILL.md; ! grep -l '^404' ~/.claude/skills/style-maker/*
       - name: place the owner's video (Hebrew name with a space, on the Desktop)
         shell: bash
@@ -82,7 +83,8 @@ jobs:
         run: |
           "USERPROFILE=$env:USERPROFILE"
           "cwd=$(Get-Location)"
-          foreach ($f in 'SKILL.md','axes.md','kit.py') { curl.exe -fsSL --create-dirs -o "$env:USERPROFILE\.claude\skills\style-maker\$f" "$env:RAW/$f"; "$f exit=$LASTEXITCODE" }
+          New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\style-maker" | Out-Null
+          foreach ($f in 'SKILL.md','axes.md','kit.py') { curl.exe -fsSL -o "$env:USERPROFILE\.claude\skills\style-maker\$f" "$env:RAW/$f"; "$f exit=$LASTEXITCODE" }
           Get-Item "$env:USERPROFILE\.claude\skills\style-maker\SKILL.md" | Format-List FullName, Length
           Get-Content "$env:USERPROFILE\.claude\skills\style-maker\SKILL.md" -TotalCount 1
       - name: place the owner's video (OneDrive Desktop, Hebrew name with a space)
@@ -91,6 +93,12 @@ jobs:
           echo "bash sees HOME=$HOME"
           mkdir -p "$HOME/OneDrive/שולחן העבודה" && cp ci/animation/test-reel.mp4 "$HOME/OneDrive/שולחן העבודה/הסרטון שלי.mp4"
           ls -la "$HOME/OneDrive/שולחן העבודה"
+      - name: INSTALL.md in Git Bash ("as on Mac, with curl.exe"), into a scratch folder under the same profile
+        shell: bash
+        run: |
+          D=~/.claude/skills/gitbash-probe; mkdir -p $D
+          for c in curl.exe curl; do $c -fsSL -o $D/SKILL-$c.md "$RAW/SKILL.md"; echo "$c exit=$? $(which $c)"; done
+          ls -la $D; head -1 $D/SKILL-curl.exe.md
       - name: skill part 1 (step 1, install base, libs in background then exit)
         shell: bash
         run: bash ci/animation/run-skill.sh part1
@@ -160,7 +168,8 @@ jobs:
           # built from code points: Windows PowerShell 5.1 reads a BOM-less script file as ANSI (a harness limit, not the skill)
           $env:USERPROFILE = "C:\Users\" + (-join [char[]](0x05D3,0x05E0,0x05D4,0x20,0x05DB,0x05D4,0x05DF))
           New-Item -ItemType Directory -Force "$env:RUNNER_TEMP\elsewhere" | Out-Null; Set-Location "$env:RUNNER_TEMP\elsewhere"
-          foreach ($f in 'SKILL.md','axes.md','kit.py') { curl.exe -fsSL --create-dirs -o "$env:USERPROFILE\.claude\skills\style-maker\$f" "$env:RAW/$f"; "$f exit=$LASTEXITCODE" }
+          New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\style-maker" | Out-Null
+          foreach ($f in 'SKILL.md','axes.md','kit.py') { curl.exe -fsSL -o "$env:USERPROFILE\.claude\skills\style-maker\$f" "$env:RAW/$f"; "$f exit=$LASTEXITCODE" }
           Get-ChildItem "$env:USERPROFILE\.claude\skills\style-maker" | Format-Table FullName, Length
           "stray files in cwd: $((Get-ChildItem).Count)"
           Get-Content "$env:USERPROFILE\.claude\skills\style-maker\SKILL.md" -TotalCount 1 -Encoding UTF8
