@@ -61,7 +61,7 @@ Create the skill folder and enter it. Download straight into it: moving or delet
 mkdir -p ~/.claude/skills/style-maker && cd ~/.claude/skills/style-maker
 ```
 
-(On Windows in Git Bash the same line works. Without Git Bash: `mkdir %USERPROFILE%\.claude\skills\style-maker` and `cd` into it.) Then download four files into it, with exactly these names:
+(On Windows in Git Bash the same line works. Without Git Bash, in PowerShell: `New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\style-maker"; Set-Location "$env:USERPROFILE\.claude\skills\style-maker"`.) Then download four files into it, with exactly these names:
 
 ```
 SKILL.md   https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/skills/style-maker/SKILL.md
@@ -70,7 +70,7 @@ kit.py     https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/s
 makers.md  https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/style-maker/RUNBOOK-makers.md
 ```
 
-On Mac: `curl -fsSL -o <file name> <url>`. On Windows: `curl.exe -fsSL -o <file name> <url>`.
+Chain each download to the `cd`, so the files land in the skill folder even if the working folder was reset. On Mac, and on Windows in Git Bash: `cd ~/.claude/skills/style-maker && curl -fsSL -o <file name> <url>`. On Windows in PowerShell: `curl.exe -fsSL -o "$env:USERPROFILE\.claude\skills\style-maker\<file name>" <url>`.
 
 The fourth file is saved as `makers.md`, not under the name in its URL. That is the name the skill looks for.
 
@@ -79,11 +79,10 @@ The fourth file is saved as `makers.md`, not under the name in its URL. That is 
 Run each line on its own, so one failing does not hide the others:
 
 ```bash
-cd ~/.claude/skills/style-maker
-head -1 SKILL.md; head -1 makers.md
-grep -c 'makers.md' SKILL.md
-wc -c SKILL.md axes.md kit.py makers.md
-grep -l '^404' SKILL.md axes.md kit.py makers.md
+cd ~/.claude/skills/style-maker && head -1 SKILL.md; head -1 makers.md
+cd ~/.claude/skills/style-maker && grep -c 'makers.md' SKILL.md
+cd ~/.claude/skills/style-maker && wc -c SKILL.md axes.md kit.py makers.md
+cd ~/.claude/skills/style-maker && grep -l '^404' SKILL.md axes.md kit.py makers.md
 ```
 
 Expected: the line `---`, then `# MAKERS layer for style-maker`, then a number of at least 2 (the skill knows about the layer), then a size for each of the four files and a total, none of them zero, and the last line printing nothing.
