@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
 
 env:
+  # simulate a customer machine with no Python of its own: uv must download its managed Python into ~/reel-studio/tools
+  UV_PYTHON_PREFERENCE: only-managed
   RAW: https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/skills/style-maker
 
 jobs:

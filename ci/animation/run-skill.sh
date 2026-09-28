@@ -36,15 +36,17 @@ echo "uname: $(uname -sm)   HOME=$HOME"
   mkdir -p ~/reel-studio
   awk '/וכתוב לתוכה את הקובץ `install.sh`/{f=1;next} f&&/^```bash/{g=1;next} g&&/^```/{exit} g' \
       ~/.claude/skills/style-maker/SKILL.md > ~/reel-studio/install.sh
+  rec "uv-python-pref" INFO "UV_PYTHON_PREFERENCE=${UV_PYTHON_PREFERENCE:-unset}"
   if [ "${AUDIT_CRLF:-0}" = "1" ]; then
     sed -i 's/$/\r/' ~/reel-studio/install.sh
-    rec "crlf" INFO "install.sh rewritten with CRLF, $(grep -c $'\r' ~/reel-studio/install.sh) CR lines"
+    rec "crlf" INFO "install.sh rewritten with CRLF, $(tr -cd '\r' < ~/reel-studio/install.sh | wc -c) CR bytes"
     run crlf-base-as-is bash ~/reel-studio/install.sh base
     ls -la ~/reel-studio/ | tee "$LOGD/crlf-dir.txt"; [ -f ~/reel-studio/kit ] && od -c ~/reel-studio/kit | head -5 | tee -a "$LOGD/crlf-dir.txt"
     run crlf-kit-doctor bash ~/reel-studio/kit doctor
+    rm -rf ~/reel-studio/.venv ~/reel-studio/kit
     # the proposed fix: strip CR before running, then re-run
     tr -d '\r' < ~/reel-studio/install.sh > ~/reel-studio/install.tmp && mv ~/reel-studio/install.tmp ~/reel-studio/install.sh
-    rec "crlf-fix" INFO "CR lines after tr: $(grep -c $'\r' ~/reel-studio/install.sh)"
+    rec "crlf-fix" INFO "CR bytes after tr: $(tr -cd '\r' < ~/reel-studio/install.sh | wc -c)"
   fi
   run install-base bash ~/reel-studio/install.sh base
   grep -q "BASE READY" "$LOGD/install-base.log" && rec base-marker PASS "BASE READY" || rec base-marker FAIL "no BASE READY"
@@ -106,7 +108,7 @@ s = s.replace('                c.text(540, mid, "מילה", 56, INK, 600)',
               '    cw = current_word(t, WORDS)\n'
               '    if cw:\n'
               '        c.text(540, 1440, cw["w"], 90, (255, 255, 255), 800, stroke=8, stroke_fill=(0, 0, 0))')
-p.write_text(s, encoding="utf-8"); print(s[-900:])
+p.write_text(s, encoding="utf-8"); print("scenes.py edited", len(s), "chars")
 PY
   cat "$LOGD/scenes-edit.log" | tail -12
   # step 12: stills
