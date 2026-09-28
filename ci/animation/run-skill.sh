@@ -102,7 +102,10 @@ w = json.loads((jd / "words.json").read_text(encoding="utf-8"))["words"]
 t = lambda i, d: w[i]["s"] if len(w) > i else d
 s = s.replace("SCENES = [\n    # dict(name=\"card\", t=2.20, until=3.40),\n]",
               f"SCENES = [dict(name='card', t={t(2, 1.5)}, until={t(5, 3.0)})]")
-s = s.replace("FULLSCREEN = [\n", f"FULLSCREEN = [({t(7, 4.5)}, {t(10, 6.5)}, (540, 900)),\n", 1)
+last = w[-1]["e"] if w else 8.0
+s = s.replace("FULLSCREEN = [\n", f"FULLSCREEN = [({t(7, 4.5)}, {t(10, 6.5)}, (540, 900)), ({last}, None, (540, 960)),\n", 1)
+s = s.replace("# END = 30.0", f"END = {last + 1.5:.2f}", 1)
+(jd / "END.txt").write_text(f"{last + 1.5:.2f}", encoding="utf-8")
 s = s.replace('                c.text(540, mid, "מילה", 56, INK, 600)',
               '                c.text(540, mid, "דפי נחיתה", 56, INK, 600)\n'
               '    cw = current_word(t, WORDS)\n'
@@ -115,7 +118,7 @@ PY
   run render-check bash ~/reel-studio/kit render "$VIDEO" --check 0.5 2.0 3.0 5.0 6.0 8.0
   # step 13: sound
   run sfx bash ~/reel-studio/kit sfx
-  DUR=$(sed -n 's/.*"duration": \([0-9.]*\).*/\1/p' "$LOGD/info.log" | head -1)
+  DUR=$(cat "$JOB/END.txt" 2>/dev/null || sed -n 's/.*"duration": \([0-9.]*\).*/\1/p' "$LOGD/info.log" | head -1)
   printf '{"end": %s, "bed": {"type": "pad", "under_lu": 17}, "cues": [{"name": "card", "t": 2.0, "layers": [{"sound": "knock", "db": -8}]}, {"name": "iris", "t": 5.0, "layers": [{"sound": "whoosh", "db": -12}]}]}\n' "$DUR" > "$JOB/cues.json"
   run mix bash ~/reel-studio/kit mix "$VIDEO" "$JOB/cues.json"
   # step 14: full render in the background, exactly the SKILL.md form (log path = the JOB FOLDER string kit printed)
@@ -128,6 +131,7 @@ PY
   run verify bash ~/reel-studio/kit verify "$OUT" --at 1 3 5 7
   grep -q "FILE OK" "$LOGD/verify.log" && rec verify-marker PASS "FILE OK" || rec verify-marker FAIL "no FILE OK"
   DEST="$(dirname "$VIDEO_ORIG")/$(basename "$VIDEO_ORIG" .mp4)-animated.mp4"
+  echo "$VIDEO" > "$LOGD/video-path.txt"; echo "$JOB" > "$LOGD/job-path.txt"; echo "$OUT" > "$LOGD/out-path.txt"
   run copy-back cp -n "$OUT" "$DEST"
   ls -la "$(dirname "$VIDEO_ORIG")" | tee -a "$LOGD/copy-back.log"
   # collect artifacts

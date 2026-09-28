@@ -533,7 +533,8 @@ def probe(video):
     err = p.stderr
     m = re.search(r"Duration: (\d+):(\d+):([\d.]+)", err)
     if not m:
-        die(f"could not read the video: {video}")
+        die(f"could not read the video: {video}. On a Mac, check that Claude Code (VS Code or Terminal) may access this folder: "
+            "System Settings, Privacy & Security, Files and Folders")
     dur = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
     v = re.search(r"Stream #.*Video: .*?(\d{2,5})x(\d{2,5})", err)
     fps = re.search(r"([\d.]+) fps", err)
@@ -727,7 +728,15 @@ def cmd_face(a):
         med = box
     else:
         info = probe(video)
-        casc = cv2.CascadeClassifier(os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml"))
+        xml = os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
+        casc = cv2.CascadeClassifier(xml)
+        if casc.empty():
+            # on Windows opencv cannot open a path with non-ASCII letters (a Hebrew user folder): load it from memory
+            fs = cv2.FileStorage(Path(xml).read_text(encoding="utf-8"), cv2.FILE_STORAGE_READ | cv2.FILE_STORAGE_MEMORY)
+            casc = cv2.CascadeClassifier()
+            casc.read(fs.getFirstTopLevelNode())
+        if casc.empty():
+            die("the face finder could not load. Measure the face by eye and run: kit face <video> --manual x0 y0 x1 y1")
         boxes, times = [], []
         n = 30
         say("looking for the face in 30 frames")
@@ -1287,7 +1296,7 @@ FULLSCREEN = [
 def layout(t):
     """Where the video is at time t. See the style file for which modes this style uses."""
     for hide_at, show_at, dot in FULLSCREEN:
-        if hide_at - 0.25 <= t < show_at + 0.35:
+        if hide_at - 0.25 <= t < (show_at + 0.35 if show_at is not None else float("inf")):
             return iris(t, hide_at, show_at, FACE["center"], dot, BG, INK)
     return {"mode": "full", "bg": BG}
 

@@ -61,7 +61,7 @@ Create the skill folder and enter it. Download straight into it: moving or delet
 mkdir -p ~/.claude/skills/style-maker && cd ~/.claude/skills/style-maker
 ```
 
-(On Windows in Git Bash the same line works. Without Git Bash: `mkdir %USERPROFILE%\.claude\skills\style-maker` and `cd` into it.) Then download four files into it, with exactly these names:
+(On Windows in Git Bash the same line works. Without Git Bash, in PowerShell: `New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\style-maker"; Set-Location "$env:USERPROFILE\.claude\skills\style-maker"`.) Then download four files into it, with exactly these names:
 
 ```
 SKILL.md   https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/skills/style-maker/SKILL.md
@@ -70,7 +70,7 @@ kit.py     https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/s
 makers.md  https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/style-maker/RUNBOOK-makers.md
 ```
 
-On Mac: `curl -fsSL -o <file name> <url>`. On Windows: `curl.exe -fsSL -o <file name> <url>`.
+Give the full target path, not only the file name, so the files land in the skill folder even if the working folder changed. On Mac: `curl -fsSL -o ~/.claude/skills/style-maker/<file name> <url>`. On Windows in PowerShell: `curl.exe -fsSL -o "$env:USERPROFILE\.claude\skills\style-maker\<file name>" <url>`, and in Git Bash as on Mac, with `curl.exe`.
 
 The fourth file is saved as `makers.md`, not under the name in its URL. That is the name the skill looks for.
 
