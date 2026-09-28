@@ -6,7 +6,7 @@ The owner brought a MAKERS gift to install: the reel style builder (style-maker)
 
 A skill that asks the owner how their animation should look and sound, writes their own style as a skill, and applies it to a vertical video in which they talk to camera. At the end there is an MP4 with animation and sound beside the original video.
 
-Inside a MAKERS system it does one more thing. It reads what the system already knows about the owner in `1-me/` and their design brief if they have one, so it asks at most three questions. The layer file `makers.md`, installed with the skill, does that.
+Inside a MAKERS system it does one more thing. It reads what the system already knows about the owner in `1-me/` and their design brief if they have one, so it asks only the style questions it cannot answer itself, once, in one message. That is the one deliberate exception to the three-question cap: the answers become a style the owner reuses on every later video without being asked again. The layer file `makers.md`, installed with the skill, does that.
 
 ## Decisions already made for you
 

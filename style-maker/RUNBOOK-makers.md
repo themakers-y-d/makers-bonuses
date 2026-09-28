@@ -15,8 +15,8 @@ Messages to the owner below are in Hebrew, word for word. Everything else is ins
 Check that `1-me/summary.md` exists in the folder you are working in. If it does not, this is not a MAKERS system: stop reading this file and follow SKILL.md as it is.
 
 If it does, first run the search of step 2 and the reading of step 3 silently, without sending anything, so you know whether a brief exists and whether `1-me/` answers anything. Then run step 1 of SKILL.md (the check, asking for the video, and the "ככה זה ילך" message), with one change to item 1 of that message's numbered list. Replace it with:
-• When a brief was found or `1-me/` answers at least one question: "1) עד שלוש שאלות קצרות על הסגנון. חלק מהתשובות כבר אצלי, מהמערכת שלך."
-• Otherwise: "1) עד שלוש שאלות קצרות על הסגנון."
+• When a brief was found or `1-me/` answers at least one question: "1) כמה שאלות קצרות על הסגנון, בהודעה אחת, כ-3 דקות. חלק מהתשובות כבר אצלי, מהמערכת שלך."
+• Otherwise: "1) שבע שאלות קצרות על הסגנון, בהודעה אחת, כ-3 דקות."
 
 Then continue with step 2, sending its message if it has one.
 
@@ -27,7 +27,7 @@ If a style already exists and the owner asked to apply it to a video, go straigh
 Run:
 
 ```bash
-find . -maxdepth 6 -name '*.css' -not -path './.claude/*' -not -path './3-work/done/*' -not -path '*/node_modules/*' -exec grep -l ':root' {} + 2>/dev/null; ls 5-library/design-brief 2>/dev/null
+grep -rl ':root' --include='*.css' --exclude-dir=.claude --exclude-dir=done --exclude-dir=node_modules . 2>/dev/null; ls 5-library/design-brief 2>/dev/null
 ```
 
 A CSS file with `:root` and `--` variables is a design brief's colour file. The brief itself is the `.md` file in the same folder whose name contains `brief`, if there is one. It usually holds rules and no hex values at all, because the numbers live in the colour file, and it is still the brief: read it. A `5-library/design-brief/` folder holding only a `.md` with hex colours in it, with no CSS, is also a brief. When the same brief shows up in `5-library/design-brief/` and somewhere else, use the one in `5-library/design-brief/` and do not ask.
@@ -83,38 +83,40 @@ Only when there is a brief. From its colour file and the brief:
 
 Question 3 is answered: colour codes, axis 4 option ג, with these colours.
 
-## שלב 5. One wave, at most three questions
+## שלב 5. One wave, every question that is still open
 
-The system allows at most three questions per request, in one wave. Build the wave:
+**This is the one place where the system's three-question cap does not apply, on purpose.** The questions are the product: answering them is how the owner finds their style, and it happens once. The personal style it produces is reused on every later video without a single question. So ask every style question that steps 3 and 4 did not answer, all of them in one message, and nothing that is already known.
+
+Build the wave:
 
 1) Drop every question that steps 3 and 4 answered.
-2) From the rest, in this order, keep the first three: 1, 4, 5, 3, 6, 7, 2. Copy each one word for word from step 2 of SKILL.md, keeping its original number, so the derivation rules in axes.md still apply. When step 3 found the field, the audience and the ending, question 1 shrinks to "1) על מה הסרטון הזה, במשפט?" and moves to the end of the order.
-3) Every question left out takes the safe option from "לא יודע" in axes.md, with one exception: a shrunk question 1 left out takes nothing from there. Its topic comes from the transcript in step 9 of SKILL.md, and the field and the ending stay as step 3 found them.
+2) Keep all the rest, in their original order and with their original numbers, copied word for word from step 2 of SKILL.md, so the derivation rules in axes.md still apply. When step 3 found the field, the audience and the ending, question 1 shrinks to "1) על מה הסרטון הזה, במשפט?".
 
-The top block holds one line for every question that is not in the wave, and only those. A line answered from the system reads as below. A line left out by the cap reads "<הנושא>: בחרתי <האפשרות, במילים> כברירת מחדל. אפשר לשנות בהמשך." For colours without a brief: "צבעים: אין לי בריף שלך, אז בחרתי פלטה בהירה ונקייה. אפשר לשנות, או לכתוב לי קודי צבע." Nothing is chosen for the owner without a line.
+The top block holds one line for every question that was answered from the system, and one line for every axis a brief rule settled on its own (for example "תנועה: הבריף שלך אוסר קפיצה, אז התנועה תהיה רגועה וחלקה"). Nothing is chosen for the owner without a line.
 
-When no line came from the system, the block opens with: "המערכת שלך עוד לא מכירה אותך מספיק כדי לענות במקומך. כשתמלא את הפרופיל שלך, בפעם הבאה אשאל פחות." That line is what tells the owner that filling `1-me/` saves them questions, so it is never dropped.
+When there is no usable logo (no brief, or a brief whose logo file is missing or empty) and question 3 is not already in the wave, the wave ends with one more line: "ועוד דבר: יש לך קובץ לוגו לסוף הסרטון? גרור אותו לכאן, או כתוב 'אין'." A logo that arrives is opened and checked like the brief's logo in step 4.
+
+When no line came from the system, replace the block's heading, its lines and the line "ועכשיו רק מה שחסר לי..." with this single line, and go straight to the questions: "המערכת שלך עוד לא מכירה אותך מספיק כדי לענות במקומך, אז הנה כל השאלות. זה קורה פעם אחת: מהתשובות אני בונה סגנון שנשמר אצלך. כשתמלא את הפרופיל שלך, בפעם הבאה שתבנה סגנון אשאל פחות." That line is what tells the owner that filling `1-me/` saves them questions, so it is never dropped.
 
 Send:
 
 ```
-מה כבר ידוע לי, ומה בחרתי. אם משהו לא נכון, תקן:
+מה כבר ידוע לי מהמערכת שלך. אם משהו לא נכון, תקן:
 • התחום: <מ-1-me>
 • הסרטונים מדברים אל: <מ-audience.md>
 • בסוף הצופה: <המילים שהצופה יקרא, מ-offers.md>
 • הטון בסרטונים: <האפשרות, מ-voice.md>
 • צבעים: מהבריף שלך. רקע <hex>, טקסט <hex>, ראשי <hex>, מבטא <hex>
-<a line for each question left out by the cap>
 
-ועכשיו רק מה שחסר לי:
+ועכשיו רק מה שחסר לי. זה קורה פעם אחת: מהתשובות אני בונה סגנון שנשמר אצלך, ובסרטונים הבאים לא אשאל שוב.
 
-<the questions kept, word for word>
+<every open question, word for word>
 
-אפשר לענות בקיצור, למשל: <an example built only from the questions kept: a letter for each multiple-choice one, a few words for question 1 if it was kept, never an answer the top block already gave>
+אפשר לענות בקיצור, למשל: <an example built only from the questions asked: a letter for each multiple-choice one, a few words for question 1, never an answer the top block already gave>
 על כל שאלה אפשר לכתוב "לא יודע", ואבחר את האפשרות הבטוחה.
 ```
 
-Do not send the extra-tuning line from SKILL.md step 2 in a MAKERS system. Tuning happens through notes after the first video. If the owner answers tuning questions anyway, or changes a line that was not asked, take it: an explicit answer always wins over a default.
+After the answers, send the extra-tuning line from SKILL.md step 2 as it is, and on yes the five questions from axes.md. If the owner changes a line of the top block, take it: an explicit answer always wins over what the system knew.
 
 ## שלב 6. Derive, confirm, write the style
 
@@ -122,7 +124,7 @@ Run steps 3, 4 and 5 of SKILL.md, with these changes, the ones marked "with a br
 
 1) Step 3 there, with a brief: question 3 is answered. Do not run `palette` and do not offer palettes, not in step 3 and not in item 6 of step 6 there.
 2) Step 4 there: keep each line's number and option letter, as SKILL.md does, so "2ב" can be answered, and describe it in plain words the owner uses ("איך אתה מופיע", "איך הדברים זזים"), not the axis names. Right above the lines say once: "המספרים כאן הם של השורות למטה, לא של השאלות מקודם." After them and before the question about changes, one short paragraph. With a brief: "מהבריף שלך: <הצבעים, הרדיוס, ומה מהכללים נכנס>. לא נכנס: הגופן, כי האנימציה כותבת ב-Assistant שנבדק לעברית<, ועוד מה שלא נכנס ולמה>. בחרתי לבד, כי הבריף לא הגדיר: <רשימה, או 'כלום'>." Without a brief: "את הצבעים בחרתי בלי בריף. כשיהיה לך, אפשר לבנות את הסגנון מחדש ממנו."
-3) Step 5 there, with a brief: in the style's "נבנה ב-" line add "מהבריף שב-<הנתיב>". This replaces SKILL.md's instruction that "הערות שנשמרו" stays empty: after its explanation line, add one line per brief rule that entered the style, both "אסור" lines and "never text / never a word" rules, and only rules about colour, shape, motion or the mark: `• <תאריך> מהבריף, בכפוף ל-14 החוקים הקבועים: "<הכלל כלשונו>"`. These lines never override the fixed rules, on this run or any later one. A brief rule that could not enter only because a file was missing (a mark with no image) gets a line too: `• <תאריך> מהבריף, ממתין לקובץ: "<הכלל כלשונו>"`, so a later run picks it up once the file exists. Inside the quoted rule, a long dash becomes a comma, double quotes become single quotes, and `<` or `>` become words, because step 5's check counts all of them.
+3) Step 5 there, always: in the style's "נבנה ב-" line write "התשובות המקוריות" without a number, list both the owner's answers and what came from the system, and take the closing words of line 12 from the "בסוף הצופה" line the owner saw in step 5. With a brief, add "מהבריף שב-<הנתיב>". This replaces SKILL.md's instruction that "הערות שנשמרו" stays empty: after its explanation line, add one line per brief rule that entered the style, both "אסור" lines and "never text / never a word" rules, and only rules about colour, shape, motion or the mark: `• <תאריך> מהבריף, בכפוף ל-14 החוקים הקבועים: "<הכלל כלשונו>"`. These lines never override the fixed rules, on this run or any later one. A brief rule that could not enter only because a file was missing (a mark with no image) gets a line too: `• <תאריך> מהבריף, ממתין לקובץ: "<הכלל כלשונו>"`, so a later run picks it up once the file exists. Inside the quoted rule, a long dash becomes a comma, double quotes become single quotes, and `<` or `>` become words, because step 5's check counts all of them.
 
 ## שלב 7. From installation to the file
 
