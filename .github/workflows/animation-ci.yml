@@ -138,3 +138,27 @@ jobs:
           winget show --id Git.Git -e --source winget --accept-source-agreements | Out-String
           "--- scope user manifest:"
           winget show --id Git.Git -e --source winget --scope user --accept-source-agreements | Out-String
+
+  windows-hebrew-face-fix-probe:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Hebrew + space profile
+        shell: pwsh
+        run: |
+          $p = "C:\Users\דנה כהן"
+          New-Item -ItemType Directory -Force "$p\.claude\skills\style-maker" | Out-Null
+          "HOME=$p" | Add-Content $env:GITHUB_ENV -Encoding utf8
+          "USERPROFILE=$p" | Add-Content $env:GITHUB_ENV -Encoding utf8
+          curl.exe -fsSL -o "$p\.claude\skills\style-maker\SKILL.md" "$env:RAW/SKILL.md"
+      - name: base install from the published SKILL.md, then only opencv + numpy + imageio-ffmpeg
+        shell: bash
+        run: |
+          mkdir -p ~/reel-studio
+          awk '/וכתוב לתוכה את הקובץ `install.sh`/{f=1;next} f&&/^```bash/{g=1;next} g&&/^```/{exit} g' ~/.claude/skills/style-maker/SKILL.md > ~/reel-studio/install.sh
+          bash ~/reel-studio/install.sh base
+          cd ~/reel-studio && VIRTUAL_ENV="$HOME/reel-studio/.venv" UV_CACHE_DIR="$HOME/reel-studio/tools/cache" tools/uv/uv pip install numpy==2.5.3 opencv-python-headless==4.14.0.94 imageio-ffmpeg==0.6.0
+      - name: probe the current load and the proposed in-memory load
+        shell: bash
+        run: ~/reel-studio/.venv/Scripts/python.exe ci/animation/face-fix-probe.py ci/animation/test-reel.mp4
