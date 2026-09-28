@@ -96,9 +96,11 @@ jobs:
       - name: INSTALL.md in Git Bash ("as on Mac, with curl.exe"), into a scratch folder under the same profile
         shell: bash
         run: |
-          D=~/.claude/skills/gitbash-probe; mkdir -p $D
-          for c in curl.exe curl; do $c -fsSL -o $D/SKILL-$c.md "$RAW/SKILL.md"; echo "$c exit=$? $(which $c)"; done
-          ls -la $D; head -1 $D/SKILL-curl.exe.md
+          # the text's literal form: tilde path, unquoted (tilde expansion is not word-split, so a space in the profile is safe)
+          mkdir -p ~/.claude/skills/gitbash-probe
+          curl.exe -fsSL -o ~/.claude/skills/gitbash-probe/SKILL-curl.exe.md "$RAW/SKILL.md"; echo "curl.exe exit=$? $(which curl.exe)"
+          curl -fsSL -o ~/.claude/skills/gitbash-probe/SKILL-curl.md "$RAW/SKILL.md"; echo "curl exit=$? $(which curl)"
+          ls -la ~/.claude/skills/gitbash-probe; head -1 ~/.claude/skills/gitbash-probe/SKILL-curl.exe.md
       - name: skill part 1 (step 1, install base, libs in background then exit)
         shell: bash
         run: bash ci/animation/run-skill.sh part1
