@@ -96,11 +96,12 @@ jobs:
       - name: INSTALL.md in Git Bash ("as on Mac, with curl.exe"), into a scratch folder under the same profile
         shell: bash
         run: |
-          # the text's literal form: tilde path, unquoted (tilde expansion is not word-split, so a space in the profile is safe)
+          # 1) full -o path to a (possibly Hebrew) profile, Git's curl: recorded, expected to fail on a Hebrew profile
           mkdir -p ~/.claude/skills/gitbash-probe
-          curl.exe -fsSL -o ~/.claude/skills/gitbash-probe/SKILL-curl.exe.md "$RAW/SKILL.md"; echo "curl.exe exit=$? $(which curl.exe)"
-          curl -fsSL -o ~/.claude/skills/gitbash-probe/SKILL-curl.md "$RAW/SKILL.md"; echo "curl exit=$? $(which curl)"
-          ls -la ~/.claude/skills/gitbash-probe; head -1 ~/.claude/skills/gitbash-probe/SKILL-curl.exe.md
+          curl -fsSL -o ~/.claude/skills/gitbash-probe/full-path.md "$RAW/SKILL.md" && echo "full-path form OK" || echo "full-path form FAILED rc=$?"
+          # 2) the install text's Git Bash form: cd, then a relative file name. Must succeed.
+          for f in SKILL.md axes.md kit.py; do cd ~/.claude/skills/gitbash-probe && curl -fsSL -o $f "$RAW/$f" || exit 1; done
+          ls -la ~/.claude/skills/gitbash-probe; head -1 ~/.claude/skills/gitbash-probe/SKILL.md
       - name: skill part 1 (step 1, install base, libs in background then exit)
         shell: bash
         run: bash ci/animation/run-skill.sh part1

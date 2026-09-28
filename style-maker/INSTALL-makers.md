@@ -70,7 +70,7 @@ kit.py     https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/s
 makers.md  https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/style-maker/RUNBOOK-makers.md
 ```
 
-Give the full target path, not only the file name, so the files land in the skill folder even if the working folder changed. On Mac: `curl -fsSL -o ~/.claude/skills/style-maker/<file name> <url>`. On Windows in PowerShell: `curl.exe -fsSL -o "$env:USERPROFILE\.claude\skills\style-maker\<file name>" <url>`, and in Git Bash as on Mac, with `curl.exe`.
+Chain each download to the `cd`, so the files land in the skill folder even if the working folder was reset. On Mac, and on Windows in Git Bash: `cd ~/.claude/skills/style-maker && curl -fsSL -o <file name> <url>`. On Windows in PowerShell: `curl.exe -fsSL -o "$env:USERPROFILE\.claude\skills\style-maker\<file name>" <url>`.
 
 The fourth file is saved as `makers.md`, not under the name in its URL. That is the name the skill looks for.
 
