@@ -33,7 +33,7 @@ They also need the kit: the `ig-dm-automation` folder from the MAKERS bonuses re
 
    Open it for them in a text editor, `open -e ~/.config/ig-dm/zernio.env` on a Mac or `notepad "$HOME/.config/ig-dm/zernio.env"` on Windows, and tell them an empty window will open. They paste the line, save with Cmd+S on a Mac or Ctrl+S on Windows, and close it.
 
-   Never into the chat, never into a repo, and never into iCloud, OneDrive, Dropbox or an external drive. A scheduled run is blocked from synced drives and fails silently, which looks exactly like a bug in the code.
+   Never into the chat, never into a repo, and never into iCloud, OneDrive, Dropbox or an external drive. That way the key never syncs to any cloud and stays only on this machine.
 
 6) **Prove the connection with one visible read before building anything.** Run `node kit/zernio.mjs doctor`. It must come back with their own Instagram handle. Their handle on the screen is proof. The word "connected" is a claim.
 

@@ -5,8 +5,8 @@
 //
 // Hard rules baked in:
 //   - the API key is read from ~/.config/ig-dm/zernio.env (local disk, never a synced
-//     folder like iCloud or Dropbox, never this repo). A scheduled run is blocked from
-//     synced and external drives and fails silently, which looks exactly like a code bug.
+//     folder like iCloud, OneDrive or Dropbox, never this repo), so the key never syncs
+//     to any cloud and stays only on this machine.
 //   - the key is never printed, never logged, never echoed back in errors.
 //   - every subcommand prints what it is about to do BEFORE it does it.
 //   - writes are dry-run by default. --apply is required to touch the live account.
