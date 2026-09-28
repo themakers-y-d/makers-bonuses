@@ -534,7 +534,8 @@ def probe(video):
     m = re.search(r"Duration: (\d+):(\d+):([\d.]+)", err)
     if not m:
         die(f"could not read the video: {video}. On a Mac, check that Claude Code (VS Code or Terminal) may access this folder: "
-            "System Settings, Privacy & Security, Files and Folders")
+            "System Settings, Privacy & Security, Files and Folders. On Windows, if the video is in OneDrive, make sure it is "
+            "on this computer: right click the file, Always keep on this device")
     dur = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
     v = re.search(r"Stream #.*Video: .*?(\d{2,5})x(\d{2,5})", err)
     fps = re.search(r"([\d.]+) fps", err)

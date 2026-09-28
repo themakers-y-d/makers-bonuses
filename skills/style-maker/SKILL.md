@@ -14,7 +14,7 @@ description: Builds the owner a personal animation style for talking-head reels,
 ## שלב 1. לבדוק מה כבר יש, ולהגיד מראש מה יקרה
 
 לפני הכל: אם אתה על ווינדוס, בדוק שכלי הפקודות שלך הוא bash (`echo $BASH_VERSION` מדפיס מספר גרסה, וב-PowerShell הוא מדפיס שורה ריקה). אם הכלי שלך הוא PowerShell, או ש-bash לא נמצא, הסקיל הזה צריך את Git for Windows. בדוק ב-PowerShell אם הוא כבר מותקן: `@("$env:ProgramFiles\Git\bin\bash.exe", "$env:LOCALAPPDATA\Programs\Git\bin\bash.exe") | Where-Object { Test-Path $_ }`.
-• לא הודפס כלום: אמור לבעלים: "כדי להלביש אנימציה אני צריך את Git for Windows, כלי חינמי שקלוד קוד משתמש בו כדי להריץ פקודות. ההתקנה לוקחת כמה דקות, ווינדוס עשוי לפתוח חלון שמבקש אישור מנהל, ואז מאשרים. מאשר שאתקין?" אחרי אישור הרץ ב-PowerShell, עם זמן המתנה של עשר דקות: `winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements`. ואז הרץ שוב את בדיקת ההתקנה.
+• לא הודפס כלום: אמור לבעלים: "כדי להלביש אנימציה אני צריך את Git for Windows, כלי חינמי שקלוד קוד משתמש בו כדי להריץ פקודות. ההתקנה לוקחת כמה דקות, ווינדוס עשוי לפתוח חלון שמבקש אישור מנהל, ואז מאשרים. מאשר שאתקין?" אחרי אישור הרץ ב-PowerShell, עם זמן המתנה של עשר דקות: `winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements`. אם winget לא נמצא או נכשל, תן לבעלים את הקישור https://git-scm.com/download/win ואמור לו להוריד את הקובץ, להריץ אותו ולאשר את ברירות המחדל. ואז הרץ שוב את בדיקת ההתקנה.
 • הודפס נתיב, ו-`$env:CLAUDE_CODE_GIT_BASH_PATH` ריק: הרץ ב-PowerShell `setx CLAUDE_CODE_GIT_BASH_PATH "<הנתיב שהודפס>"`, כדי ש-Claude Code ימצא את bash בפתיחה הבאה. אמור לבעלים: "Git for Windows מותקן. עכשיו סגור את כל החלון של הטרמינל או של VS Code, לא רק את Claude Code, פתח חלון חדש, הפעל בו את Claude Code וכתוב שוב 'תבנה לי סגנון לרילס'." עצור כאן.
 • הודפס נתיב, ו-`$env:CLAUDE_CODE_GIT_BASH_PATH` כבר מלא: הבעלים כבר פתח חלון חדש, ו-Claude Code עדיין לא מריץ bash. אל תתקין שוב. אמור לבעלים: "Git for Windows מותקן, אבל Claude Code עוד לא משתמש בו. הפעל מחדש את המחשב, פתח את Claude Code וכתוב שוב 'תבנה לי סגנון לרילס'. אם גם אז זה לא עובד, זה המקום לעצור ולבקש עזרה." עצור כאן.
 
@@ -218,7 +218,7 @@ bash ~/reel-studio/kit wait ~/reel-studio/model.log "MODEL READY"
 
 ## שלב 8. לקלוט את הסרטון
 
-בכל הפקודות מכאן `<video>` הוא הנתיב המלא לסרטון, במירכאות. בווינדוס, נתיב כמו `C:\Users\dana\Videos\reel.mp4` נכתב בפקודות כ-`/c/Users/dana/Videos/reel.mp4` (אות הכונן קטנה, לוכסנים רגילים). ובווינדוס, כשאתה מריץ סקריפט פייתון קצר משלך (למשל לתיקון words.json), הקדם לו `PYTHONIOENCODING=utf-8`, אחרת הדפסה של עברית נכשלת.
+בכל הפקודות מכאן `<video>` הוא הנתיב המלא לסרטון, במירכאות. בווינדוס, נתיב כמו `C:\Users\dana\Videos\reel.mp4` נכתב בפקודות כ-`/c/Users/dana/Videos/reel.mp4` (אות הכונן קטנה, לוכסנים רגילים). ובווינדוס, כשאתה מריץ סקריפט פייתון קצר משלך (למשל לתיקון words.json), הקדם לו `PYTHONIOENCODING=utf-8` (ב-Git Bash, כמו כל הפקודות כאן), אחרת הדפסה של עברית נכשלת.
 
 במק, בפעם הראשונה שקוראים סרטון מהורדות, משולחן העבודה או ממסמכים, macOS עשוי לפתוח חלון שמבקש גישה לתיקייה. אמור לבעלים לפני שאתה נוגע בסרטון: "אם יופיע חלון שמבקש גישה לתיקייה של הסרטון, לחץ אישור (Allow)."
 
