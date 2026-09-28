@@ -159,7 +159,8 @@ jobs:
       - name: INSTALL.md (new) in PowerShell, from an unrelated folder, Hebrew profile
         run: |
           "PSVersion $($PSVersionTable.PSVersion)"
-          $env:USERPROFILE = "C:\Users\דנה כהן"
+          # built from code points: Windows PowerShell 5.1 reads a BOM-less script file as ANSI (a harness limit, not the skill)
+          $env:USERPROFILE = "C:\Users\" + (-join [char[]](0x05D3,0x05E0,0x05D4,0x20,0x05DB,0x05D4,0x05DF))
           New-Item -ItemType Directory -Force "$env:RUNNER_TEMP\elsewhere" | Out-Null; Set-Location "$env:RUNNER_TEMP\elsewhere"
           New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\style-maker" | Out-Null
           foreach ($f in 'SKILL.md','axes.md','kit.py') { curl.exe -fsSL -o "$env:USERPROFILE\.claude\skills\style-maker\$f" "$env:RAW/$f"; "$f exit=$LASTEXITCODE" }
@@ -186,7 +187,8 @@ jobs:
           curl.exe -fsSL -o INSTALL-makers.md "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/${{ github.sha }}/style-maker/INSTALL-makers.md"; "exit=$LASTEXITCODE size=$((Get-Item INSTALL-makers.md).Length)"
       - name: INSTALL-makers.md line 64 (new) verbatim, then the download into it
         run: |
-          $env:USERPROFILE = "C:\Users\דנה כהן"
+          # built from code points: Windows PowerShell 5.1 reads a BOM-less script file as ANSI (a harness limit, not the skill)
+          $env:USERPROFILE = "C:\Users\" + (-join [char[]](0x05D3,0x05E0,0x05D4,0x20,0x05DB,0x05D4,0x05DF))
           Set-Location $env:RUNNER_TEMP
           New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\style-maker" | Out-Null; Set-Location "$env:USERPROFILE\.claude\skills\style-maker"
           "cwd now: $(Get-Location)"
