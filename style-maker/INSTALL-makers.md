@@ -12,9 +12,7 @@ Inside a MAKERS system it does one more thing. It reads what the system already 
 
 Do not spend questions on them.
 
-**The install:** the Vibecoder runs steps 2 to 4, because they run commands and write outside the system folder. They need no conversation, so its own window suits it. You say the lines to the owner before and after, and you write the button in step 5, because `.claude/` inside the system is yours and not the Vibecoder's.
-
-**Every run after it:** the Designer, in the main conversation. The job is how a video looks, and the skill is a conversation that stops for the owner several times. The Vibecoder works in its own window and cannot hold that conversation, and nothing here touches a live system or money. No chain.
+**Who does the work: the Designer, in the main conversation, from step 2 to the end, install included, and on every run after it.** The job is how a video looks, and the skill is a conversation that stops for the owner several times. The install commands run in this same conversation: there is no worker in a window of its own to hand them to. You open the Designer's file in step 1 and it takes it from there. Nothing here touches a live system or money. No chain.
 
 **The project:** `3-work/now/reels/`. If it exists, work inside it.
 
@@ -36,16 +34,18 @@ Do not spend questions on them.
 
 If this is the owner's first session and your own file asks for a first-session line, say it first, in one line, then continue here.
 
-Then send this, and hand steps 2 to 4 to the Vibecoder:
+Then send this:
 
 ```
-מתקין לך את בונה הסגנון לרילס, דרך ה-Vibecoder. זה לוקח כמה דקות: ארבעה קבצים שיורדים מגיטהאב לתיקיית הסקילים שלך, וכפתור אחד בתפריט. זה לא נוגע בשום דבר חי.
+זו עבודה של המעצב שלך. הוא מתקין לך את בונה הסגנון לרילס, כאן בשיחה הזו. זה לוקח כמה דקות: ארבעה קבצים שיורדים מגיטהאב לתיקיית הסקילים שלך, וכפתור אחד בתפריט. זה לא נוגע בשום דבר חי.
 תוך כדי יופיעו כמה בקשות לאשר כתיבה לתיקיית ההגדרות של Claude Code ולהריץ פקודות. זה רגיל, אשר. אם תרצה להסיר את זה אחר כך, אגיד לך איך בסוף.
 ```
 
+Then open `2-makers/designer/designer.md`, become the Designer for the rest of this file, and continue at step 2.
+
 ### שלב 2. What is already installed
 
-Vibecoder: Morty has already told the owner in one paragraph what is about to happen and that nothing live is touched, and step 5 gives them the undo. Pasting the install message was the owner's yes. Do not stop to ask again; go through steps 2 to 4 and report back to Morty in one line.
+Step 1 has already told the owner in one paragraph what is about to happen and that nothing live is touched, and step 5 gives them the undo. Pasting the install message was the owner's yes. Do not stop to ask again; go through steps 2 to 4 without a message to the owner in between.
 
 ```bash
 ls ~/.claude/skills/style-maker 2>/dev/null; find ~/.claude/skills -maxdepth 1 -name 'reel-style-*' 2>/dev/null
@@ -87,20 +87,20 @@ cd ~/.claude/skills/style-maker && grep -l '^404' SKILL.md axes.md kit.py makers
 
 Expected: the line `---`, then `# MAKERS layer for style-maker`, then a number of at least 2 (the skill knows about the layer), then a size for each of the four files and a total, none of them zero, and the last line printing nothing.
 
-Anything wrong: download the bad file once more. If it fails again, report back in one line that the download from GitHub does not go through, and stop. Nothing is deleted: pasting the install message again later finishes the job, and an older working version keeps working until then except for the file that failed.
+Anything wrong: download the bad file once more. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted: pasting the install message again later finishes the job, and an older working version keeps working until then except for the file that failed.
 
-Report to Morty in one line; the owner does not need the numbers.
+All as expected: continue to step 5 without a message; the owner does not need the numbers.
 
 ### שלב 5. The button, and what you tell the owner
 
-After the Vibecoder reports success, and only then, write the button yourself: `.claude/commands/reel-style.md` in the system folder, with exactly this content:
+After step 4 passed, and only then, write the button: `.claude/commands/reel-style.md` in the system folder, with exactly this content:
 
 ```
 ---
 description: בונה לך סגנון אנימציה משלך לרילס, או מלביש את הסגנון שלך על סרטון חדש
 ---
 
-Open `2-makers/designer/designer.md` and become that agent for this request, in this conversation. Do not hand it to the Vibecoder subagent: it cannot hold the back-and-forth this needs.
+Open `2-makers/designer/designer.md` and become that agent for this request, in this conversation. Do not hand it to a worker in a window of its own: it cannot hold the back-and-forth this needs.
 
 Then open `~/.claude/skills/style-maker/SKILL.md` and follow it from step 1. It sends you to the MAKERS layer in `makers.md` beside it.
 

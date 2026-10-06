@@ -5,7 +5,9 @@ description: Sets up the automation where someone replies a keyword on a reel, a
 
 # Connect Instagram comment-to-DM
 
-Owner: the Vibecoder.
+Owner: Morty.
+
+Morty runs it with the owner in the main conversation, under `/connect-a-tool`. Connecting an account is no maker's trade, and the owner is needed in the middle several times, so this never goes to a worker in a window of its own.
 
 ⚠️ This sends messages to real strangers under the owner's name. Follow the steps in order. Where a step says stop, stop.
 

@@ -1,6 +1,6 @@
 ---
 name: style-maker
-description: Builds the owner a personal animation style for talking-head reels, saves it as their own skill, and applies it to a video they filmed, producing an MP4 with animation and sound. Use whenever the owner says things like "תבנה לי סגנון לרילס", "סגנון אנימציה", "תלביש אנימציה על הסרטון", "אנימציה לסרטון שלי", "סאונד ואנימציה לריל", "style-maker", "build my reel style", "animate my reel". Always use this instead of animating a video freehand, because it asks the style questions first, writes the style as a reusable skill, checks the face and timing rules frame by frame, and keeps the owner's notes for next time. Not for editing cuts or subtitles only, and not for videos without a person talking to camera. In a MAKERS system the Designer runs this skill in the main conversation, never the Vibecoder subagent.
+description: Builds the owner a personal animation style for talking-head reels, saves it as their own skill, and applies it to a video they filmed, producing an MP4 with animation and sound. Use whenever the owner says things like "תבנה לי סגנון לרילס", "סגנון אנימציה", "תלביש אנימציה על הסרטון", "אנימציה לסרטון שלי", "סאונד ואנימציה לריל", "style-maker", "build my reel style", "animate my reel". Always use this instead of animating a video freehand, because it asks the style questions first, writes the style as a reusable skill, checks the face and timing rules frame by frame, and keeps the owner's notes for next time. Not for editing cuts or subtitles only, and not for videos without a person talking to camera. In a MAKERS system the Designer runs this skill in the main conversation.
 ---
 
 # בונה הסגנון לרילס
@@ -463,7 +463,7 @@ bash ~/reel-studio/kit verify "<הנתיב של ה-MP4>" --at <3 עד 6 זמני
 ````markdown
 ---
 name: reel-style-<שם>
-description: The personal reel animation style of <שם>. Use whenever the owner says "תלביש את הסגנון שלי", "הסגנון שלי על הסרטון", "אנימציה בסגנון שלי", "apply my style", "reel-style-<שם>", together with a video. Always use this instead of animating a video freehand, because it holds the owner's chosen style, the fixed rules and every note the owner gave. Needs the style-maker skill and the reel-studio folder. In a MAKERS system the Designer runs this skill in the main conversation, never the Vibecoder subagent.
+description: The personal reel animation style of <שם>. Use whenever the owner says "תלביש את הסגנון שלי", "הסגנון שלי על הסרטון", "אנימציה בסגנון שלי", "apply my style", "reel-style-<שם>", together with a video. Always use this instead of animating a video freehand, because it holds the owner's chosen style, the fixed rules and every note the owner gave. Needs the style-maker skill and the reel-studio folder. In a MAKERS system the Designer runs this skill in the main conversation.
 ---
 
 # הסגנון של <שם>
