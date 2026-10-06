@@ -26,6 +26,10 @@ MAKERS/.claude/skills/connect-ig-dm/SKILL.md
 
 הסקיל עובד יחד עם הערכה בתיקיית [ig-dm-automation](../ig-dm-automation/), אז כדאי לשכפל את הריפו הזה ולא רק להוריד קובץ בודד.
 
+### spy
+
+המרגל: קורא את האתרים של שלושה מתחרים, ומוצא את ההבטחה שאף אחד מהם לא נותן. לא צריך מערכת MAKERS, והוא מותקן מהקובץ [spy/INSTALL.md](../spy/INSTALL.md).
+
 ## ממי זה
 
 מבית MAKERS, הסדנה שבונה לך צוות סוכנים שעובד בשבילך: [themakers.co.il](https://themakers.co.il)
