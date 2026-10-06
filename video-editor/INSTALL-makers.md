@@ -48,10 +48,10 @@ Then open `2-makers/designer/designer.md`, become the Designer for the rest of t
 
 First find out which computer this is, without asking: run `uname -s`. `Darwin` is a Mac. `MINGW`, `MSYS` or `CYGWIN` is Windows with Git Bash. Both continue below with the same commands.
 
-If `uname` itself fails, you are on Windows in PowerShell, without Git for Windows, and every command in this file and in the skill needs it. Check in PowerShell whether it is installed but not found: `@("$env:ProgramFiles\Git\bin\bash.exe", "$env:LOCALAPPDATA\Programs\Git\bin\bash.exe") | Where-Object { Test-Path $_ }`.
+If `uname` itself fails, you are on Windows in PowerShell, without Git for Windows, and every command in this file and in the skill needs it. Check in PowerShell whether it is installed but not found: `@("$env:ProgramFiles\Git\bin\bash.exe", "${env:ProgramFiles(x86)}\Git\bin\bash.exe", "$env:LOCALAPPDATA\Programs\Git\bin\bash.exe") | Where-Object { Test-Path $_ }`.
 
 • Nothing printed: say "כדי לערוך וידאו אני צריך את Git for Windows, כלי חינמי שדרכו Claude Code מריץ פקודות. ההתקנה לוקחת כמה דקות, ווינדוס עשוי לפתוח חלון שמבקש אישור, ואז מאשרים. מאשר שאתקין?" After a yes, run in PowerShell, allowing ten minutes: `winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements`. If winget is missing or fails, give the owner https://git-scm.com/download/win and ask them to run the file and accept the defaults. Then run the check above again.
-• A path printed: run `setx CLAUDE_CODE_GIT_BASH_PATH "<that path>"` and say: "Git for Windows מותקן. עכשיו סגור את Claude Code לגמרי, כולל החלון שהוא פתוח בו, פתח אותו שוב באותה תיקייה, והדבק לי שוב את הודעת ההתקנה." Stop here. The next paste starts this file again and `uname` answers.
+• A path printed: run `setx CLAUDE_CODE_GIT_BASH_PATH "<that path>"` and say: "Git for Windows מותקן. עכשיו סגור את Claude Code לגמרי, כולל החלון שהוא פתוח בו, ואם פתחת אותו מתוך טרמינל, סגור גם את הטרמינל. פתח אותו שוב באותה תיקייה, והדבק לי שוב את הודעת ההתקנה." Stop here. The next paste starts this file again and `uname` answers.
 • A path printed and `$env:CLAUDE_CODE_GIT_BASH_PATH` already set: the owner already reopened and it still does not run bash. Do not install again. Say: "Git for Windows מותקן, אבל Claude Code עוד לא משתמש בו. הפעל מחדש את המחשב, פתח את Claude Code והדבק שוב את הודעת ההתקנה." Stop here.
 
 Then check that this is a MAKERS system: a `.claude/skills/` folder beside `1-me/` or `2-makers/`, in the folder you are working in.
@@ -73,9 +73,9 @@ PY=~/reel-studio/.venv/bin/python; [ -x "$PY" ] || PY=~/reel-studio/.venv/Script
 
 Read the result into four facts:
 
-• **The tools.** `LIBS OK` means the Python environment and its libraries are in place, almost always from the reel style builder. No `.venv`, or `LIBS MISSING`, means step 5 installs them. A fresh computer prints nothing here, and that is the usual case, not a fault.
-• **The model.** `models--ivrit-ai--whisper-large-v3-turbo-ct2` is the Hebrew model. `models--Systran--faster-whisper-medium` or `models--Systran--faster-whisper-small` is a general one, which also works. None of them means step 5 downloads one.
-• **An earlier copy of this editor.** `.claude/skills/video-editor` means the owner installed it before: step 6 downloads over it, which is the update.
+• **The tools.** `LIBS OK` means the Python environment and its libraries are in place, almost always from the reel style builder. No `.venv`, or `LIBS MISSING`, means step 6 installs them. A fresh computer prints nothing here, and that is the usual case, not a fault.
+• **The model.** `models--ivrit-ai--whisper-large-v3-turbo-ct2` is the Hebrew model. `models--Systran--faster-whisper-medium` or `models--Systran--faster-whisper-small` is a general one, which also works. None of them means step 6 downloads one.
+• **An earlier copy of this editor.** `.claude/skills/video-editor` means the owner installed it before: step 5 downloads over it, which is the update.
 • **The old method.** `.claude/skills/video-editing-skill` is an older, text-only video method some owners copied from the skills hub. It would compete with this skill for the same sentences, so step 4 asks about it.
 
 ### שלב 4. One message: what happens, and the questions
@@ -101,16 +101,40 @@ Then, in the same message, only the questions that apply, numbered in the order 
 
 Wait for the answer. No answer to the model question is not a yes: nothing downloads until the owner says so. "לא יודע" on the model is the Hebrew one, after the yes to download.
 
-### שלב 5. The tools, only when missing
+### שלב 5. The skill, into the system
+
+The commands are the same on Mac and on Windows in Git Bash. This step comes before the tools because the tools step runs the engine that is in these files. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2. They come from one fixed version of the gift, and each file is checked against its fingerprint, so what runs on the owner's computer is exactly what was tested:
+
+```bash
+REV=f80c45959998e6ea60c0ba32364c6ff46e36fade; D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && for f in SKILL.md craft.md edit.py; do curl -fsSL -o "$D/$f" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/$REV/skills/video-editor/$f" || echo "PROBLEM $f did not download"; done
+```
+
+Claude Code asks the owner to approve writing into `.claude/`. That is expected; it was announced in step 4.
+
+Check the download:
+
+```bash
+D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 32417de3162d3e06ab753be63baec505dd2add1ba499df5c669c83104bda778f SKILL.md 7ccff86a1f142be3134fcbc4e17fb5b0dd58700640f03270f70e1aea63048880 craft.md d27f9fdec1912a91bdcce41a3deaffd09fa9830cad8ee672c0a13bdef4682b16 edit.py | $H -c - )
+```
+
+Expected: three lines, `SKILL.md: OK`, `craft.md: OK`, `edit.py: OK`. `FAILED` on a file: download that file once more with the command above and check again. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted; pasting the install message again later finishes the job.
+
+Then write the launcher, `~/reel-studio/editor`, the one line every later command goes through. It is the same line Step 1 of the skill writes:
+
+```bash
+SK="$(pwd)/.claude/skills/video-editor"; [ -f "$SK/edit.py" ] || { echo "NOT IN THE SYSTEM FOLDER"; exit 1; }; mkdir -p ~/reel-studio && printf '#!/bin/bash\nPY="$HOME/reel-studio/.venv/bin/python"; [ -x "$PY" ] || PY="$HOME/reel-studio/.venv/Scripts/python.exe"\nexport PYTHONIOENCODING=utf-8 PYTHONUTF8=1\nexec "$PY" %q "$@"\n' "$SK/edit.py" > ~/reel-studio/editor && echo LAUNCHER READY
+```
+
+### שלב 6. The tools, only when missing, and the check
 
 On Mac and on Windows in Git Bash the commands of this step are the same: the script below picks the right download for the computer by itself.
 
-When step 3 found `LIBS OK` and a model, skip this step entirely and say nothing about it. Otherwise, write `~/reel-studio/install-editor.sh` with exactly this content. It uses the same pinned versions as the reel style builder, so the two gifts keep sharing one folder:
+When step 3 found `LIBS OK` and a model, skip straight to the check at the end of this step and say nothing about downloads. Otherwise, write `~/reel-studio/install-editor.sh` with exactly this content. It uses the same pinned versions as the reel style builder, so the two gifts keep sharing one folder:
 
 ```bash
 #!/bin/bash
 # The video editor's tools, shared with the reel style builder.
-# base: uv and Python (about a minute). libs: the libraries (the long part). model NAME: the transcription model.
+# base: uv and Python (about a minute). libs: the libraries (the long part).
 # wait LOG MARK: returns within about 90 seconds with READY, STILL RUNNING, STUCK or FAILED.
 STUDIO="$HOME/reel-studio"
 mkdir -p "$STUDIO/tools" "$STUDIO/in" "$STUDIO/models" && cd "$STUDIO" || exit 1
@@ -150,18 +174,6 @@ if [ "$1" = "libs" ]; then
   tools/uv/uv cache clean >/dev/null 2>&1
   echo "INSTALLED $(du -sh "$STUDIO" | cut -f1) in $STUDIO"
 fi
-if [ "$1" = "model" ]; then
-  case "${2:-ivrit}" in
-    ivrit)  ID=ivrit-ai/whisper-large-v3-turbo-ct2; REV=72ad623a37947395efcc3933132353790e5a12f5 ;;
-    medium) ID=medium; REV= ;;
-    small)  ID=small; REV= ;;
-    *) echo "PROBLEM unknown model $2"; exit 1 ;;
-  esac
-  ( while true; do echo "downloaded so far $(du -sm "$STUDIO/models" 2>/dev/null | cut -f1) MB"; sleep 20; done ) & WATCH=$!
-  HF_HUB_DISABLE_TELEMETRY=1 "$PY" -c "import sys; from faster_whisper.utils import download_model; p = download_model(sys.argv[1], cache_dir=sys.argv[2], revision=sys.argv[3] or None); print('MODEL READY', p)" "$ID" "$STUDIO/models" "$REV"; RC=$?
-  kill $WATCH 2>/dev/null
-  [ $RC = 0 ] || echo "PROBLEM the model did not download"
-fi
 if [ "$1" = "wait" ]; then
   LOG="$2"; MARK="$3"; T=0
   while [ $T -lt 90 ]; do
@@ -180,45 +192,25 @@ Then run the parts the facts of step 3 call for, in this order, skipping any tha
 
 1) Without `.venv`: `bash ~/reel-studio/install-editor.sh base`, in the foreground, allowing ten minutes; it usually takes a minute. Done when `BASE READY` prints.
 2) Without `LIBS OK`: tell the owner "מתקין עכשיו את הספריות, בין שלוש לעשר דקות, עם שקט ביניהן. זה תקין." and run it in the background, with your tool's background option or `nohup bash ~/reel-studio/install-editor.sh libs > ~/reel-studio/install.log 2>&1 &`. Then wait: `bash ~/reel-studio/install-editor.sh wait ~/reel-studio/install.log INSTALLED`.
-3) Without a model: tell the owner "מוריד עכשיו את מודל התמלול, בין חמש לחמש עשרה דקות. אכתוב לך כמה ירד." and run, in the background the same way, `bash ~/reel-studio/install-editor.sh model ivrit > ~/reel-studio/model.log 2>&1` (or `model small` when the owner chose ב). Then wait: `bash ~/reel-studio/install-editor.sh wait ~/reel-studio/model.log "MODEL READY"`.
+3) Without a model: tell the owner "מוריד עכשיו את מודל התמלול, בין חמש לחמש עשרה דקות. אכתוב לך כמה ירד." and run the engine's own `model` command, in the background the same way: `nohup bash ~/reel-studio/editor model ivrit > ~/reel-studio/model.log 2>&1 &` (or `model small` when the owner chose ב). It prints how much has arrived every fifteen seconds. Then wait: `bash ~/reel-studio/editor wait ~/reel-studio/model.log "MODEL READY"`.
 
-Each `wait` returns within about a minute and a half. `STILL RUNNING`: tell the owner in one line how far it got (the megabytes on the last line) and run it again. `READY`: next part. `STUCK`: run the same part once more; the model download continues where it stopped. `FAILED` on the libraries: show the owner the last lines in one sentence and run the part once more. `FAILED` on the Hebrew model: download `model medium` instead and tell the owner in one line. A warning about `HF_TOKEN` or symlinks in the log is harmless.
+Each `wait` returns within about a minute and a half. `STILL RUNNING`: tell the owner in one line how far it got (the size on the last line) and run it again. `READY`: next part. `STUCK` means five minutes without a single new line, although the engine prints one at least every minute while it works: run the same part once more; the model download continues where it stopped. `FAILED` on the libraries: show the owner the last lines in one sentence and run the part once more. `FAILED` on the Hebrew model: run the same part with `model medium` instead (`nohup bash ~/reel-studio/editor model medium > ~/reel-studio/model.log 2>&1 &`) and tell the owner in one line. A warning about `HF_TOKEN` or symlinks in the log is harmless.
 
 If `base` fails on a Windows computer with an ARM processor, run it again this way, then `libs` again as in item 2. On a Mac this line does nothing:
 
 ```bash
 case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) PYVER=cpython-3.12-windows-x86_64-none bash ~/reel-studio/install-editor.sh base ;; esac
 ```
- Any other failure twice: show the owner the last three lines, say in one sentence what is missing, and stop. The script is safe to run again later; nothing is deleted.
 
-### שלב 6. The skill, into the system
+Any other failure twice: show the owner the last three lines, say in one sentence what is missing, and stop. The script is safe to run again later; nothing is deleted.
 
-The commands are the same on Mac and on Windows in Git Bash. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2:
-
-```bash
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && for f in SKILL.md craft.md edit.py; do curl -fsSL -o "$D/$f" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/main/skills/video-editor/$f" || echo "PROBLEM $f did not download"; done
-```
-
-Claude Code asks the owner to approve writing into `.claude/`. That is expected; it was announced in step 4.
-
-Check the download, each line on its own so one failure does not hide another:
+**The check,** always, also when nothing was downloaded:
 
 ```bash
-D="$(pwd)/.claude/skills/video-editor"; head -2 "$D/SKILL.md"
-D="$(pwd)/.claude/skills/video-editor"; sed -n 's/^description: //p' "$D/SKILL.md" | grep -c ': '; true
-D="$(pwd)/.claude/skills/video-editor"; wc -c "$D/SKILL.md" "$D/craft.md" "$D/edit.py"
-D="$(pwd)/.claude/skills/video-editor"; grep -l '^404' "$D/SKILL.md" "$D/craft.md" "$D/edit.py"; true
+bash ~/reel-studio/editor doctor
 ```
 
-Expected: `---` and `name: video-editor`, then `0`, then a size for each of the three files with none of them zero, then nothing. A bad file: download it once more. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted; pasting the install message again later finishes the job.
-
-Then write the launcher and run the tool check, exactly as Step 1 of the skill does:
-
-```bash
-SK="$(pwd)/.claude/skills/video-editor"; [ -f "$SK/edit.py" ] || { echo "NOT IN THE SYSTEM FOLDER"; exit 1; }; mkdir -p ~/reel-studio && printf '#!/bin/bash\nPY="$HOME/reel-studio/.venv/bin/python"; [ -x "$PY" ] || PY="$HOME/reel-studio/.venv/Scripts/python.exe"\nexport REEL_STUDIO="$HOME/reel-studio" PYTHONIOENCODING=utf-8 PYTHONUTF8=1\nexec "$PY" %q "$@"\n' "$SK/edit.py" > ~/reel-studio/editor && bash ~/reel-studio/editor doctor
-```
-
-The last line must be `ALL GOOD`. A `MISSING` library: run the `libs` part of step 5 again. No transcription model: the `model` part of step 5. `x264=NO` on the video line: the video encoder that came with the tools cannot encode on this computer; tell the owner in one sentence and stop. Anything else: show the owner the last lines and stop.
+The last line must be `ALL GOOD`. A `MISSING` library: run the `libs` part above again. `MISSING transcription model`: the `model` part above. `x264=NO` on the ffmpeg line: the video encoder that came with the tools cannot encode on this computer; tell the owner in one sentence and stop. Anything else: show the owner the last lines and stop. Lines that start with `NOTE` or `LATER` are information, not faults; the caption font downloads by itself the first time.
 
 After `ALL GOOD`, send:
 
@@ -274,6 +266,6 @@ Send:
 
 The skill says what to do at every failure of transcription, cutting and rendering. Do not try to fix `edit.py` in chat.
 
-If after reopening `/video-editor` is not in the menu, check that step 6 passed and that the owner really quit Claude Code (Cmd+Q on Mac, Alt+F4 or closing every window on Windows) and did not only close one window. In File Explorer on Windows or in Finder on Mac, the folder `.claude/skills/video-editor` inside the system must hold three files.
+If after reopening `/video-editor` is not in the menu, check that steps 5 and 6 passed and that the owner really quit Claude Code (Cmd+Q on Mac, Alt+F4 or closing every window on Windows) and did not only close one window. In File Explorer on Windows or in Finder on Mac, the folder `.claude/skills/video-editor` inside the system must hold three files.
 
 A real break in the system itself belongs to Rick, not to live debugging in chat.
