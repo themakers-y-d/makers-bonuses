@@ -62,7 +62,7 @@ Most social video is watched without sound, so on vertical video captions are bu
 
 **Look.** A bold Hebrew face (weight 700 to 800), about 60 to 80 px high on a 1080-wide frame. White letters with a dark outline of 4 to 6 px, or dark letters on a solid box, so they survive any background. Contrast is physics, not taste: a caption that cannot be read on a bright wall in daylight is broken whatever the colours.
 
-**Position.** On vertical video, around 65 to 75% of the height (y about 1250 to 1450), below the chin and inside the safe zone. Never over the face: if the face sits low in the frame, the captions move above the shoulders, not over the mouth. On wide video, centred near the bottom inside the margin.
+**Position.** On vertical video, around 65 to 75% of the height (y about 1250 to 1450), below the chin and inside the safe zone. Never over the face: if the face sits low in the frame, the captions move above the shoulders, not over the mouth. On wide video, centred near the bottom inside the margin. The engine does this by itself when no position is set: it finds the face and places the captions below the chin, or as low as the safe zone allows while clear of the mouth, and says where and why. A position set by hand wins, so it is set only after a frame shows a problem.
 
 **One caption system only.** If the source already has captions burned in, do not add a second set.
 
