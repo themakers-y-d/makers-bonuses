@@ -80,7 +80,7 @@ Read the result into four facts:
 
 ### שלב 4. One message: what happens, and the questions
 
-Send one message, built from the facts of step 3. The opening, with exactly one of the two first items:
+Send one message, built from the facts of step 3, before anything is installed, also when the tools were found and nothing big downloads: it is the only place the owner is asked for a video. Step 5 starts only after the answer. The opening, with exactly one of the two first items:
 
 ```
 מתקין לך את עורך הווידאו. ככה זה ילך:
@@ -106,7 +106,9 @@ Then end your turn and wait for the answer, always, also when the video question
 The commands are the same on Mac and on Windows in Git Bash. This step comes before the tools because the tools step runs the engine that is in these files. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2. They come from one fixed version of the gift, and each file is checked against its fingerprint, so what runs on the owner's computer is exactly what was tested:
 
 ```bash
-REV=e2040b3f98a9f64d2cab1ea2a19680ad3008d5c3; D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && for f in SKILL.md craft.md edit.py; do curl -fsSL -o "$D/$f" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/$REV/skills/video-editor/$f" || echo "PROBLEM $f did not download"; done
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/SKILL.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/d0ee8bc9a8be23cd04c7d3f4c79ddc9d6043be94/skills/video-editor/SKILL.md" || echo "PROBLEM SKILL.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/craft.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/d0ee8bc9a8be23cd04c7d3f4c79ddc9d6043be94/skills/video-editor/craft.md" || echo "PROBLEM craft.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/edit.py" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/d0ee8bc9a8be23cd04c7d3f4c79ddc9d6043be94/skills/video-editor/edit.py" || echo "PROBLEM edit.py did not download"
 ```
 
 Claude Code asks the owner to approve writing into `.claude/`. That is expected; it was announced in step 4.
@@ -117,7 +119,7 @@ Check the download:
 D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 563042f49f21c9f6b803d450b3183000a568aeaadb93499534bde43b7a05ce30 SKILL.md f3ba1d064b1e17dfd78fcdc404d108f85b8237277e78b2d57929a56a22a28da8 craft.md 4da1ae15a52e646db825bcb1b1558c11bb6017d6035825daad9b68ef71503b1f edit.py | $H -c - )
 ```
 
-Expected: three lines, `SKILL.md: OK`, `craft.md: OK`, `edit.py: OK`. `FAILED` on a file: download that file once more with the command above and check again. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted; pasting the install message again later finishes the job.
+Expected: three lines, `SKILL.md: OK`, `craft.md: OK`, `edit.py: OK`. `FAILED` on a file: download that file once more with its line above and check again. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted; pasting the install message again later finishes the job.
 
 Then write the launcher, `~/reel-studio/editor`, the one line every later command goes through. It is the same line Step 1 of the skill writes:
 
@@ -148,13 +150,15 @@ if [ "$1" = "base" ]; then
       MINGW*|MSYS*|CYGWIN*) UVPKG=uv-x86_64-pc-windows-msvc.zip ;;
       *) echo "PROBLEM unsupported computer $(uname -sm)"; exit 1 ;;
     esac
-    UVVER=0.12.19
     case "$UVPKG" in
-      uv-aarch64-apple-darwin.tar.gz) UVSHA=a9a8df1eedeb192f2e47e40e2faabfb387db4b850209118786d42f89dde3e0ba ;;
-      uv-x86_64-apple-darwin.tar.gz)  UVSHA=cb5fa57bafe68fc0fb94b17f06bee0b0b9a7feb94ccbd110445afa0696e39273 ;;
-      uv-x86_64-pc-windows-msvc.zip)  UVSHA=6dbb02d79e419522f1c500f0adb1cddcff0cda7d59b0d66ea7f5e3b4a1b2f5f0 ;;
+      uv-aarch64-apple-darwin.tar.gz) UVSHA=a9a8df1eedeb192f2e47e40e2faabfb387db4b850209118786d42f89dde3e0ba
+        UVURL=https://github.com/astral-sh/uv/releases/download/0.12.19/uv-aarch64-apple-darwin.tar.gz ;;
+      uv-x86_64-apple-darwin.tar.gz)  UVSHA=cb5fa57bafe68fc0fb94b17f06bee0b0b9a7feb94ccbd110445afa0696e39273
+        UVURL=https://github.com/astral-sh/uv/releases/download/0.12.19/uv-x86_64-apple-darwin.tar.gz ;;
+      uv-x86_64-pc-windows-msvc.zip)  UVSHA=6dbb02d79e419522f1c500f0adb1cddcff0cda7d59b0d66ea7f5e3b4a1b2f5f0
+        UVURL=https://github.com/astral-sh/uv/releases/download/0.12.19/uv-x86_64-pc-windows-msvc.zip ;;
     esac
-    curl -fsSL -o "tools/$UVPKG" "https://github.com/astral-sh/uv/releases/download/$UVVER/$UVPKG" || { echo "PROBLEM no internet connection, or GitHub is blocked"; exit 1; }
+    curl -fsSL -o "tools/$UVPKG" "$UVURL" || { echo "PROBLEM no internet connection, or GitHub is blocked"; exit 1; }
     GOT=$( (shasum -a 256 "tools/$UVPKG" 2>/dev/null || sha256sum "tools/$UVPKG") | cut -d' ' -f1 )
     [ "$GOT" = "$UVSHA" ] || { echo "PROBLEM the downloaded file does not match its checksum, stopping"; rm -f "tools/$UVPKG"; exit 1; }
     mkdir -p tools/uv
