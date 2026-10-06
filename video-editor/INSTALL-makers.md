@@ -106,7 +106,7 @@ Then end your turn and wait for the answer, always, also when the video question
 The commands are the same on Mac and on Windows in Git Bash. This step comes before the tools because the tools step runs the engine that is in these files. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2. They come from one fixed version of the gift, and each file is checked against its fingerprint, so what runs on the owner's computer is exactly what was tested:
 
 ```bash
-REV=e68a09097945e2c64bdb2d190ab06ac349dc3cdf; D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && for f in SKILL.md craft.md edit.py; do curl -fsSL -o "$D/$f" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/$REV/skills/video-editor/$f" || echo "PROBLEM $f did not download"; done
+REV=e2040b3f98a9f64d2cab1ea2a19680ad3008d5c3; D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && for f in SKILL.md craft.md edit.py; do curl -fsSL -o "$D/$f" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/$REV/skills/video-editor/$f" || echo "PROBLEM $f did not download"; done
 ```
 
 Claude Code asks the owner to approve writing into `.claude/`. That is expected; it was announced in step 4.
@@ -114,7 +114,7 @@ Claude Code asks the owner to approve writing into `.claude/`. That is expected;
 Check the download:
 
 ```bash
-D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 0e83908983f67349abf1b7f39fb5362ea28c8400c1abcf5acbfcc1f62c62b491 SKILL.md 7ccff86a1f142be3134fcbc4e17fb5b0dd58700640f03270f70e1aea63048880 craft.md d27f9fdec1912a91bdcce41a3deaffd09fa9830cad8ee672c0a13bdef4682b16 edit.py | $H -c - )
+D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 563042f49f21c9f6b803d450b3183000a568aeaadb93499534bde43b7a05ce30 SKILL.md f3ba1d064b1e17dfd78fcdc404d108f85b8237277e78b2d57929a56a22a28da8 craft.md 4da1ae15a52e646db825bcb1b1558c11bb6017d6035825daad9b68ef71503b1f edit.py | $H -c - )
 ```
 
 Expected: three lines, `SKILL.md: OK`, `craft.md: OK`, `edit.py: OK`. `FAILED` on a file: download that file once more with the command above and check again. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted; pasting the install message again later finishes the job.
