@@ -84,6 +84,7 @@ LUFS_SOCIAL, LUFS_LONG, TRUE_PEAK = -14.0, -16.0, -1.5
 MUSIC_UNDER_DUCKED, MUSIC_UNDER_STATIC = 7.0, 16.0   # LU the bed sits under the voice before ducking / with no ducking
 DUCK = "threshold=0.02:ratio=6:attack=20:release=400"  # sidechaincompress: about 15 to 20 dB down while someone talks
 MUSIC_FADE = 2.0
+SAFE_MARGIN = 0.008                           # captions keep this fraction of the frame inside the zone verify checks
 MAX_RUNS = 25                                 # forward runs of the source in one render (each one opens a reader)
 SR = 48000
 
@@ -722,6 +723,17 @@ def text_width(style, px, s):
     return font(style, px).getlength(bidi_visual(s))
 
 
+def cap_text_max(style, px, fmtname, W, H):
+    """The widest a caption line may be, in pixels of the frame. The caption block (the letters plus their outline
+    or box) is centred, and the zone verify checks is not: the app's buttons on the right make it narrower there.
+    So the block must fit twice the nearer side, with a small margin, or a default render could fail verify."""
+    sx0, _, sx1, _ = safe_rect(fmtname, W, H)
+    half = min(W / 2 - sx0, sx1 - W / 2) - SAFE_MARGIN * W
+    scale = min(W, H) / 1080
+    pad = 0.32 * px if style.get("box") else (float(style.get("outline_width") or 0) * scale if style.get("outline") else 0.0)
+    return max(W * 0.2, min(CAP_WIDTH[fmt_of(fmtname, W, H)] * W, 2 * (half - pad)))
+
+
 def wrap(words, style, px, maxpx, max_lines, max_chars):
     one = " ".join(words)
     if (text_width(style, px, one) <= maxpx and len(one) <= max_chars) or max_lines < 2 or len(words) < 2:
@@ -748,7 +760,7 @@ def build_chunks(words, style, fmtname, W, H, total):
     """Caption chunks on the edited timeline: [{'s','e','lines'}]."""
     scale = min(W, H) / 1080
     px = style["size"] * scale
-    maxpx = CAP_WIDTH[fmt_of(fmtname, W, H)] * W
+    maxpx = cap_text_max(style, px, fmtname, W, H)
     maxw = int(style.get("max_words") or CAP_WORDS[fmt_of(fmtname, W, H)])
     max_lines = int(style.get("max_lines") or 2)
     max_chars = int(style.get("max_chars") or 32)
@@ -814,10 +826,13 @@ def draw_caption(lines, style, fmtname, W, H):
     SS = 2
     scale = min(W, H) / 1080
     px = style["size"] * scale
-    maxpx = CAP_WIDTH[fmt_of(fmtname, W, H)] * W
     widest = max(text_width(style, px, l) for l in lines)
-    if widest > maxpx:                                   # one long word: shrink this caption, never overflow
-        px = max(px * 0.7, px * maxpx / widest)
+    for _ in range(3):                                   # one long word: shrink this caption, never past the zone
+        maxpx = cap_text_max(style, px, fmtname, W, H)
+        if widest <= maxpx:
+            break
+        px *= maxpx / widest * 0.995
+        widest = max(text_width(style, px, l) for l in lines)
     f = font(style, px * SS)
     vis = [bidi_visual(l) for l in lines]
     widths = [f.getlength(v) for v in vis]
@@ -975,6 +990,7 @@ class Plan:
         fmt = fmt_of(self.fmt, W, H)
         default = CAP_BOTTOM[fmt]
         sx0, sy0, sx1, sy1 = safe_rect(self.fmt, W, H)
+        sy0, sy1 = sy0 + SAFE_MARGIN * H, sy1 - SAFE_MARGIN * H        # inside the zone verify checks, never on it
         faces = self.faces()
         boxes = [self.out_box(max(f, key=lambda b: b[2] * b[3])) for f in (faces or []) if f]
         # the face that matters is the big one, the speaker; small faces (on a screen in the shot, in the crowd)
@@ -1007,12 +1023,23 @@ class Plan:
             pos, why = sy1, "as low as the app allows, under the mouth (the chin may be behind the words)"
         elif sy1 - hb1 >= mouth + gap:
             self.style["max_lines"] = 1
+            self.style["max_chars"] = min(int(self.style.get("max_chars") or 32), 24)
             pos, why = sy1, "as low as the app allows, one line per caption so the words stay under the mouth"
         elif crown - gap - hb >= sy0:
             pos, why = crown - gap, "above the head, the face fills the bottom of the frame"
         else:
-            pos, why = sy1, "as low as the app allows; the face fills the frame, so the words touch it"
-        self.style["position"] = round(100 * pos / H, 1)
+            self.style["max_lines"] = 1               # one line covers the least of the face
+            self.style["max_chars"] = min(int(self.style.get("max_chars") or 32), 24)
+            pos, why = sy1, "as low as the app allows, one line per caption; the face fills the frame, so the words touch it"
+        pct = math.floor(1000 * pos / H) / 10
+        # measured on the block as it is drawn (letters, outline or box), the tallest it can be: never past the line
+        for _ in range(20):
+            lines = ["שלום שלום עולם"] * (1 if self.style.get("max_lines") == 1 else 2)
+            _, b = draw_caption(lines, dict(self.style, position=pct), self.fmt, W, H)
+            if b[3] <= sy1:
+                break
+            pct = math.floor(10 * (pct - 100 * (b[3] - sy1) / H) - 1) / 10
+        self.style["position"] = pct
         say(f"CAPTIONS at {self.style['position']:g}% of the height: {why} "
             f"(face from {100 * top / H:.0f}% to {100 * bot / H:.0f}%, found in {len(boxes)} of {len(faces)} frames)")
 
