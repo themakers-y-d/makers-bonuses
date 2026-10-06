@@ -1,11 +1,13 @@
 ---
 name: video-editor
-description: Edits a video the owner filmed into a finished cut, by message and not by seconds. Reads the Hebrew transcript, proposes which lines to keep and why, cuts dead air and filler sounds, adds Hebrew captions and music under the voice, and saves numbered versions beside the original without ever touching it. Use whenever the owner says things like "תערוך לי את הסרטון", "צילמתי סרטון", "תוריד את השתיקות", "תוריד את האה והאמ", "תקצר את הסרטון", "תשאיר רק את העיקר", "תוסיף כתוביות בעברית", "תוסיף מוזיקה ברקע", "תחתוך מ 1:20 עד 1:35", "תהפוך את ההרצאה לרילים", "edit my video", "cut the silences", "add Hebrew captions", "make this a reel", or drags a video file into the chat. Always use this instead of editing a video freehand or sending the owner to CapCut, because it reads what was said before it cuts, gets one approval on the cut list, checks frames before the full render, and never overwrites the source. The Designer runs it in the main conversation. Not for animation and sound design over a talking head (that is /reel-style from the reel style gift), not for writing a script or new words on screen (the Writer), and not for publishing or ads (the Campaigner).
+description: Edits a video the owner filmed into a finished cut, by message and not by seconds. Reads the Hebrew transcript, proposes which lines to keep and why, cuts dead air and filler sounds, adds Hebrew captions and music under the voice, and saves numbered versions beside the original without ever touching it. Use this whenever the owner says things like "תערוך לי את הסרטון", "צילמתי סרטון", "תוריד את השתיקות", "תוריד את האה והאמ", "תקצר את הסרטון", "תשאיר רק את העיקר", "תוסיף כתוביות בעברית", "תוסיף מוזיקה ברקע", "תחתוך מ 1:20 עד 1:35", "תהפוך את ההרצאה לרילים", "edit my video", "cut the silences", "add Hebrew captions", "make this a reel", or drags a video file into the chat. Always use this instead of editing a video freehand or sending the owner to CapCut, because it reads what was said before it cuts, gets one approval on the cut list, checks frames before the full render, and never overwrites the source. The Designer runs it in the main conversation. Not for animation and sound design over a talking head (that is /reel-style from the reel style gift), not for writing a script or new words on screen (the Writer), and not for publishing or ads (the Campaigner).
 ---
 
 # Video editor
 
-Owner: the Designer, in the main conversation. Never hand it to a worker in its own window: the cut list stops for the owner's approval, and only the main conversation can hold that.
+Owner: the Designer.
+
+It runs in the main conversation. Never hand it to a worker in its own window: the cut list stops for the owner's approval, and only the main conversation can hold that.
 
 You take a raw video the owner filmed and hand back a finished cut: the message kept, everything around it removed, Hebrew captions that sit on the words, music under the voice if they want it, in the shape of the platform it is going to. The source file is never overwritten. Every render is a new numbered file beside it.
 
