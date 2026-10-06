@@ -171,7 +171,7 @@ if [ "$1" = "base" ]; then
   echo "BASE READY"
 fi
 if [ "$1" = "libs" ]; then
-  tools/uv/uv pip install numpy==2.5.3 pillow==12.3.0 opencv-python-headless==4.14.0.94 faster-whisper==1.2.1 imageio-ffmpeg==0.6.0 certifi==2026.7.22 > "$STUDIO/pip.log" 2>&1 &
+  tools/uv/uv pip install numpy==2.5.3 pillow==12.3.0 opencv-python-headless==4.14.0.94 faster-whisper==1.2.1 av==18.1.0 imageio-ffmpeg==0.6.0 certifi==2026.7.22 > "$STUDIO/pip.log" 2>&1 &
   PIP=$!
   while kill -0 $PIP 2>/dev/null; do echo "installing libraries, $(du -sm "$STUDIO/.venv" 2>/dev/null | cut -f1) MB so far"; sleep 15; done
   wait $PIP || { tail -5 "$STUDIO/pip.log"; echo "PROBLEM the libraries did not install"; exit 1; }

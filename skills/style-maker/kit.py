@@ -896,13 +896,20 @@ def cmd_transcribe(a):
     lang = a[a.index("--lang") + 1] if "--lang" in a else "he"
     jd = job_dir(video)
     wav = jd / "voice16k.wav"
-    subprocess.run([ffmpeg_exe(), "-v", "error", "-y", "-i", str(video), "-vn", "-ac", "1", "-ar", "16000", str(wav)], check=True)
+    subprocess.run([ffmpeg_exe(), "-v", "error", "-y", "-i", str(video), "-vn", "-ac", "1", "-ar", "16000",
+                    "-c:a", "pcm_s16le", str(wav)], check=True)
+    # the sound goes to the model as samples decoded by our own ffmpeg, never as a file path: faster-whisper's
+    # own file reader depends on the PyAV version that happened to install, and PyAV 19 breaks it
+    import wave
+    import numpy as np
+    with wave.open(str(wav), "rb") as wf:
+        audio = np.frombuffer(wf.readframes(wf.getnframes()), np.int16).astype(np.float32) / 32768.0
     from faster_whisper import WhisperModel
     say(f"loading model {name} (first time on this computer it downloads, see the model command)")
     model = WhisperModel(MODELS[name], device="cpu", compute_type="int8", download_root=str(STUDIO / "models"),
                          revision=MODEL_REVISIONS.get(MODELS[name]))
     say("transcribing, one line per sentence as it finishes")
-    segs, info = model.transcribe(str(wav), language=None if lang == "auto" else lang, beam_size=5,
+    segs, info = model.transcribe(audio, language=None if lang == "auto" else lang, beam_size=5,
                                   word_timestamps=True, vad_filter=False, condition_on_previous_text=False)
     words, lines = [], []
     for s in segs:
