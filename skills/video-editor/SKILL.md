@@ -76,6 +76,8 @@ Otherwise, read what you already know before asking anything: what the owner wro
 
 Keep the original numbers of the questions you do ask, and build the short example only from them. Never more than these three, and never a question about who the owner is: that is in `1-me/`.
 
+The transcript does not depend on the answers, so start it now, in the background exactly as in step 4, and end your turn with the questions as your last message: the owner cannot answer while you are still working. Nothing from step 5 on happens before the answers arrive.
+
 When the owner says "לא יודע": a vertical video goes to a reel of up to about a minute, burned captions, no music. Say which you chose in one line and continue.
 
 ### Step 4. The transcript
@@ -91,7 +93,7 @@ bash ~/reel-studio/editor wait "<job>/transcribe.log" TRANSCRIBED
 
 `--model` is whichever `doctor` listed: `ivrit` if present, otherwise `medium` or `small`. `wait` returns within about a minute and a half with the latest line: `STILL RUNNING`, tell the owner in one line how far it got and run it again. `READY`, done. A line `still working` is a heartbeat, printed every minute while the model works in silence; it is normal. `STUCK` (five minutes without any line) or `FAILED`, show the owner the last lines in one sentence and run `transcribe` once more; if it fails again, stop and say so.
 
-The result is `transcript.txt` in `<job>`, one numbered line per sentence with its start and end time, and `words.json` with every word's time. **Read `transcript.txt` in full before you decide anything.** Fix words the model misheard, usually English names written in Hebrew letters ("וורד פרס" is WordPress), in `words.json` and `transcript.txt`, without touching any time. Captions are built from these words, so a misheard brand name ends up burned into the video.
+The result is `transcript.txt` in `<job>`, one numbered line per sentence with its start and end time, and `words.json` with every word's time. **Read `transcript.txt` in full before you decide anything.** Fix words the model misheard, usually English names written in Hebrew letters ("וורד פרס" is WordPress), in `words.json` and `transcript.txt`, without touching any time. Fix only what you are sure of. A name you do not know (a person, a product, a nickname) stays as it was heard, and you ask about it in one line of the cut-list message in step 5: "שמעתי 'אורל', ככה כותבים את זה?". Captions are built from these words, so a misheard brand name ends up burned into the video.
 
 ### Step 5. The cut list, by line numbers, with a reason for every cut
 
