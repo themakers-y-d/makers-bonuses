@@ -99,7 +99,7 @@ Then, in the same message, only the questions that apply, numbered in the order 
 • Only when the old method was found: "יש אצלך גם שיטת עריכת וידאו ישנה, `video-editing-skill`. להסיר אותה, כדי ששתיהן לא יתבלבלו? (כן / לא)"
 • Always: "יש לך סרטון לנסות עליו? אם כן, גרור אותו לכאן עכשיו, ונערוך אותו מיד אחרי ההתקנה. אם לא, זה לא חובה."
 
-Wait for the answer. No answer to the model question is not a yes: nothing downloads until the owner says so. "לא יודע" on the model is the Hebrew one, after the yes to download.
+Then end your turn and wait for the answer, always, also when the video question is the only one: the answer decides whether step 8 runs, and the owner cannot drag a video while you are still working. Never ask the video question again later in place of this wait. No answer to the model question is not a yes: nothing downloads until the owner says so. "לא יודע" on the model is the Hebrew one, after the yes to download.
 
 ### שלב 5. The skill, into the system
 
