@@ -944,8 +944,81 @@ class Plan:
         a0, b0 = self.segs[-1]
         return max(a0, b0 - 0.5 / self.F)
 
+    def out_box(self, b):
+        """A face box in fractions of the source frame, as pixels of the finished frame (x0, y0, x1, y1)."""
+        fit = self.decide_fit(quiet=True)
+        sw, sh, W, H = self.info["width"], self.info["height"], self.W, self.H
+        if fit["mode"] == "scale":
+            return (b[0] * W, b[1] * H, (b[0] + b[2]) * W, (b[1] + b[3]) * H)
+        if fit["mode"] == "crop":
+            k = max(W / sw, H / sh)
+            w2, h2 = max(W, even(sw * k)), max(H, even(sh * k))
+            ox = int(min(max(fit["cx"] * w2 - W / 2, 0), w2 - W))
+            oy = int(min(max(fit["cy"] * h2 - H / 2, 0), h2 - H))
+        else:                                                    # band and blur: the whole picture, centred
+            k = min(W / sw, H / sh)
+            w2, h2 = sw * k, sh * k
+            ox, oy = -(W - w2) / 2, -(H - h2) / 2
+        return (b[0] * w2 - ox, b[1] * h2 - oy, (b[0] + b[2]) * w2 - ox, (b[1] + b[3]) * h2 - oy)
+
+    def place_captions(self):
+        """With no position chosen, the captions go where they cover no face: below the chin when there is room
+        inside the safe zone, else as low as the safe zone allows while clear of the mouth, else above the head.
+        A position the owner set (style --position) always wins. Prints one line: where, and why."""
+        if getattr(self, "placed", False):
+            return
+        self.placed = True
+        if self.style.get("position") not in (None, ""):
+            say(f"CAPTIONS at {float(self.style['position']):g}% of the height: the position set in the style")
+            return
+        W, H = self.W, self.H
+        fmt = fmt_of(self.fmt, W, H)
+        default = CAP_BOTTOM[fmt]
+        sx0, sy0, sx1, sy1 = safe_rect(self.fmt, W, H)
+        faces = self.faces()
+        boxes = [self.out_box(max(f, key=lambda b: b[2] * b[3])) for f in (faces or []) if f]
+        # the face that matters is the big one, the speaker; small faces (on a screen in the shot, in the crowd)
+        # are left alone. Even a speaker seen in only part of the edit is kept clear.
+        big = max([b[3] - b[1] for b in boxes] or [0])
+        boxes = [b for b in boxes if b[3] - b[1] >= max(0.6 * big, 0.08 * H)]
+        if not boxes:
+            self.style["position"] = default
+            say(f"CAPTIONS at {default:g}% of the height: the default, no face big enough to cover")
+            return
+        # the face as it moves: the highest top, the lowest bottom, the widest sides of the steady detections.
+        # The finder's box runs from the eyebrows to just under the lower lip; the chin is about a fifth lower.
+        top = min(b[1] for b in boxes)
+        bot = max(b[3] for b in boxes)
+        left, right = min(b[0] for b in boxes), max(b[2] for b in boxes)
+        fh = sum(b[3] - b[1] for b in boxes) / len(boxes)
+        mouth, chin, crown = bot + 0.03 * fh, bot + 0.25 * fh, top - 0.35 * fh
+        probe_st = dict(self.style, position=None)
+        _, cb = draw_caption(["שלום שלום עולם", "שלום שלום עולם"], probe_st, self.fmt, W, H)   # two lines, the tallest
+        _, cb1 = draw_caption(["שלום שלום עולם"], probe_st, self.fmt, W, H)
+        hb, hb1, cw = cb[3] - cb[1], cb1[3] - cb1[1], CAP_WIDTH[fmt] * W
+        gap = 0.012 * H
+        if right < W / 2 - cw / 2 or left > W / 2 + cw / 2:
+            pos, why = default * H / 100, "the default, the face is beside the captions"
+        elif default * H / 100 - hb >= chin + gap or default * H / 100 <= crown - gap:
+            pos, why = default * H / 100, "the default, clear of the face"
+        elif chin + gap + hb <= sy1:
+            pos, why = chin + gap + hb, "below the chin"
+        elif sy1 - hb >= mouth + gap:
+            pos, why = sy1, "as low as the app allows, under the mouth (the chin may be behind the words)"
+        elif sy1 - hb1 >= mouth + gap:
+            self.style["max_lines"] = 1
+            pos, why = sy1, "as low as the app allows, one line per caption so the words stay under the mouth"
+        elif crown - gap - hb >= sy0:
+            pos, why = crown - gap, "above the head, the face fills the bottom of the frame"
+        else:
+            pos, why = sy1, "as low as the app allows; the face fills the frame, so the words touch it"
+        self.style["position"] = round(100 * pos / H, 1)
+        say(f"CAPTIONS at {self.style['position']:g}% of the height: {why} "
+            f"(face from {100 * top / H:.0f}% to {100 * bot / H:.0f}%, found in {len(boxes)} of {len(faces)} frames)")
+
     def make_chunks(self):
         if self.words:
+            self.place_captions()
             self.chunks = build_chunks(remap_words(self.words, self.segs), self.style, self.fmt, self.W, self.H, self.total)
         return self.chunks
 
@@ -1025,7 +1098,7 @@ class Plan:
         """Face boxes (fractions of the source frame) on frames sampled across the kept parts, or None."""
         cache = self.jd / "faces.json"
         data = load_json(cache, {})
-        key = json.dumps(self.segs)
+        key = json.dumps(["v2", self.segs])
         if data.get("key") == key:
             return data["faces"]
         try:
@@ -1047,8 +1120,8 @@ class Plan:
         w, h = even(sw * k), even(sh * k)
         out = []
         n = 12
-        for i in range(n):
-            t = self.total * (i + 0.5) / n
+        # the opening frame first (it is the one people see longest before they decide), then across the edit
+        for t in [min(0.3, self.total / 2)] + [self.total * (i + 0.5) / n for i in range(n)]:
             raw = ff_bytes("-ss", f"{self.to_source(t):.3f}", "-i", self.video, "-frames:v", "1",
                            "-vf", f"{self.hdr_chain()}scale={w}:{h}", "-f", "rawvideo", "-pix_fmt", "gray", "-")
             if len(raw) < w * h:
@@ -1195,15 +1268,32 @@ def cmd_model(a):
     stop = []
 
     def watch():
+        # never dies: the download renames and removes files while this counts them
         while not stop:
-            size = sum(f.stat().st_size for f in mdir.rglob("*") if f.is_file()) / 1e9
-            say(f"downloaded so far {size:.2f} GB")
+            try:
+                say(f"downloaded so far {folder_bytes(mdir) / 1e9:.2f} GB")
+            except Exception as e:
+                say(f"downloading (could not count the folder this time: {type(e).__name__})")
             time.sleep(15)
 
     threading.Thread(target=watch, daemon=True).start()
     path = model_path(name, mdir)
     stop.append(1)
     say(f"MODEL READY {name} at {path}")
+
+
+def folder_bytes(d):
+    """Bytes in a folder that is changing while it is counted: a file or folder that vanishes is skipped."""
+    total = 0
+    for root, _dirs, files in os.walk(d, onerror=lambda e: None):
+        for f in files:
+            try:
+                st = os.stat(os.path.join(root, f), follow_symlinks=False)
+            except OSError:
+                continue
+            if not os.path.islink(os.path.join(root, f)):
+                total += st.st_size
+    return total
 
 
 def model_path(name, mdir):
