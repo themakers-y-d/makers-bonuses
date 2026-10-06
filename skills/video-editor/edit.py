@@ -51,11 +51,14 @@ os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
 os.environ.setdefault("OPENCV_LOG_LEVEL", "SILENT")
 IS_WIN = os.name == "nt"
 
-MODEL_REVISIONS = {"ivrit-ai/whisper-large-v3-turbo-ct2": "72ad623a37947395efcc3933132353790e5a12f5"}
+# every model is pinned to one commit, so a change upstream never reaches an owner unseen
+MODEL_REVISIONS = {"ivrit-ai/whisper-large-v3-turbo-ct2": "72ad623a37947395efcc3933132353790e5a12f5",
+                   "Systran/faster-whisper-medium": "08e178d48790749d25932bbc082711ddcfdfbc4f",
+                   "Systran/faster-whisper-small": "536b0662742c02347bc0e980a01041f333bce120"}
 MODELS = {
     "ivrit": "ivrit-ai/whisper-large-v3-turbo-ct2",   # Hebrew fine-tune, about 1.6 GB
-    "medium": "medium",                               # multilingual, about 1.5 GB
-    "small": "small",                                 # multilingual, about 0.5 GB, faster, less accurate in Hebrew
+    "medium": "Systran/faster-whisper-medium",        # multilingual, about 1.5 GB
+    "small": "Systran/faster-whisper-small",          # multilingual, about 0.5 GB, faster, less accurate in Hebrew
 }
 PINS = {"numpy": "numpy==2.5.3", "PIL": "pillow==12.3.0", "cv2": "opencv-python-headless==4.14.0.94",
         "faster_whisper": "faster-whisper==1.2.1", "imageio_ffmpeg": "imageio-ffmpeg==0.6.0", "certifi": "certifi==2026.7.22"}
@@ -81,6 +84,7 @@ LUFS_SOCIAL, LUFS_LONG, TRUE_PEAK = -14.0, -16.0, -1.5
 MUSIC_UNDER_DUCKED, MUSIC_UNDER_STATIC = 7.0, 16.0   # LU the bed sits under the voice before ducking / with no ducking
 DUCK = "threshold=0.02:ratio=6:attack=20:release=400"  # sidechaincompress: about 15 to 20 dB down while someone talks
 MUSIC_FADE = 2.0
+MAX_RUNS = 25                                 # forward runs of the source in one render (each one opens a reader)
 SR = 48000
 
 FORMATS = {"reel": (1080, 1920), "wide": (1920, 1080), "square": (1080, 1080)}
@@ -110,6 +114,27 @@ def say(*a):
 def die(msg, code=2):
     say("PROBLEM " + msg)
     sys.exit(code)
+
+
+class Heartbeat:
+    """A line every minute while a long step prints nothing, so `wait` on the log never calls a working job STUCK."""
+
+    def __init__(self, what):
+        self.what = what
+
+    def __enter__(self):
+        import threading
+        self.stop, self.t0 = threading.Event(), time.time()
+
+        def beat():
+            while not self.stop.wait(60):
+                say(f"still working: {self.what}, {(time.time() - self.t0) / 60:.0f} min so far")
+        threading.Thread(target=beat, daemon=True).start()
+        return self
+
+    def __exit__(self, *exc):
+        self.stop.set()
+        return False
 
 
 def write_text(p, s):
@@ -268,8 +293,13 @@ def download(url, dest, sha256=None):
     dest = Path(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_name(dest.name + ".part")
-    with urllib.request.urlopen(url, context=ssl_ctx(), timeout=60) as r, open(tmp, "wb") as f:
-        shutil.copyfileobj(r, f)
+    try:
+        with urllib.request.urlopen(url, context=ssl_ctx(), timeout=60) as r, open(tmp, "wb") as f:
+            shutil.copyfileobj(r, f)
+    except Exception as e:
+        tmp.unlink(missing_ok=True)
+        die(f"could not download {dest.name} ({type(e).__name__}: {str(e)[:120]}). Check the internet connection "
+            "(a work network or VPN may block GitHub) and run the same command again.")
     if sha256:
         h = hashlib.sha256(tmp.read_bytes()).hexdigest()
         if h != sha256:
@@ -306,7 +336,7 @@ def probe(video):
         elif " Subtitle: " in l and sline is None:
             sline = l
     w = h = 0
-    fps = None
+    fps = tbr = None
     vcodec = pix = None
     hdr = None
     if vline:
@@ -315,6 +345,8 @@ def probe(video):
             w, h = int(v.group(1)), int(v.group(2))
         f = re.search(r"([\d.]+) fps", vline) or re.search(r"([\d.]+) tbr", vline)
         fps = float(f.group(1)) if f else None
+        t = re.search(r"([\d.]+) tbr", vline)
+        tbr = float(t.group(1)) if t else None
         c = re.search(r"Video: (\w+)", vline)
         vcodec = c.group(1) if c else None
         px = re.search(r"Video: [^,]*, (\w+)", vline)
@@ -332,14 +364,21 @@ def probe(video):
         r = re.search(r"(\d+) Hz", aline)
         rate = int(r.group(1)) if r else None
     orient = "vertical" if h > w * 1.05 else ("horizontal" if w > h * 1.05 else "square")
-    return {"duration": round(dur, 3), "width": w, "height": h, "fps": fps, "vcodec": vcodec, "pix_fmt": pix,
+    return {"duration": round(dur, 3), "width": w, "height": h, "fps": fps, "tbr": tbr, "vcodec": vcodec, "pix_fmt": pix,
             "hdr": hdr, "rotation": rot, "has_video": vline is not None and w > 0, "has_audio": aline is not None,
             "acodec": acodec, "audio_rate": rate, "has_subtitles": sline is not None, "orientation": orient,
             "bytes": Path(video).stat().st_size}
 
 
-def choose_fps(fps):
-    """Keep the source frame rate (30 stays 30, 60 stays 60). Only slow-motion rates above 60 come down to 30."""
+STD_RATES = (24000 / 1001, 24.0, 25.0, 30000 / 1001, 30.0, 50.0, 60000 / 1001, 60.0)
+
+
+def choose_fps(fps, tbr=None):
+    """Keep the source frame rate (30 stays 30, 60 stays 60). Only slow-motion rates above 60 come down to 30.
+    A phone records at a variable rate: the average (30.01, 59.97, or lower in the dark) is not the rate it was
+    filmed at. When the stream's base rate is a standard one, that is the rate."""
+    if tbr and any(abs(tbr - r) < 0.01 for r in STD_RATES) and fps and fps <= tbr + 0.1:
+        fps = tbr
     if not fps or fps <= 0:
         return 30.0, "30"
     if fps > 61:
@@ -353,34 +392,61 @@ def choose_fps(fps):
     return round(fps, 3), f"{fps:.3f}"
 
 
-def safe_name(s):
-    s = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", s).strip().rstrip(".")
+WIN_RESERVED = {"CON", "PRN", "AUX", "NUL", *(f"COM{i}" for i in range(1, 10)), *(f"LPT{i}" for i in range(1, 10))}
+
+
+def safe_name(s, limit=60):
+    """A folder or file name that works on Mac and Windows: no reserved characters, no trailing dot or space,
+    not a Windows device name, and short, so the working paths stay far below the Windows 260 limit."""
+    s = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", s).strip()[:limit].strip().rstrip(".").strip()
+    if s.split(".")[0].upper() in WIN_RESERVED:
+        s = "_" + s
     return s or "video"
+
+
+def fingerprint(video, size):
+    """The first and the last megabyte, hashed: tells two different videos of the same name and size apart."""
+    import hashlib
+    h = hashlib.sha256()
+    with open(video, "rb") as f:
+        h.update(f.read(1 << 20))
+        if size > 2 << 20:
+            f.seek(size - (1 << 20))
+            h.update(f.read(1 << 20))
+    return h.hexdigest()[:24]
 
 
 def job_dir(video):
     """One working folder per source video in the studio. Same file, same folder; a different file with
-    the same name gets its own folder, so nothing from one video leaks into another."""
+    the same name gets its own folder, so nothing from one video leaks into another.
+
+    The folders live in edits/, never in jobs/: jobs/ belongs to the reel style builder, which names its
+    folders by the file name alone and writes its own words.json there."""
     video = Path(video).resolve()
     st = video.stat()
-    ident = {"source": str(video), "name": video.name, "bytes": st.st_size}
-    base = STUDIO / "jobs" / safe_name(video.stem)
+    fp = fingerprint(video, st.st_size)
+    ident = {"source": str(video), "name": video.name, "bytes": st.st_size, "fp": fp}
+    base = STUDIO / "edits" / safe_name(video.stem)
     for i in range(1, 1000):
         d = base if i == 1 else base.with_name(f"{base.name}-{i}")
         sj = d / "source.json"
-        if not d.exists():
+        try:
             d.mkdir(parents=True)
             save_json(sj, ident)
             return d
+        except FileExistsError:
+            pass
+        except OSError as e:
+            die(f"cannot create the working folder {d} ({e}). Run doctor; the studio folder must be writable.")
         cur = load_json(sj)
-        if cur is None:                     # a folder the reel style builder made for this name: adopt it
-            save_json(sj, ident)
-            return d
-        if cur.get("bytes") == st.st_size and (cur.get("source") == str(video) or cur.get("name") == video.name):
-            if cur.get("source") != str(video):
+        if not isinstance(cur, dict):       # a folder from a crash before source.json was written: not ours to guess
+            continue
+        if cur.get("bytes") == st.st_size and cur.get("fp", fp) == fp and \
+                (cur.get("source") == str(video) or cur.get("name") == video.name):
+            if cur.get("source") != str(video) or "fp" not in cur:
                 save_json(sj, ident)        # the same file, moved
             return d
-    die("too many job folders with this name")
+    die("too many working folders with this name in the studio. Rename the video and run again.")
 
 
 def load_words(jd, need=True):
@@ -857,7 +923,7 @@ class Plan:
             self.F, self.fstr = float(edl.get("fps") or 30), edl.get("fps_str") or "30"
             self.has_edl = True
         else:
-            self.F, self.fstr = choose_fps(self.info["fps"])
+            self.F, self.fstr = choose_fps(self.info["fps"], self.info.get("tbr"))
             end = math.floor(self.info["duration"] * self.F) / self.F
             self.segs = [(0.0, end)]
             self.has_edl = False
@@ -1135,10 +1201,46 @@ def cmd_model(a):
             time.sleep(15)
 
     threading.Thread(target=watch, daemon=True).start()
-    from faster_whisper.utils import download_model
-    path = download_model(MODELS[name], cache_dir=str(mdir), revision=MODEL_REVISIONS.get(MODELS[name]))
+    path = model_path(name, mdir)
     stop.append(1)
     say(f"MODEL READY {name} at {path}")
+
+
+def model_path(name, mdir):
+    """The model's folder on this computer, downloaded at its pinned commit the first time."""
+    from faster_whisper.utils import download_model
+    repo = MODELS[name]
+    try:
+        return download_model(repo, cache_dir=str(mdir), revision=MODEL_REVISIONS[repo], local_files_only=True)
+    except Exception:
+        pass
+    say(f"downloading the {name} transcription model (it continues where it stopped if the connection drops)")
+    try:
+        return download_model(repo, cache_dir=str(mdir), revision=MODEL_REVISIONS[repo])
+    except Exception as e:
+        die(f"the {name} model did not download ({type(e).__name__}: {str(e)[:150]}). Check the internet connection "
+            "and run the same command again; it continues where it stopped.")
+
+
+def load_whisper(name, mdir):
+    from faster_whisper import WhisperModel
+    path = model_path(name, mdir)
+    kw = {"device": "cpu", "compute_type": "int8"}
+    try:
+        return WhisperModel(path, **kw)
+    except Exception as e:
+        first = e
+    if not str(path).isascii():
+        # the model reader opens its files with the old Windows code page, so a user folder with Hebrew letters
+        # in its name defeats it: hand it the files from memory instead (about 1.6 GB of memory for a minute)
+        say("NOTE the model folder has non-English letters in its path; loading the model from memory")
+        try:
+            files = {f.name: f.read_bytes() for f in Path(path).iterdir() if f.is_file()}
+            return WhisperModel(MODELS[name], files=files, **kw)
+        except Exception as e:
+            first = e
+    die(f"the {name} model did not load ({type(first).__name__}: {str(first)[:150]}). Close other programs to free "
+        f"memory and run again; if it fails again, download it once more: model {name}, or use --model small.")
 
 
 def cmd_info(a):
@@ -1233,6 +1335,8 @@ def cmd_transcribe(a):
     mdir = STUDIO / "models"
     if not any(mdir.glob(f"models--*{MODELS[name].split('/')[-1]}")):
         say(f"NOTE the {name} model is not on this computer yet; it downloads now (see the model command for progress)")
+    beat = Heartbeat("transcribing")
+    beat.__enter__()
     dur = info["duration"]
     # long recordings in windows of about ten minutes, split in a pause: one long pass drifts and invents text
     bounds = [0.0]
@@ -1246,10 +1350,8 @@ def cmd_transcribe(a):
             t = b + 600
     bounds.append(dur)
     import numpy as np
-    from faster_whisper import WhisperModel
     say(f"loading the {name} model (about a minute the first time)")
-    model = WhisperModel(MODELS[name], device="cpu", compute_type="int8", download_root=str(mdir),
-                         revision=MODEL_REVISIONS.get(MODELS[name]))
+    model = load_whisper(name, mdir)
     say("transcribing, one line per sentence as it finishes")
     words, nseg = [], 0
     for wi in range(len(bounds) - 1):
@@ -1279,6 +1381,7 @@ def cmd_transcribe(a):
                     continue
                 words.append({"w": w.word.strip(), "s": round(w.start + t0, 3), "e": round(w.end + t0, 3),
                               "p": round(w.probability, 2), "seg": nseg})
+    beat.__exit__()
     if not words:
         die("the model heard no speech. Check that the video has sound, or try --lang auto")
     lines = make_lines(words)
@@ -1520,7 +1623,7 @@ def cmd_edl(a):
     info = probe(video)
     jd = job_dir(video)
     dur = info["duration"]
-    F, fstr = choose_fps(info["fps"])
+    F, fstr = choose_fps(info["fps"], info.get("tbr"))
     data = load_words(jd, need=False)
     lines = data["lines"] if data else []
     lw = line_windows(lines, dur) if lines else {}
@@ -1549,6 +1652,21 @@ def cmd_edl(a):
             else:
                 base.append((max(0.0, x), min(dur, y)))
                 notes.append(f"keep {fmt_t(x)}-{fmt_t(y)}")
+        # a piece that starts inside the one just before it joins it: "1-5,3-7" means 1 to 7, not 3 to 5 twice
+        joined = []
+        for x, y in base:
+            if joined and joined[-1][0] - 0.01 <= x <= joined[-1][1] + 0.01:
+                if x < joined[-1][1] - 0.01:
+                    notes.append(f"{fmt_t(x)}-{fmt_t(y)} overlaps the piece before it: joined into one, nothing plays twice")
+                joined[-1] = (joined[-1][0], max(joined[-1][1], y))
+            else:
+                joined.append((x, y))
+        base = joined
+        for k, (x, y) in enumerate(base):         # a deliberate repeat (the hook again at the end) stays, said aloud
+            for x2, y2 in base[:k]:
+                if x < y2 - 0.05 and x2 < y - 0.05:
+                    notes.append(f"NOTE {fmt_t(max(x, x2))}-{fmt_t(min(y, y2))} is in two pieces of --keep, so it plays twice")
+                    break
     else:
         base = [(0.0, dur)]
     removals, removed_lines = [], []
@@ -1758,7 +1876,7 @@ def cmd_style(a):
                 die(f"no font {fnt}. Use one of: {', '.join(FONTS)}, or the path of a .ttf or .otf file")
             if not has_hebrew(p):
                 die(f"{p.name} has no Hebrew letters, so it cannot carry Hebrew captions")
-            dest = STUDIO / "fonts" / "custom" / safe_name(p.name)
+            dest = STUDIO / "fonts" / "custom" / (safe_name(p.stem) + p.suffix.lower())
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(p, dest)
             st["font"] = f"custom/{dest.name}"
@@ -1995,19 +2113,33 @@ def build_audio(plan, tmp, music, duck, target):
 
 # ----------------------------------------------------------------------------- render
 
+def same_file(a, b):
+    try:
+        return Path(a).resolve() == Path(b).resolve() or os.path.samefile(a, b)
+    except OSError:
+        return False
+
+
 def out_path(video, a, fmtname):
     o = opt(a, "--out")
+    d = video.parent
     if o:
         p = path_arg(o)
-        if p.suffix.lower() != ".mp4":
-            p = p.with_suffix(".mp4")
-        p = p.resolve() if p.parent.exists() else p
-        if p.exists():
-            q = free_name(p)
-            say(f"NOTE {p.name} already exists and is never overwritten: writing {q.name}")
-            p = q
-        return p
-    d = video.parent
+        if p.is_dir() or o.rstrip().endswith(("/", "\\")):
+            d = p                                   # a folder: the numbered name goes inside it
+            if not d.is_dir():
+                die(f"there is no folder {d}. Create it first, or leave --out out and the new version goes beside the original.")
+        else:
+            if p.suffix.lower() != ".mp4":
+                p = p.with_suffix(".mp4")
+            if not p.parent.is_dir():
+                die(f"there is no folder {p.parent}. Create it first, or leave --out out and the new version goes beside the original.")
+            p = p.parent.resolve() / p.name
+            if p.exists():
+                q = free_name(p)
+                say(f"NOTE {p.name} already exists and is never overwritten: writing {q.name}")
+                p = q
+            return p
     try:
         t = d / f".write-test-{os.getpid()}"
         t.write_bytes(b"")
@@ -2016,10 +2148,31 @@ def out_path(video, a, fmtname):
         d = STUDIO / "out"
         d.mkdir(parents=True, exist_ok=True)
         say(f"NOTE the folder of the video is read-only: the new version goes to {d}")
+    d = d.resolve()
     stem = video.stem
-    pat = re.compile(re.escape(stem) + r"-edit-v(\d+)\.mp4$")
+    pat = re.compile(re.escape(stem) + r"-edit-v(\d+)\.mp4$", re.I)
     nums = [int(m.group(1)) for f in d.iterdir() if (m := pat.match(f.name))]
-    return d / f"{stem}-edit-v{(max(nums) + 1) if nums else 1}.mp4"
+    return free_name(d / f"{stem}-edit-v{(max(nums) + 1) if nums else 1}.mp4")
+
+
+def place(part, out):
+    """Move the finished file to its name without ever replacing a file that is already there."""
+    while True:
+        final = free_name(out)
+        try:
+            if IS_WIN:
+                os.rename(part, final)          # on Windows rename refuses an existing name
+            else:
+                os.link(part, final)            # on Mac a hard link refuses an existing name; then drop the work name
+                os.unlink(part)
+            return final
+        except FileExistsError:
+            continue
+        except OSError:
+            if final.exists():                  # a drive without hard links (exFAT, a network share)
+                continue
+            os.replace(part, final)
+            return final
 
 
 def write_srt(path, chunks):
@@ -2062,12 +2215,12 @@ def cmd_render(a):
     W, H = plan.W, plan.H
     lufs = fnum(a, "--lufs", LUFS_LONG if plan.total > 300 else LUFS_SOCIAL)
     out = out_path(video, a, plan.fmt)
-    if out.resolve() == video.resolve():
+    if same_file(out, video) or out.exists():
         die("the output would be the original video. The original is never overwritten; choose another name.")
     jd = plan.jd
-    for old in jd.glob("render-*"):          # work folders left by an interrupted render, after six hours
+    for old in jd.glob("render-*"):          # work folders left by an interrupted render, after a day
         try:
-            if time.time() - old.stat().st_mtime > 6 * 3600:
+            if old.is_dir() and time.time() - old.stat().st_mtime > 24 * 3600:
                 shutil.rmtree(old, ignore_errors=True)
         except OSError:
             pass
@@ -2076,6 +2229,8 @@ def cmd_render(a):
     say(f"rendering {plan.total:.1f} s ({len(plan.segs)} pieces{'' if plan.has_edl else ', no edit list: the whole video'}) "
         f"as {plan.fmt} {W}x{H} at {plan.fstr} fps, fit {fit['mode']}, captions {captions}"
         + (f", music{' ducked' if duck else ''}" if music else ""))
+    beat = Heartbeat("captions and sound")
+    beat.__enter__()
     # 1. captions
     chunks = plan.make_chunks() if captions != "none" else []
     cap_list = None
@@ -2110,33 +2265,60 @@ def cmd_render(a):
     # 2. sound
     say("building the sound: the cuts, " + ("the music, " if music else "") + f"loudness {lufs:g} LUFS")
     wav, rep = build_audio(plan, tmp, music, duck, lufs)
+    beat.__exit__()
     for r_ in rep:
         say("  " + r_)
     # 3. picture
+    # The kept pieces are read in runs that move forward through the source. A piece that plays before an
+    # earlier moment of the source (the hook moved to the front) starts a new run with its own reader, seeked
+    # to it. One reader for everything would hold every frame of the later pieces in memory until their turn:
+    # gigabytes for a few seconds of 4K phone video.
     n = len(plan.segs)
-    half = 0.5 / plan.F
-    G = [f"[0:v]{plan.rotate_chain()}{plan.hdr_chain()}fps={plan.fstr},split={n}" + "".join(f"[s{i}]" for i in range(n)) + ";" if n > 1
-         else f"[0:v]{plan.rotate_chain()}{plan.hdr_chain()}fps={plan.fstr}[s0];"]
+    runs = []
     for i, (a0, b0) in enumerate(plan.segs):
-        G.append(f"[s{i}]trim=start={max(0.0, a0 - half):.6f}:end={b0 - half:.6f},setpts=PTS-STARTPTS[v{i}];")
+        if runs and a0 >= plan.segs[runs[-1][-1]][1] - 1e-6:
+            runs[-1].append(i)
+        else:
+            runs.append([i])
+    if len(runs) > MAX_RUNS:
+        shutil.rmtree(tmp, ignore_errors=True)
+        die(f"this edit jumps back in the video {len(runs) - 1} times, and one render takes at most {MAX_RUNS - 1}. "
+            "Keep the pieces closer to the order they were filmed in, or render the list in two parts.")
+    # a phone video filmed upright carries a rotation flag. A complex filtergraph does not turn the picture by
+    # itself, and the flag would be copied onto the finished file: turn it here and drop the flag
+    rot_in = ["-display_rotation:v:0", "0"] if plan.rotate_chain() else []
+    cmd = [ffmpeg_exe(), "-hide_banner", "-nostdin", "-n"]
+    G = []
+    for r, idxs in enumerate(runs):
+        first, last = plan.segs[idxs[0]][0], plan.segs[idxs[-1]][1]
+        X = 0.0
+        if len(runs) > 1 and first > 1.0:
+            X = math.floor((first - 1.0) * plan.F + 1e-6) / plan.F      # a second early, on the frame grid
+        cmd += rot_in + (["-ss", f"{X:.6f}"] if X > 0 else []) + (["-t", f"{last - X + 1.0:.6f}"] if len(runs) > 1 else [])
+        cmd += ["-i", str(video)]
+        head = f"[{r}:v]{plan.rotate_chain()}{plan.hdr_chain()}fps={plan.fstr}"
+        G.append(head + (f",split={len(idxs)}" + "".join(f"[s{i}]" for i in idxs) if len(idxs) > 1 else f"[s{idxs[0]}]") + ";")
+        # after fps= every frame's timestamp is its frame number, so each piece is cut by whole frame numbers:
+        # exactly (b0 - a0) x fps frames, the same length as its sound. Cutting by seconds rounds some pieces a
+        # frame short, and over many silence cuts the picture runs ahead of the voice.
+        for i in idxs:
+            a0, b0 = plan.segs[i]
+            k0, k1 = max(0, round((a0 - X) * plan.F)), round((b0 - X) * plan.F)
+            G.append(f"[s{i}]trim=start_pts={k0}:end_pts={k1},setpts=PTS-STARTPTS[v{i}];")
+    idx = len(runs)
     if n > 1:
         G.append("".join(f"[v{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=0[cat];")
     else:
         G.append("[v0]null[cat];")
     G.append(f"[cat]{plan.fit_chain()}[fit];")
     if cap_list:
-        G.append("[1:v]format=rgba[cap];[fit][cap]overlay=0:0:eof_action=pass:format=auto,scale=out_range=tv,format=yuv420p[outv]")
+        G.append(f"[{idx}:v]format=rgba[cap];[fit][cap]overlay=0:0:eof_action=pass:format=auto,scale=out_range=tv,format=yuv420p[outv]")
     else:
         G.append("[fit]scale=out_range=tv,format=yuv420p[outv]")
     fv = tmp / "video-graph.txt"
     write_text(fv, "\n".join(G) + "\n")
-    # a phone video filmed upright carries a rotation flag. A complex filtergraph does not turn the picture by
-    # itself, and the flag would be copied onto the finished file: turn it here and drop the flag
-    rot_in = ["-display_rotation:v:0", "0"] if plan.rotate_chain() else []
-    cmd = [ffmpeg_exe(), "-hide_banner", "-nostdin", "-y", *rot_in, "-i", str(video)]
-    idx = 1
     if cap_list:
-        cmd += ["-f", "concat", "-safe", "0", "-i", str(cap_list)]
+        cmd += ["-f", "concat", "-safe", "0", "-i", cap_list.as_posix()]
         idx += 1
     ai = si = None
     if wav:
@@ -2154,9 +2336,12 @@ def cmd_render(a):
             "-r", plan.fstr, "-color_range", "tv", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
             "-movflags", "+faststart", "-metadata", "comment=video-editor", "-progress", "pipe:1", "-nostats",
             "-f", "mp4"]
-    part = out.with_name(out.name + ".part")
-    if part.exists():
-        part.unlink()
+    # the file being written has its own name, unique to this render, beside the final one (same drive, so the
+    # last step is a rename). Nothing that already exists is ever deleted or written over: not a leftover, and
+    # never the original, whatever it is called.
+    part = free_name(out.with_name(f".{safe_name(out.stem)}.rendering-{os.getpid()}.part"))
+    if same_file(part, video):
+        die("the output would be the original video. The original is never overwritten; choose another name.")
     cmd.append(str(part))
     log_p = tmp / "encode.log"
     say(f"encoding the picture ({W}x{H})")
@@ -2184,8 +2369,7 @@ def cmd_render(a):
     if not got["has_video"] or got["duration"] < plan.total - 1.0:
         part.unlink(missing_ok=True)
         die(f"the encoded file is incomplete ({got['duration']:.1f} s of {plan.total:.1f} s); render again")
-    final = free_name(out)
-    os.replace(part, final)
+    final = place(part, out)
     srt_out = None
     if srt_tmp:
         srt_out = free_name(final.with_suffix(".srt"))
@@ -2228,7 +2412,7 @@ def moov_before_mdat(p):
 
 def find_sidecar(out):
     out = str(Path(out).resolve())
-    for p in (STUDIO / "jobs").glob("*/renders/*.json"):
+    for p in (STUDIO / "edits").glob("*/renders/*.json"):
         d = load_json(p, {})
         if d.get("out") == out:
             return d, p
@@ -2359,11 +2543,13 @@ def cmd_wait(a):
             txt = log.read_text(encoding="utf-8", errors="replace")
             lines = [l for l in txt.replace("\r", "\n").split("\n") if l.strip()]
             last = lines[-1] if lines else ""
-            if marker in txt:
+            # only at the start of a line: a transcript line printed in the log starts with its time, so words
+            # the speaker said can never look like the marker or a problem
+            if any(l.lstrip().startswith(marker) for l in lines):
                 say(last)
                 say("READY")
                 return
-            if "Traceback" in txt or "PROBLEM" in txt:
+            if any(l.startswith(("Traceback (most recent call last)", "PROBLEM")) for l in lines):
                 say("\n".join(lines[-5:]))
                 say("FAILED")
                 sys.exit(2)
