@@ -71,15 +71,15 @@ Most social video is watched without sound, so on vertical video captions are bu
 Dead air is found by loudness: anything quieter than the threshold for longer than the minimum is a cut candidate.
 
 • Threshold -30 dB, minimum silence 0.6 s, keep at least 0.15 s of padding around speech so no word loses its first letter, and drop any kept piece shorter than 0.2 s.
-• A soft-spoken person, or a noisy room: raise the threshold to -35 to -40 dB.
+• A soft-spoken person, or word starts that get clipped: a lower threshold, -35 to -40 dB (`--db -35`), so quiet speech is not taken for silence. A noisy room where the report finds almost nothing: a higher one, about -25 dB (`--db -25`). The `silences` report prints both suggestions under its list.
 • Music or a constant hum under the voice in the source: silence detection becomes unreliable. Cut from the transcript instead.
-• Long-form: start gentler, removing only silences of about a second or more, and keep more padding.
+• Long-form: start gentler, removing only silences of about a second or more, and keep more padding (`--min 1.0 --pad 0.25`).
 
 When a value other than the default worked for a person, write it down. Their next video is very likely the same voice in the same room.
 
 ## Fillers, and when not to cut
 
-Filler sounds (אה, אמ, אהה, אממ, uh, um) are cut with about 0.06 s of padding. Words like "כאילו" and "יעני" are often fillers and sometimes carry meaning, so they are cut only when the owner asks. The transcription model often leaves fillers out of the text altogether; the silence pass catches most of those.
+Filler sounds (אה, אמ, אהה, אממ, uh, um) are cut with about 0.06 s of padding, and so are a stuttered short word ("אני אני") and a phrase said twice in a row. Words like "כאילו", "יעני", "רגע" and "בעצם" are often fillers and sometimes carry meaning, and a doubled content word ("לאט לאט", "מאוד מאוד") is often Hebrew on purpose. The filler report marks all of these `ask`, and they are cut only after the owner agrees. The transcription model often leaves fillers out of the text altogether; the silence pass catches most of those.
 
 Not every pause is dead air. Keep:
 
@@ -99,7 +99,7 @@ The voice is always the loudest thing. While the person talks, the music sits ab
 
 ## Loudness
 
-Social platforms and YouTube normalise to about -14 LUFS. Deliver -14 to -16 LUFS integrated (the louder end for short social video, the quieter end for long speech), with the true peak no higher than -1 dBTP. A video far quieter than that sounds weak next to everything around it in the feed; a video above it gets turned down and may distort on the way.
+Social platforms and YouTube normalise to about -14 LUFS. Deliver -14 to -16 LUFS integrated (the louder end for short social video, the quieter end for long speech), with the true peak no higher than -1 dBTP. The render does this by itself: -14 for a video up to five minutes, -16 for a longer one. A video far quieter than that sounds weak next to everything around it in the feed; a video above it gets turned down and may distort on the way.
 
 ## Landscape into vertical
 
@@ -108,6 +108,8 @@ A centre crop of a 1920×1080 frame to 9:16 keeps only about 608 px of the width
 • One person, roughly centred: crop around the face, not around the centre of the frame, and check the crop on frames from the start, the middle and the end, because people move.
 • Two people, a whiteboard, or a screen that matters: do not crop. Put the whole wide frame in the middle of the vertical canvas with a plain band above and below, and the captions in the lower band.
 • Never stretch.
+
+The engine's `--fit` does this. `auto`, the default, looks for faces on frames across the edit: one steady face is cropped around; anything else (no face, two people, a face that moves wider than the crop) keeps the whole picture on a dark band. `crop` always crops, `band` always keeps the whole picture, and `blur` keeps it whole over a blurred, darkened copy of itself instead of a plain band. The sheet's first line says which one it chose and why.
 
 ## Long-form is not a long reel
 

@@ -26,7 +26,7 @@ On Windows, first check that your command tool is bash: `echo $BASH_VERSION` pri
 Then, from the system folder (the one holding `1-me/` and `2-makers/`), write the launcher and run the check. This is safe to run every time and keeps the launcher pointing at this folder even if the system moved:
 
 ```bash
-SK="$(pwd)/.claude/skills/video-editor"; [ -f "$SK/edit.py" ] || { echo "NOT IN THE SYSTEM FOLDER"; exit 1; }; mkdir -p ~/reel-studio && printf '#!/bin/bash\nPY="$HOME/reel-studio/.venv/bin/python"; [ -x "$PY" ] || PY="$HOME/reel-studio/.venv/Scripts/python.exe"\nexport REEL_STUDIO="$HOME/reel-studio" PYTHONIOENCODING=utf-8 PYTHONUTF8=1\nexec "$PY" %q "$@"\n' "$SK/edit.py" > ~/reel-studio/editor && bash ~/reel-studio/editor doctor
+SK="$(pwd)/.claude/skills/video-editor"; [ -f "$SK/edit.py" ] || { echo "NOT IN THE SYSTEM FOLDER"; exit 1; }; mkdir -p ~/reel-studio && printf '#!/bin/bash\nPY="$HOME/reel-studio/.venv/bin/python"; [ -x "$PY" ] || PY="$HOME/reel-studio/.venv/Scripts/python.exe"\nexport PYTHONIOENCODING=utf-8 PYTHONUTF8=1\nexec "$PY" %q "$@"\n' "$SK/edit.py" > ~/reel-studio/editor && bash ~/reel-studio/editor doctor
 ```
 
 • `NOT IN THE SYSTEM FOLDER`: you are working in another folder. Ask the owner in one line to open Claude Code in the folder of their system, the one they open every day, and stop.
@@ -47,7 +47,7 @@ Run:
 bash ~/reel-studio/editor info "<video>"
 ```
 
-It prints the length, the size, the frame rate, whether it is vertical, and the `JOB FOLDER` where this video's working files live. Remember that folder; below it is `<job>`. If `info` fails on a path with Hebrew letters, spaces or symbols, copy the file to a plain English name and use the copy, remembering the original path for the report:
+It prints the length, the size, the frame rate, whether it is vertical, and the `JOB FOLDER` where this video's working files live. Remember that folder; below it is `<job>`. On Windows it prints as `C:\Users\...`: write it with forward slashes, `C:/Users/...`, in every command below. If `info` fails on a path with Hebrew letters, spaces or symbols, copy the file to a plain English name and use the copy, remembering the original path. The new versions are then made beside the copy, in `~/reel-studio/in`; in step 10, after `FILE OK`, copy each one beside the original with `cp -n` and report that path:
 
 ```bash
 N="video-$(date +%Y%m%d-%H%M)"; mkdir -p ~/reel-studio/in && cp "<video>" ~/reel-studio/in/$N.mp4 && echo ~/reel-studio/in/$N.mp4
@@ -57,7 +57,7 @@ Two things from `info` go into the first message of step 3 when they apply: a la
 
 ### Step 3. One wave, at most three questions
 
-**When the request is mechanical and complete, ask nothing.** "תוריד את השתיקות", "תוריד את האה והאמ", "תחתוך מ 1:20 עד 1:35", "תשאיר שורות 3 עד 7" say exactly what to do: skip to step 4 (the transcript is still needed for captions and to check nothing whole was lost), then step 6.
+**When the request is mechanical and complete, ask nothing.** "תוריד את השתיקות", "תוריד את האה והאמ", "תחתוך מ 1:20 עד 1:35", "תשאיר שורות 3 עד 7" say exactly what to do: skip to step 4 (the transcript is still needed for captions and to check nothing whole was lost), then step 6. "רק תוסיף כתוביות" is mechanical too: no `edl` at all, and `--no-edl` on the sheet and the render, so an edit list left from an earlier session on the same video is not applied.
 
 Otherwise, read what you already know before asking anything: what the owner wrote in their request, what `info` showed, `caption-style.json` from step 1, and in `1-me/` where they publish and how they speak (`summary.md` is already loaded, open `voice.md` and `audience.md`). Every question that is already answered is dropped. Send one message:
 
@@ -89,7 +89,7 @@ nohup bash ~/reel-studio/editor transcribe "<video>" --model ivrit > "<job>/tran
 bash ~/reel-studio/editor wait "<job>/transcribe.log" TRANSCRIBED
 ```
 
-`--model` is whichever `doctor` listed: `ivrit` if present, otherwise `medium` or `small`. `wait` returns within about a minute and a half with the latest line: `STILL RUNNING`, tell the owner in one line how far it got and run it again. `READY`, done. `STUCK` or `FAILED`, show the owner the last lines in one sentence and run `transcribe` once more; if it fails again, stop and say so.
+`--model` is whichever `doctor` listed: `ivrit` if present, otherwise `medium` or `small`. `wait` returns within about a minute and a half with the latest line: `STILL RUNNING`, tell the owner in one line how far it got and run it again. `READY`, done. A line `still working` is a heartbeat, printed every minute while the model works in silence; it is normal. `STUCK` (five minutes without any line) or `FAILED`, show the owner the last lines in one sentence and run `transcribe` once more; if it fails again, stop and say so.
 
 The result is `transcript.txt` in `<job>`, one numbered line per sentence with its start and end time, and `words.json` with every word's time. **Read `transcript.txt` in full before you decide anything.** Fix words the model misheard, usually English names written in Hebrew letters ("וורד פרס" is WordPress), in `words.json` and `transcript.txt`, without touching any time. Captions are built from these words, so a misheard brand name ends up burned into the video.
 
@@ -103,6 +103,8 @@ First run the two mechanical reports, each under a minute:
 bash ~/reel-studio/editor silences "<video>"
 bash ~/reel-studio/editor fillers "<video>"
 ```
+
+`silences` lists the dead-air cuts. `fillers` lists numbered items, each marked `cut` or `ask`. `cut` are the safe ones: hesitation sounds (אה, אמ), a stuttered short word, a phrase said twice in a row. `ask` are words that are sometimes filler and sometimes part of the sentence (כאילו, יעני, רגע, בעצם), a doubled word that may be on purpose (לאט לאט, מאוד מאוד), and a word that may have been started twice. An `ask` item is never cut without the owner: read each one inside its line, and put in the message below only the ones you would cut, with their numbers. The rest stay.
 
 Then, from the whole transcript:
 
@@ -122,12 +124,14 @@ Send:
 • <שורות 1 עד 3>: <סיבה>
 • <שורה 9>: <סיבה>
 וגם <מספר> שתיקות ארוכות ו<מספר> "אה" ו"אמ", בלי לגעת בהפסקות שמדגישות משהו.
+מילים שאני לא מוריד בלי אישור שלך, כי לפעמים הן חלק מהמשפט:
+• <מספר מהדוח>) "<המילה>" בשורה <מספר>: <למה להוריד, בחצי משפט>
 
 יוצא בערך <שניות> שניות מתוך <שניות>.
 יאללה, או שתשנה? אפשר לכתוב למשל "תחזיר את 9" או "תוריד גם את 12".
 ```
 
-Wait. Each change: update the list, send it again, wait. **Nothing is cut before this list is approved.**
+Drop the two lines of words to approve when you propose none. Wait. Each change: update the list, send it again, wait. **Nothing is cut before this list is approved.** An approval of the list ("יאללה", "מאשר") approves the words in it too.
 
 **Long-form mode.** A lecture, a live or a recorded call longer than about five minutes, when the owner wants reels out of it: do not trim the whole thing. Propose three to six reels instead, each 30 to 90 seconds, each a set of line ranges that may come from different places. Every candidate must pass three tests, judged as a stranger who sees only that reel: complete (no "as I said before", nothing pointing at something missing), hook (the first one or two sentences stop a scroll on their own), close (the last sentence lands on an insight, a punch or an invitation, never mid-breath). Send them as a numbered list, one line each: the opening words, the line ranges, the length, and why it works. Each approved reel then goes through steps 6 to 12 as its own version. For a full long-form edit (a lecture for YouTube), follow craft.md, "Long-form is not a long reel".
 
@@ -137,35 +141,41 @@ Wait. Each change: update the list, send it again, wait. **Nothing is cut before
 bash ~/reel-studio/editor edl "<video>" --keep "<approved line numbers, in play order>" --use silence,fillers
 ```
 
-A mechanical request uses only what was asked: `--use silence`, `--use fillers`, `--remove "1:20-1:35"`, or `--keep "3-7"`. The command prints the length the edit will have. If it differs from what you promised the owner by more than about ten percent, find out why before going on.
+When the owner approved `ask` words, add `--fillers "<numbers>"`. That list replaces the default choice, so it holds every number the report marked `cut` plus the approved `ask` numbers. `--fillers none` keeps every word, `--fillers all` cuts every item.
 
-If `silences` cut into the start of words or left long gaps, follow craft.md, "Silence thresholds", and run the report again with the adjusted values before building the edit. Note any value that differed from the default: it goes into the record in step 11.
+**Lines and times are written differently, and a mistake here cuts the wrong thing.** In `--keep` and `--remove` a bare number or range ("5", "3-7", "7,1-6,8-12") is a line number from `transcript.txt`. A time has a colon, a decimal point or an `s`: "1:20-1:35", "40.5-42", "40s-42s". So "תחתוך מ 40 עד 42 שניות" is `--remove "40s-42s"`, never `"40-42"`, which would remove lines 40 to 42.
+
+A mechanical request uses only what was asked: `--use silence`, `--use fillers`, `--remove "1:20-1:35"`, or `--keep "3-7"`. Every `edl` run builds the whole edit from the source again, so a later change repeats everything already approved (`--keep`, `--use`, `--fillers`) and adds the new part. The command prints the length the edit will have. If it differs from what you promised the owner by more than about ten percent, find out why before going on.
+
+If `silences` cut into the start of words or left long gaps, follow craft.md, "Silence thresholds": run the report again with the adjusted values before building the edit, for example `silences "<video>" --db -35 --pad 0.25` (the defaults are `--db -30 --min 0.6 --pad 0.15`). Note any value that differed from the default: it goes into the record in step 11.
 
 ### Step 7. The look
 
+**The format first,** from step 3: `reel` (1080x1920), `wide` (1920x1080), `square`, or `source` (the shape it was filmed in). From here every `style`, `sheet`, `frames` and `render` gets the same `--format`. A landscape video going to `reel` also gets `--fit` (craft.md, "Landscape into vertical"): `auto`, the default, crops around one steady face and otherwise keeps the whole picture on a dark band; `band` keeps the whole picture on a dark band; `blur` keeps it whole over a blurred copy of itself; `crop` always crops. A vertical video into `reel` needs no `--fit`.
+
 Captions and music, from the step 3 answers. The caption style comes from the first that exists:
 
-1) `3-work/now/video/caption-style.json`, the style saved from an earlier video. Use it as it is.
+1) `3-work/now/video/caption-style.json`, the style saved from an earlier video: `bash ~/reel-studio/editor style "<video>" --format <format> --style "3-work/now/video/caption-style.json"`, which takes it as it is.
 2) The owner's design brief. Look for it:
 
 ```bash
 grep -rl ':root' --include='*.css' --exclude-dir=.claude --exclude-dir=done --exclude-dir=node_modules . 2>/dev/null; ls 5-library/design-brief 2>/dev/null
 ```
 
-A CSS file with `:root` and `--` colour variables is the brief's colour file. One found: `bash ~/reel-studio/editor style "<video>" --from-css "<that file>"`, and say in one line: "מצאתי את בריף העיצוב שלך. הכתוביות ייקחו ממנו את הצבעים." More than one: ask in one line which, with the paths.
-3) Nothing: `bash ~/reel-studio/editor style "<video>"`, the safe default, white letters with a dark outline. Say in one line: "אין לך עדיין בריף עיצוב, אז הכתוביות בסגנון הבטוח, לבן עם קו כהה. כשיהיה בריף, אבנה את הסגנון ממנו."
+A CSS file with `:root` and `--` colour variables is the brief's colour file. One found: `bash ~/reel-studio/editor style "<video>" --format <format> --from-css "<that file>"`, and say in one line: "מצאתי את בריף העיצוב שלך. הכתוביות ייקחו ממנו את הצבעים." More than one: ask in one line which, with the paths.
+3) Nothing: `bash ~/reel-studio/editor style "<video>" --format <format>`, the safe default, white letters with a dark outline. Say in one line: "אין לך עדיין בריף עיצוב, אז הכתוביות בסגנון הבטוח, לבן עם קו כהה. כשיהיה בריף, אבנה את הסגנון ממנו."
 
-`style` prints the path of the `style.json` it wrote. Copy it to `3-work/now/video/caption-style.json` only when that file does not exist yet (`mkdir -p` the folder, then `cp -n`), so the next video starts from the same look without asking. A brief's fonts are not taken for burned captions unless they have Hebrew letters; the engine's Hebrew font is the safe one.
+`style` prints `STYLE <job>/style.json`, the style file from now on, and `PREVIEW`, an image with a frame and five test lines; open it and check every test line reads right to left. Pass that `STYLE` path as `--style` to every `sheet`, `frames` and `render` below, always together with the same `--format`. Copy it to `3-work/now/video/caption-style.json` only when that file does not exist yet (`mkdir -p` the folder, then `cp -n`), so the next video starts from the same look without asking. A brief's fonts are not taken for burned captions unless they have Hebrew letters; the engine's Hebrew font is the safe one.
 
 Music: only a file the owner gave. Before using it, say once which platform it is licensed for if they did not say (craft.md, "Music under speech"), and never download music yourself.
 
 ### Step 8. Frames before the full render
 
 ```bash
-bash ~/reel-studio/editor sheet "<video>"
+bash ~/reel-studio/editor sheet "<video>" --format <format> --style "<job>/style.json"
 ```
 
-It draws one frame from every kept part of the edit, with the captions in place, on one image, and prints its path. Open it with your image tool and go through craft.md, "Check before the full render". In short: the opening frame is the hook line; captions sit inside the safe area and never on the face; at most two lines; Hebrew reads right to left with punctuation, English words and numbers in the right place; the crop keeps the face; the contrast holds. For a closer look at a moment, `bash ~/reel-studio/editor frames "<video>" <t1> <t2> ...` gives full-size stills at those times of the edit.
+Give it exactly the `--format`, `--fit` and `--style` that the render in step 9 will get (and `--no-edl` when there is no cut); a sheet drawn with other values previews a different video. Its first line says the format, the fit and the style it used: check them. It draws one frame from every kept part of the edit, with the captions in place, on one image, and prints its path. Open it with your image tool and go through craft.md, "Check before the full render". In short: the opening frame is the hook line; captions sit inside the safe area and never on the face; at most two lines; Hebrew reads right to left with punctuation, English words and numbers in the right place; the crop keeps the face; the contrast holds. For a closer look at a moment, `bash ~/reel-studio/editor frames "<video>" <t1> <t2> ... --format <format> --style "<job>/style.json"` gives full-size stills at those seconds of the edit; add `--safe` to shade what the app covers.
 
 A problem: fix the style or the edit and draw the sheet again, up to three rounds. Still wrong after three: tell the owner in one sentence and continue.
 
@@ -176,11 +186,11 @@ Show it: `bash ~/reel-studio/editor open "<the sheet>"`, and write: "זו תצו
 Say before: "מרנדר עכשיו את הסרטון המלא. זה לוקח בין דקה לעשר דקות לפי האורך והמחשב, ובזמן הזה יש שקט. אכתוב לך אחוזים. עדיף לא לסגור את החלון עד שאגיד שהסרטון מוכן."
 
 ```bash
-nohup bash ~/reel-studio/editor render "<video>" --format <reel|wide|square|source> --captions <burn|soft|none> --style "<style.json>" > "<job>/render.log" 2>&1 &
+nohup bash ~/reel-studio/editor render "<video>" --format <reel|wide|square|source> --captions <burn|soft|none> --style "<job>/style.json" > "<job>/render.log" 2>&1 &
 bash ~/reel-studio/editor wait "<job>/render.log" DONE
 ```
 
-With music, add `--music "<file>" --duck`. Run `wait` again after every `STILL RUNNING`, and tell the owner the percent each time. `STUCK` or `FAILED`: show the last lines in one sentence, fix, render again. The `DONE` line prints the path of the new numbered version beside the source; that path is the one used from here on. Never pass `--out` over an existing file.
+The same `--format`, `--fit` and `--style` as the sheet. With music, add `--music "<file>" --duck`. With no cut at all, add `--no-edl`. Loudness is -14 LUFS for up to five minutes and -16 for longer, by itself; `--lufs` changes it only when the owner asks. Run `wait` again after every `STILL RUNNING`, and tell the owner the percent each time. `STUCK` or `FAILED`: show the last lines in one sentence, fix, render again. The `DONE` line prints the path of the new numbered version beside the source; that path is the one used from here on. Never pass `--out` over an existing file.
 
 ### Step 10. Check the delivered file
 
@@ -190,7 +200,7 @@ Do not trust the render. Check the file itself:
 bash ~/reel-studio/editor verify "<the new mp4>"
 ```
 
-It checks that the file opens, its length against the edit, the video and audio streams, the loudness and the peak, and pulls frames from the delivered file. Open them. Then look at three moments right after a cut, with `frames` on the delivered file if needed: the caption on screen must be the word being said. A caption that leads or lags after each cut is drift (craft.md, "Failure modes"), and the version is not delivered.
+It checks that the file opens, its length against the edit, the video and audio streams, the loudness and the peak, and pulls frames from the delivered file. Open them. Then look at three moments right after a cut: add up the lengths of the pieces `edl` printed to get the second of each cut, and run `bash ~/reel-studio/editor frames "<the new mp4>" <t1> <t2> <t3> --safe` on the delivered file. The caption on screen must be the word being said. A caption that leads or lags after each cut is drift (craft.md, "Failure modes"), and the version is not delivered.
 
 `FILE HAS PROBLEMS`, a length that does not match, or frames that do not match step 8: go back to the step that made it. Only after `FILE OK`: `bash ~/reel-studio/editor open "<the new mp4>"`.
 
@@ -238,7 +248,7 @@ Every note makes a new version from the source, never from the previous cut, so 
 
 • Content ("תחזיר את 9", "תוריד את ההתחלה"): update the line list, `edl` again, steps 8 to 11.
 • A time window ("תחתוך 1:20 עד 1:35"): `edl ... --remove "1:20-1:35"` on top of the approved list, steps 8 to 11.
-• The look ("הכתוביות קטנות מדי", "תזיז אותן למעלה"): change `style.json`, then copy it over `3-work/now/video/caption-style.json` (now the owner asked for it, so overwrite is right) and say "נשמר בסגנון שלך, גם לסרטונים הבאים." Steps 8 to 11.
+• The look ("הכתוביות קטנות מדי", "תזיז אותן למעלה"): `bash ~/reel-studio/editor style "<video>" --format <format> --style "<job>/style.json"` with the change, for example `--size 90` (78 is the default), `--position 62` (the bottom edge of the captions in percent of the height, smaller is higher; 75 is the default on a reel), `--color`, `--outline`, `--box` or `--font`. Then copy `<job>/style.json` over `3-work/now/video/caption-style.json` (now the owner asked for it, so overwrite is right) and say "נשמר בסגנון שלך, גם לסרטונים הבאים." Steps 8 to 11.
 • Music level, format, captions on or off: the render flags, steps 9 to 11.
 
 Every new version gets its own record, with `-2`, `-3`. The earlier version stays on disk; say its path if the owner wants to compare.
