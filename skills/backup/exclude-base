@@ -1,0 +1,41 @@
+# What the MAKERS backup never sends to GitHub. Same syntax as .gitignore.
+# Passwords and keys
+.env
+.env.*
+*.pem
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.claude/settings.local.json
+.mcp.json
+# Things that are rebuilt, not owned
+node_modules/
+.venv/
+__pycache__/
+.trash/
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+# Computer noise
+.DS_Store
+Thumbs.db
+desktop.ini
+# Video, audio and archives: big, and they already live where they came from
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.mkv
+*.wav
+*.m4a
+*.aiff
+*.zip
+*.7z
+*.rar
+*.dmg
+*.mp3
+*.webm
+*.ogg
+*.opus
+*.flac
+*.aac
