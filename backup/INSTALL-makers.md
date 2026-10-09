@@ -215,7 +215,9 @@ A `Logged in` line and a username: continue, and keep the username for step 10. 
 Download the three files of the skill straight into the system's skill folder. They come from one fixed version of the gift, and each file is checked against its fingerprint:
 
 ```bash
-D="$(pwd)/.claude/skills/backup"; mkdir -p "$D"; for f in SKILL.md backup.sh exclude-base; do curl -fsSL --retry 3 -o "$D/$f" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/4c9f7ea3d4352b09bc4c1ee7469f8afebc7faf98/skills/backup/$f" || echo "PROBLEM $f did not download"; done
+D="$(pwd)/.claude/skills/backup"; mkdir -p "$D" && curl -fsSL --retry 3 -o "$D/SKILL.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/4c9f7ea3d4352b09bc4c1ee7469f8afebc7faf98/skills/backup/SKILL.md" || echo "PROBLEM SKILL.md did not download"
+D="$(pwd)/.claude/skills/backup"; mkdir -p "$D" && curl -fsSL --retry 3 -o "$D/backup.sh" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/4c9f7ea3d4352b09bc4c1ee7469f8afebc7faf98/skills/backup/backup.sh" || echo "PROBLEM backup.sh did not download"
+D="$(pwd)/.claude/skills/backup"; mkdir -p "$D" && curl -fsSL --retry 3 -o "$D/exclude-base" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/4c9f7ea3d4352b09bc4c1ee7469f8afebc7faf98/skills/backup/exclude-base" || echo "PROBLEM exclude-base did not download"
 D="$(pwd)/.claude/skills/backup"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' dbd202c519632975aa2a22ca58a015c85338a131b0d00970bbbad52ddb5ecbb4 SKILL.md db5e7ccdad04bab513535de5ead85ca7f02c1101f5aa75004b5d4c2adc0bb4ea backup.sh 6b449dc67601b2c90b99ae605aedbbcd52b6caae37f1598d934339e31f0978a4 exclude-base | $H -c - )
 ```
 
