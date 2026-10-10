@@ -21,7 +21,7 @@ Talk to the owner in Hebrew, about their video and what they said in it, never a
 
 **How the text looks.** A message in a code block here is sent as plain chat text, never inside a code block: the fence only marks where it starts and ends. Nothing the owner reads is in bold, and no dash of any kind stands between two parts of a sentence (no —, no –, no - with spaces around it): a comma, a colon or a new sentence instead. A hyphen inside a word ("ה-CapCut", "edit-v1") stays. This holds for every line the owner reads, the closing line `/final-pass` adds included.
 
-**Dates against today.** Before you write "היום", "אתמול" or a weekday about an earlier video, compare the date in its record's file name (`<YYYY-MM-DD>-...`) with today's date (`date +%F`): the same date is "היום", the day before is "אתמול", anything older is the date itself. The step 1 sentence about an earlier video says "בפעם הקודמת" and needs no date.
+**Dates against today.** Before you write "היום", "אתמול" or a weekday about an earlier video, compare the date in its record's file name (`<YYYY-MM-DD>-...`) with today's date (`date +%F`): the same date is "היום" (never "הבוקר" or "הערב": the record has no hour), the day before is "אתמול", anything older is the date itself. The step 1 sentence about an earlier video says "בפעם הקודמת" and needs no date.
 
 **How every command runs.** Step 1 writes a small launcher, `~/reel-studio/editor`, that runs the studio's own Python on `edit.py` in this folder. Every command below is `bash ~/reel-studio/editor <command>`. Put the video path in double quotes, written in full, never with `~` inside the quotes. On Windows a path like `C:\Users\dana\Videos\reel.mp4` is written `/c/Users/dana/Videos/reel.mp4`.
 
