@@ -110,9 +110,9 @@ This one step is yours, Morty, and not the Designer's: `.claude/skills/` is a su
 The commands are the same on Mac and on Windows in Git Bash. This step comes before the tools because the tools step runs the engine that is in these files. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2. They come from one fixed version of the gift, and each file is checked against its fingerprint, so what runs on the owner's computer is exactly what was tested:
 
 ```bash
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/SKILL.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/SKILL.md" || echo "PROBLEM SKILL.md did not download"
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/craft.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/craft.md" || echo "PROBLEM craft.md did not download"
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/edit.py" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/edit.py" || echo "PROBLEM edit.py did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/SKILL.md" > "$D/SKILL.md" || echo "PROBLEM SKILL.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/craft.md" > "$D/craft.md" || echo "PROBLEM craft.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/edit.py" > "$D/edit.py" || echo "PROBLEM edit.py did not download"
 ```
 
 Claude Code asks the owner to approve writing into `.claude/`. That is expected; it was announced in step 4.
