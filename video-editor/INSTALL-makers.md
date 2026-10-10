@@ -1,6 +1,6 @@
 # Morty, this one is for you
 
-The owner brought a MAKERS gift to install: the video editor. This file is written to you so you do not have to work out what to do. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done; it is not part of their vault. Speak to the owner in Hebrew, as always; the lines in code blocks marked as messages are theirs word for word.
+The owner brought a MAKERS gift to install: the video editor. This file is written to you so you do not have to work out what to do. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done; it is not part of their vault. Speak to the owner in Hebrew, as always; the lines in code blocks marked as messages are theirs word for word, sent as plain chat text: the fence only marks where a message starts and ends, so a message never goes out inside a code block. Nothing the owner reads is in bold, and no dash of any kind stands between two parts of a sentence; a comma or a new sentence does that job.
 
 **One form of address, all the way through.** The system speaks to the owner in the second person singular, and the messages here are written in the masculine (מאשר, אשר, סגור, פתח, כתוב). When the owner writes about themself in the feminine ("מאשרת", "אני לא בטוחה"), or `1-me/summary.md` shows they are a woman, every line to them is in the feminine from then on, these messages included: מאשרת, אשרי, סגרי, פתחי, כתבי, גררי, לחצי, הדבקי. Check each reply before it goes: one gender in every sentence, including your own sentences between the messages. Never mix the two and never write both (את/ה). What the owner will write to the Designer ("תערוך לי את הסרטון") stays as it is. The skill carries the same rule for the editing that follows.
 
@@ -38,7 +38,7 @@ Do not spend questions on them.
 
 If this is the owner's first session and your own file asks for a first-session line, say it first, in one line, then continue here.
 
-Send this message, word for word, as the first thing the owner reads. Every sentence they see from here to the end is Hebrew, also the short ones you write while commands run:
+Send this message, word for word, as the first thing the owner reads, at once, as your next reply text and before any other command or file read: the owner has just pasted the install message and sees nothing until you write. Every sentence they see from here to the end is Hebrew, also the short ones you write while commands run:
 
 ```
 זו עבודה של המעצב שלך. הוא מתקין את עורך הווידאו ועורך איתך כאן, בשיחה הזו.

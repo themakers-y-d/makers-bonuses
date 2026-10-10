@@ -10,6 +10,12 @@ Two things the Designer's own file would otherwise stop on. **The message exists
 
 Messages to the owner below are in Hebrew, word for word. Everything else is instruction. Work through the numbered steps in order.
 
+**How every line to the owner is written.** These hold for this file and for SKILL.md, the whole run:
+• **Hebrew only,** also the short lines you write while commands run. Never narrate a step in English ("Scene B lands its visuals...", "Final pass caught one thing..."): say it in Hebrew or not at all.
+• **Plain chat text.** The code fences here and in SKILL.md only mark where a message starts and ends. Send its words as ordinary text, never inside a code block, never in bold, and without adding a dash of any kind (a comma or a new sentence instead).
+• **One gender.** The messages are written in the masculine. When the owner writes about themself in the feminine ("מאשרת", "אני ממשיכה") or `1-me/summary.md` shows they are a woman, every line is feminine from then on, the messages included: גררי, תקני, כתבי, לחצי, אשרי, הישארי, מאשרת, את מדברת, תסיימי, שמרי. One gender in every sentence, never both (את/ה). The examples of what the owner can write to you stay as they are.
+• **Dates against today.** Before you call earlier work "אתמול" or "בפעם הקודמת", compare the date in its record's name with today's date (`date +%F`): the same date is "היום", one day earlier is "אתמול", anything older is the date itself.
+
 ## שלב 1. Confirm this is a MAKERS system
 
 Check that `1-me/summary.md` exists in the folder you are working in. If it does not, this is not a MAKERS system: stop reading this file and follow SKILL.md as it is.
@@ -60,7 +66,7 @@ Read `1-me/summary.md`, `1-me/me.md`, `1-me/audience.md`, `1-me/offers.md` and `
 What is filled becomes a proposal, not a decision:
 • Field and topic area, from whichever of these files states it. This decides axis 9 by the derivation rules in axes.md.
 • Who the videos speak to: one short line from `audience.md`.
-• What the viewer does at the end: the natural next step from `offers.md` (send a message, comment a word, open a link), written as the words the viewer would read. Never a price.
+• What the viewer does at the end: only a call to action that a `1-me/` file states in so many words (for example "כתבו לי 'אני' בפרטי", "הקישור בביו"), copied as it is written there. A description of an offer ("פגישת ייעוץ, ואז ליווי") is not a call to action, and you never turn one into a sentence the owner did not write. When `1-me/` holds no such words, this line is not known: leave it out of the top block and keep the ending part of question 1 in the wave, so the owner says it. Never a price.
 • How they speak on camera: one of the four options of question 2 in SKILL.md, from the rhythm and sentences in `voice.md`.
 
 ## שלב 4. From the brief to colours and shapes
@@ -90,7 +96,8 @@ Question 3 is answered: colour codes, axis 4 option ג, with these colours.
 Build the wave:
 
 1) Drop every question that steps 3 and 4 answered.
-2) Keep all the rest, in their original order and with their original numbers, copied word for word from step 2 of SKILL.md, so the derivation rules in axes.md still apply. When step 3 found the field, the audience and the ending, question 1 shrinks to "1) על מה הסרטון הזה, במשפט?".
+2) Keep all the rest, in their original order, copied word for word from step 2 of SKILL.md. When step 3 found the field, the audience and the ending, question 1 shrinks to "1) על מה הסרטון הזה, במשפט?". When it found the field and the audience but not the ending, it becomes "1) על מה הסרטון הזה, במשפט? ומה אתה רוצה שהצופה יעשה בסוף? (לשלוח הודעה, להגיב במילה, להיכנס לקישור, או כלום)".
+3) Number them again, 1), 2), 3) and on, with no gap: the owner sees continuous numbers, never "1), 3), 4)". Keep for yourself which original question each one is (the derivation rules in axes.md and the "3ד" style answers speak of the original numbers), and build the short-answer example with the new numbers.
 
 The top block holds one line for every question that was answered from the system, and one line for every axis a brief rule settled on its own (for example "תנועה: הבריף שלך אוסר קפיצה, אז התנועה תהיה רגועה וחלקה"). Nothing is chosen for the owner without a line.
 
@@ -104,7 +111,7 @@ Send:
 מה כבר ידוע לי מהמערכת שלך. אם משהו לא נכון, תקן:
 • התחום: <מ-1-me>
 • הסרטונים מדברים אל: <מ-audience.md>
-• בסוף הצופה: <המילים שהצופה יקרא, מ-offers.md>
+• בסוף הצופה: <המילים מ-1-me כלשונן, רק אם כתובות שם>
 • הטון בסרטונים: <האפשרות, מ-voice.md>
 • צבעים: מהבריף שלך. רקע <hex>, טקסט <hex>, ראשי <hex>, מבטא <hex>
 
@@ -124,7 +131,7 @@ Run steps 3, 4 and 5 of SKILL.md, with these changes, the ones marked "with a br
 
 1) Step 3 there, with a brief: question 3 is answered. Do not run `palette` and do not offer palettes, not in step 3 and not in item 6 of step 6 there.
 2) Step 4 there: keep each line's number and option letter, as SKILL.md does, so "2ב" can be answered, and describe it in plain words the owner uses ("איך אתה מופיע", "איך הדברים זזים"), not the axis names. Right above the lines say once: "המספרים כאן הם של השורות למטה, לא של השאלות מקודם." After them and before the question about changes, one short paragraph. With a brief: "מהבריף שלך: <הצבעים, הרדיוס, ומה מהכללים נכנס>. לא נכנס: הגופן, כי האנימציה כותבת ב-Assistant שנבדק לעברית<, ועוד מה שלא נכנס ולמה>. בחרתי לבד, כי הבריף לא הגדיר: <רשימה, או 'כלום'>." Without a brief: "את הצבעים בחרתי בלי בריף. כשיהיה לך, אפשר לבנות את הסגנון מחדש ממנו."
-3) Step 5 there, always: in the style's "נבנה ב-" line write "התשובות המקוריות" without a number, list both the owner's answers and what came from the system, and take the closing words of line 12 from the "בסוף הצופה" line the owner saw in step 5. With a brief, add "מהבריף שב-<הנתיב>". This replaces SKILL.md's instruction that "הערות שנשמרו" stays empty: after its explanation line, add one line per brief rule that entered the style, both "אסור" lines and "never text / never a word" rules, and only rules about colour, shape, motion or the mark: `• <תאריך> מהבריף, בכפוף ל-14 החוקים הקבועים: "<הכלל כלשונו>"`. These lines never override the fixed rules, on this run or any later one. A brief rule that could not enter only because a file was missing (a mark with no image) gets a line too: `• <תאריך> מהבריף, ממתין לקובץ: "<הכלל כלשונו>"`, so a later run picks it up once the file exists. Inside the quoted rule, a long dash becomes a comma, double quotes become single quotes, and `<` or `>` become words, because step 5's check counts all of them.
+3) Step 5 there, always: in the style's "נבנה ב-" line write "התשובות המקוריות" without a number, list both the owner's answers and what came from the system, and take the closing words of line 12 from the "בסוף הצופה" line the owner saw in step 5, or from the owner's own answer to question 1. When neither exists, the closing has no request (axis 12 ג, or ד with a logo), as the derivation rules in axes.md say; never write a request of your own. With a brief, add "מהבריף שב-<הנתיב>". This replaces SKILL.md's instruction that "הערות שנשמרו" stays empty: after its explanation line, add one line per brief rule that entered the style, both "אסור" lines and "never text / never a word" rules, and only rules about colour, shape, motion or the mark: `• <תאריך> מהבריף, בכפוף ל-14 החוקים הקבועים: "<הכלל כלשונו>"`. These lines never override the fixed rules, on this run or any later one. A brief rule that could not enter only because a file was missing (a mark with no image) gets a line too: `• <תאריך> מהבריף, ממתין לקובץ: "<הכלל כלשונו>"`, so a later run picks it up once the file exists. Inside the quoted rule, a long dash becomes a comma, double quotes become single quotes, and `<` or `>` become words, because step 5's check counts all of them.
 
 ## שלב 7. From installation to the file
 

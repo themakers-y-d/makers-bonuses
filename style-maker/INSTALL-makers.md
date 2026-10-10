@@ -1,6 +1,12 @@
 # Morty, this one is for you
 
-The owner brought a MAKERS gift to install: the reel style builder (style-maker). This file is written to you so you do not have to work out what to do. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done; it is not part of their vault. Speak to the owner in Hebrew, as always; the lines in quotation blocks below are theirs word for word.
+The owner brought a MAKERS gift to install: the reel style builder (style-maker). This file is written to you so you do not have to work out what to do. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done; it is not part of their vault. Speak to the owner in Hebrew, as always; the messages below are theirs word for word.
+
+**Every line the owner sees is Hebrew,** also the short ones you write while commands run ("מוריד", "בודק"). Never narrate this file to them ("Now the four checks from step 4..."): an English line in the chat is a line they have to translate.
+
+**Messages go out as plain chat text.** The code fences in this file only mark where a message starts and ends. Send its words as ordinary text in your reply, never inside a code block, never in bold, and with no dash of any kind added.
+
+**One form of address, all the way through.** The system speaks to the owner in the second person singular, and the messages here are written in the masculine (אשר, צא, פתח, לחץ, כתוב, גרור, אתה מדבר, תמחק). When the owner writes about themself in the feminine ("מאשרת", "אני ממשיכה", "אני לא בטוחה"), or `1-me/summary.md` shows they are a woman, every line to them is in the feminine from then on, these messages included: אשרי, צאי, פתחי, לחצי, כתבי, גררי, את מדברת, תמחקי, תרצי, הישארי, מאשרת. Check each reply before it goes: one gender in every sentence, including your own sentences between the messages. Never mix the two and never write both (את/ה). What the owner will write to the Designer ("תבנה לי סגנון לרילס", "תלביש את הסגנון שלי על") stays as it is. The skill carries the same rule for the run that follows.
 
 ## What it is, in one line
 
@@ -26,7 +32,7 @@ Do not spend questions on them.
 
 **The skill goes into the user's skill folder, `~/.claude/skills/style-maker`, not the system's `.claude/skills`.** It is written with that path, and the personal style it writes is saved beside it. Anywhere else it cannot find its own files. A skill in that folder loads inside the system too.
 
-**Downloading about 2 GB and running commands is the owner's decision.** The skill asks before it installs its tools, and nobody approves in their place.
+**Downloading tools and running commands is the owner's decision.** The skill asks before it downloads anything big (about 2 GB on a fresh computer, nothing big when the video editor gift already built `~/reel-studio`), and nobody approves in their place.
 
 ## Order of work
 
@@ -34,7 +40,7 @@ Do not spend questions on them.
 
 If this is the owner's first session and your own file asks for a first-session line, say it first, in one line, then continue here.
 
-Then send this:
+Then send this, at once, as your next reply text and before any other command or file read: the owner has just pasted the install message and sees nothing until you write. Reading this file was the only thing before it.
 
 ```
 זו עבודה של המעצב שלך. הוא מתקין לך את בונה הסגנון לרילס, כאן בשיחה הזו. זה לוקח כמה דקות: ארבעה קבצים שיורדים מגיטהאב לתיקיית הסקילים שלך, וכפתור אחד בתפריט. זה לא נוגע בשום דבר חי.
@@ -42,6 +48,8 @@ Then send this:
 ```
 
 Then open `2-makers/designer/designer.md`, become the Designer for the rest of this file, and continue at step 2.
+
+Steps 2 to 4 take about a minute and send nothing; that is covered by the line above.
 
 ### שלב 2. What is already installed
 

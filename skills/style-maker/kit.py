@@ -38,6 +38,7 @@ import shutil
 import subprocess
 import sys
 import time
+import unicodedata
 from pathlib import Path
 
 W, H, FPS, SS = 1080, 1920, 30, 2          # output canvas, frame rate, supersampling for drawing
@@ -217,54 +218,109 @@ def hexrgb(h):
 # ----------------------------------------------------------------------------- Hebrew text
 
 HEB = range(0x0590, 0x0600)
-MIRROR = {"(": ")", ")": "(", "[": "]", "]": "[", "{": "}", "}": "{", "<": ">", ">": "<"}
 
 
-def _is_rtl_char(ch):
-    return ord(ch) in HEB
+def _cls(ch):
+    o = ord(ch)
+    if 0x0590 <= o <= 0x05FF or 0xFB1D <= o <= 0xFB4F:
+        return "R"
+    if unicodedata.combining(ch):
+        return "M"
+    if ch.isdigit():
+        return "N"
+    if ch.isalpha():
+        return "L"
+    return "O"
 
 
-def _is_ltr_char(ch):
-    return ch.isascii() and ch.isalnum()
+MIRROR = {"(": ")", ")": "(", "[": "]", "]": "[", "{": "}", "}": "{", "<": ">", ">": "<", "«": "»", "»": "«"}
+NUM_INNER = set(".,:/-")            # 3.5  1,000  10:30  1/2  10-20
+NUM_AFFIX = set("%$₪€£°#+")         # 100%  ₪50  +972
+LTR_INNER = set(" -'._&/+:@")        # Word Press, e-mail, Node.js, Q&A, GPT-4
 
 
 def visual(s):
     """Logical Hebrew string to left-to-right drawing order, for a right-to-left line.
 
-    Pillow here draws without a bidi engine (no libraqm), so we reorder ourselves.
-    Hebrew words are reversed, runs of Latin letters and digits keep their order,
-    brackets are mirrored. Good for plain Hebrew without niqqud, mixed with English
-    words and numbers. Always check the font test image once per machine.
+    Pillow here draws without a bidi engine, so the line is reordered here, following the Unicode
+    bidi rules that matter for captions: Hebrew runs right to left; English words and numbers keep
+    their own order (GPT-4, 3.5, 10:30, 100%); punctuation between two Hebrew words, or at the edge
+    of the line, belongs to the Hebrew (a question mark at the end shows on the left); brackets are
+    mirrored; niqqud stays on its letter. The same reordering as the video editor's captions, so a
+    comma after an English word lands where a Hebrew reader expects it (",CapCut את לי"), never
+    between the English word and the Hebrew one before it.
     """
-    tokens, cur, kind = [], "", None
+    s = s.strip()
+    if not s:
+        return s
+    # 1. classify, attaching combining marks to the character before them
+    units = []
     for ch in s:
-        k = "ltr" if _is_ltr_char(ch) else ("rtl" if _is_rtl_char(ch) else "n")
-        if k == "n" and ch in ".,%:-/'" and kind == "ltr":
-            k = "ltr"          # 3.5, 100%, 10:30, e-mail stay inside the Latin/number run
-        if kind is None or k == kind:
-            cur += ch
+        c = _cls(ch)
+        if c == "M" and units:
+            units[-1][0] += ch
         else:
-            tokens.append((kind, cur))
-            cur = ch
-        kind = k
-    if cur:
-        tokens.append((kind, cur))
-    # merge neutral runs that sit between two LTR runs into the LTR run (e.g. "Word Press")
-    merged = []
-    for i, (k, txt) in enumerate(tokens):
-        if k == "n" and merged and merged[-1][0] == "ltr" and i + 1 < len(tokens) and tokens[i + 1][0] == "ltr" and txt.strip() == "":
-            merged[-1] = ("ltr", merged[-1][1] + txt)
+            units.append([ch, "R" if c == "M" else c])
+    n = len(units)
+    cl = [u[1] for u in units]
+    # 2. numbers swallow their separators and affixes
+    for i in range(n):
+        if cl[i] == "O":
+            ch = units[i][0]
+            if ch in NUM_INNER and 0 < i < n - 1 and cl[i - 1] == "N" and cl[i + 1] == "N":
+                cl[i] = "N"
+    changed = True
+    while changed:
+        changed = False
+        for i in range(n):
+            if cl[i] == "O" and units[i][0] in NUM_AFFIX:
+                if (i > 0 and cl[i - 1] == "N") or (i < n - 1 and cl[i + 1] == "N"):
+                    cl[i] = "N"
+                    changed = True
+    # 3. a number after English (GPT 4, iPhone 15) is part of the English run
+    last_strong = "R"
+    for i in range(n):
+        if cl[i] in ("L", "R"):
+            last_strong = cl[i]
+        elif cl[i] == "N" and last_strong == "L":
+            cl[i] = "L"
+    # 4. neutrals: between two runs of the same direction they take it; otherwise they are Hebrew
+    i = 0
+    while i < n:
+        if cl[i] != "O":
+            i += 1
             continue
-        if k == "ltr" and merged and merged[-1][0] == "ltr":
-            merged[-1] = ("ltr", merged[-1][1] + txt)
-            continue
-        merged.append((k, txt))
+        j = i
+        while j < n and cl[j] == "O":
+            j += 1
+        before = cl[i - 1] if i > 0 else "R"
+        after = cl[j] if j < n else "R"
+        b = "R" if before == "N" else before
+        a2 = "R" if after == "N" else after
+        txt = "".join(u[0] for u in units[i:j])
+        if b == "L" and a2 == "L" and all(c in LTR_INNER for c in txt):
+            d = "L"
+        elif b == a2:
+            d = b
+        else:
+            d = "R"
+        for k in range(i, j):
+            cl[k] = d
+        i = j
+    # 5. runs: R at level 1, L and N at level 2; reverse the line, keep level-2 runs in their order
+    runs = []
+    for u, c in zip(units, cl):
+        lvl = 1 if c == "R" else 2
+        if runs and runs[-1][0] == lvl:
+            runs[-1][1].append(u[0])
+        else:
+            runs.append([lvl, [u[0]]])
     out = []
-    for k, txt in reversed(merged):
-        if k == "ltr":
-            out.append(txt)
+    for lvl, chars in reversed(runs):
+        if lvl == 2:
+            out.append("".join(chars))
         else:
-            out.append("".join(MIRROR.get(c, c) for c in reversed(txt)))
+            out.append("".join(MIRROR.get(ch, ch) for ch in reversed(chars)))
     return "".join(out)
 
 
@@ -1075,7 +1131,8 @@ def current_word(t, words, max_hold=0.9):
 
 def caption_chunks(words, max_words=3, max_gap=0.35):
     """Group words into caption chunks of up to max_words, breaking on pauses longer than max_gap.
-    Each chunk: {"text", "s", "e", "words"}. Draw the chunk whose s <= t < e."""
+    Each chunk: {"text", "s", "e", "words"}. Draw the chunk whose s <= t < e. A comma, period or
+    semicolon at the end of a chunk is dropped from its text, as in the video editor's captions."""
     out = []
     for w in words:
         if out and len(out[-1]["words"]) < max_words and w["s"] - out[-1]["e"] < max_gap:
@@ -1084,7 +1141,10 @@ def caption_chunks(words, max_words=3, max_gap=0.35):
         else:
             out.append({"words": [w], "s": w["s"], "e": w["e"]})
     for ch in out:
-        ch["text"] = " ".join(x["w"] for x in ch["words"])
+        t = " ".join(x["w"] for x in ch["words"]).rstrip()
+        while t and t[-1] in ".,…،;":
+            t = t[:-1].rstrip()
+        ch["text"] = t
     return out
 
 

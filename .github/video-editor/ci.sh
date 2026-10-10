@@ -50,6 +50,9 @@ echo "HOME=$HOME"; [ "$WIN" = 1 ] && echo "USERPROFILE=$USERPROFILE"
 step "fix-word tests"
 "$PYX" "$REPO/.github/video-editor/test_fix_word.py" "$REPO/skills/video-editor/edit.py" || fail "fix-word tests"
 
+step "Hebrew line order tests (the editor's captions and the style builder's words)"
+"$PYX" "$REPO/.github/video-editor/test_bidi.py" "$REPO/skills/video-editor/edit.py" "$REPO/skills/style-maker/kit.py" || fail "Hebrew line order tests"
+
 step "INSTALL step 3: what is on the computer (a fresh one prints nothing)"
 (cd "$SYS" && bash "$B/step3-look.sh") | tee "$ROOT/step3.txt"
 grep -q "LIBS OK" "$ROOT/step3.txt" && fail "step 3 found tools on a fresh computer"
