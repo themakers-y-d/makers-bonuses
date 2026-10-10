@@ -110,9 +110,9 @@ This one step is yours, Morty, and not the Designer's: `.claude/skills/` is a su
 The commands are the same on Mac and on Windows in Git Bash. This step comes before the tools because the tools step runs the engine that is in these files. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2. They come from one fixed version of the gift, and each file is checked against its fingerprint, so what runs on the owner's computer is exactly what was tested:
 
 ```bash
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/SKILL.md" > "$D/SKILL.md" || echo "PROBLEM SKILL.md did not download"
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/craft.md" > "$D/craft.md" || echo "PROBLEM craft.md did not download"
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/edit.py" > "$D/edit.py" || echo "PROBLEM edit.py did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/a8aa87676bf9475f7ebb6c1edcedf03af70986c8/skills/video-editor/SKILL.md" > "$D/SKILL.md" || echo "PROBLEM SKILL.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/a8aa87676bf9475f7ebb6c1edcedf03af70986c8/skills/video-editor/craft.md" > "$D/craft.md" || echo "PROBLEM craft.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/a8aa87676bf9475f7ebb6c1edcedf03af70986c8/skills/video-editor/edit.py" > "$D/edit.py" || echo "PROBLEM edit.py did not download"
 ```
 
 Claude Code asks the owner to approve writing into `.claude/`. That is expected; it was announced in step 4.
@@ -120,7 +120,7 @@ Claude Code asks the owner to approve writing into `.claude/`. That is expected;
 Check the download:
 
 ```bash
-D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 38d2fab4c82c700c16ed2db289af63684a4d665fcc11f014410cdac4448f3438 SKILL.md f3ba1d064b1e17dfd78fcdc404d108f85b8237277e78b2d57929a56a22a28da8 craft.md 3060976e9d5d99d3c066dbc29705ee072628130ccd5db18418ef4ff573c4fc59 edit.py | $H -c - )
+D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 479c3158e4c5b12aa11f85cc9e9d292473d58b479d05da5959a523ed339ca3a3 SKILL.md f3ba1d064b1e17dfd78fcdc404d108f85b8237277e78b2d57929a56a22a28da8 craft.md 3060976e9d5d99d3c066dbc29705ee072628130ccd5db18418ef4ff573c4fc59 edit.py | $H -c - )
 ```
 
 Expected: three lines, `SKILL.md: OK`, `craft.md: OK`, `edit.py: OK`. `FAILED` on a file: download that file once more with its line above and check again. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted; pasting the install message again later finishes the job.
