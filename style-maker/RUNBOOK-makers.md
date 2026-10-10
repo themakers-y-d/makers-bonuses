@@ -20,7 +20,7 @@ Messages to the owner below are in Hebrew, word for word. Everything else is ins
 
 Check that `1-me/summary.md` exists in the folder you are working in. If it does not, this is not a MAKERS system: stop reading this file and follow SKILL.md as it is.
 
-If it does, first run the search of step 2 and the reading of step 3 silently, without sending anything, so you know whether a brief exists and whether `1-me/` answers anything. Then run step 1 of SKILL.md (the check, asking for the video, and the "ככה זה ילך" message), with one change to item 1 of that message's numbered list. Replace it with:
+If it does, decide the form of address before your first message: `1-me/summary.md` names the owner and describes them ("אני שירה, מאמנת..." is a woman), so a woman gets the feminine from the very first line, also when she has not written to you yet in this conversation. Then run the search of step 2 and the reading of step 3 silently, without sending anything, so you know whether a brief exists and whether `1-me/` answers anything. Then run step 1 of SKILL.md (the check, asking for the video, and the "ככה זה ילך" message), with one change to item 1 of that message's numbered list. Replace it with:
 • When a brief was found or `1-me/` answers at least one question: "1) כמה שאלות קצרות על הסגנון, בהודעה אחת, כ-3 דקות. חלק מהתשובות כבר אצלי, מהמערכת שלך."
 • Otherwise: "1) שבע שאלות קצרות על הסגנון, בהודעה אחת, כ-3 דקות."
 

@@ -239,7 +239,7 @@ NUM_AFFIX = set("%$₪€£°#+")         # 100%  ₪50  +972
 LTR_INNER = set(" -'._&/+:@")        # Word Press, e-mail, Node.js, Q&A, GPT-4
 
 
-def visual(s):
+def _visual_core(s):
     """Logical Hebrew string to left-to-right drawing order, for a right-to-left line.
 
     Pillow here draws without a bidi engine, so the line is reordered here, following the Unicode
@@ -322,6 +322,17 @@ def visual(s):
         else:
             out.append("".join(MIRROR.get(ch, ch) for ch in reversed(chars)))
     return "".join(out)
+
+
+def visual(s):
+    """_visual_core for a line that may start or end with spaces. Spaces are kept, never trimmed: a scene that
+    measures the width of " " to place words one by one must get a real width, not zero. A space typed at the
+    start of a right-to-left line is drawn at its right end, and one at the end at its left end."""
+    core = s.strip()
+    if not core:
+        return s
+    lead, trail = s[:len(s) - len(s.lstrip())], s[len(s.rstrip()):]
+    return trail[::-1] + _visual_core(core) + lead[::-1]
 
 
 _font_cache = {}

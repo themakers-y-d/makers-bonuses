@@ -62,6 +62,14 @@ for label, fn in (("edit.py bidi_visual", load("edit_under_test", EDIT).bidi_vis
         fails += 0 if ok else 1
         print(("PASS " if ok else "FAIL ") + f"{label}: {logical!r}" + ("" if ok else f"  got {got!r}, want {want!r}"))
 
+# kit.py keeps the spaces at the edges of a line: scenes measure the width of " " to place words one by one
+kit_fn0 = load("kit_spaces", KIT).visual
+for logical, want in (("  ", "  "), (" ", " "), (" שלום ", " םולש "), ("שלום ", " םולש"), (" CapCut,", ",CapCut ")):
+    got = kit_fn0(logical)
+    ok = got == want
+    fails += 0 if ok else 1
+    print(("PASS " if ok else "FAIL ") + f"kit.py visual keeps edge spaces: {logical!r}" + ("" if ok else f"  got {got!r}, want {want!r}"))
+
 # the two engines draw every line the same way, so a caption and an animated word never disagree
 edit_fn, kit_fn = load("edit_same", EDIT).bidi_visual, load("kit_same", KIT).visual
 for logical, _ in CASES:
