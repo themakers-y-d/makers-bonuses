@@ -80,7 +80,12 @@ cp "$B/install-editor.sh" "$H/reel-studio/install-editor.sh"
 (cd "$SYS" && bash "$B/step6-base.sh") 2>&1 | tee "$ROOT/base.txt"
 grep -q "BASE READY" "$ROOT/base.txt" || fail "base did not finish"
 (cd "$SYS" && bash "$B/step6-libs.sh")
-poll "$B/step6-libs-wait.sh" || { tail -20 "$H/reel-studio/pip.log" 2>/dev/null; fail "the libraries did not install"; }
+if ! poll "$B/step6-libs-wait.sh"; then
+  # the runbook: FAILED on the libraries, run the part once more (a dropped connection is the usual cause)
+  echo "the libraries failed once, running the part again as step 6 says"; mv "$H/reel-studio/install.log" "$H/reel-studio/install-1.log"
+  (cd "$SYS" && bash "$B/step6-libs.sh")
+  poll "$B/step6-libs-wait.sh" || { tail -20 "$H/reel-studio/pip.log" 2>/dev/null; fail "the libraries did not install"; }
+fi
 PY="$H/reel-studio/.venv/bin/python"; [ -x "$PY" ] || PY="$H/reel-studio/.venv/Scripts/python.exe"
 "$PY" -c "import av, sys; print('python', sys.version.split()[0], 'av', av.__version__); sys.exit(0 if av.__version__ == '18.1.0' else 1)" || fail "av is not 18.1.0"
 if [ -n "${MODEL_CACHE:-}" ] && ls -d "$MODEL_CACHE"/models--Systran--faster-whisper-small >/dev/null 2>&1; then
