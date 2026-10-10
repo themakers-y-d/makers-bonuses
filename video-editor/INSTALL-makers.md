@@ -2,6 +2,8 @@
 
 The owner brought a MAKERS gift to install: the video editor. This file is written to you so you do not have to work out what to do. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done; it is not part of their vault. Speak to the owner in Hebrew, as always; the lines in code blocks marked as messages are theirs word for word.
 
+**One form of address, all the way through.** The system speaks to the owner in the second person singular, and the messages here are written in the masculine (מאשר, אשר, סגור, פתח, כתוב). When the owner writes about themself in the feminine ("מאשרת", "אני לא בטוחה"), or `1-me/summary.md` shows they are a woman, every line to them is in the feminine from then on, these messages included: מאשרת, אשרי, סגרי, פתחי, כתבי, גררי, לחצי, הדבקי. Check each reply before it goes: one gender in every sentence, including your own sentences between the messages. Never mix the two and never write both (את/ה). The skill carries the same rule for the editing that follows.
+
 ## What it is, in one line
 
 A skill that edits a video the owner filmed by message and not by seconds: it reads the Hebrew transcript, proposes which lines to keep with a reason for every cut, and after one approval renders a finished cut with Hebrew captions and music under the voice, beside the original, which it never touches.
@@ -97,7 +99,7 @@ Then, in the same message, only the questions that apply, numbered in the order 
 
 • Only when no model was found: "איזה מודל תמלול להוריד? א) עברי מדויק, בערך 1.6 ג'יגה (מומלץ) ב) קטן, בערך חצי ג'יגה, מהיר יותר ופחות מדויק בעברית. ומאשר את ההורדה?"
 • Only when the old method was found: "יש אצלך גם שיטת עריכת וידאו ישנה, `video-editing-skill`. להסיר אותה, כדי ששתיהן לא יתבלבלו? (כן / לא)"
-• Always: "יש לך סרטון לנסות עליו? אם כן, גרור אותו לכאן עכשיו, ונערוך אותו מיד אחרי ההתקנה. אם לא, זה לא חובה."
+• Always: "יש לך סרטון לנסות עליו? אם כן, גרור אותו לכאן עכשיו (בתוך VS Code מחזיקים Shift בזמן הגרירה), ונערוך אותו מיד אחרי ההתקנה. אם לא, זה לא חובה."
 
 Then end your turn and wait for the answer, always, also when the video question is the only one: the answer decides whether step 8 runs, and the owner cannot drag a video while you are still working. Never ask the video question again later in place of this wait. No answer to the model question is not a yes: nothing downloads until the owner says so. "לא יודע" on the model is the Hebrew one, after the yes to download.
 
@@ -247,11 +249,11 @@ When the owner dragged a video or gave its path in step 4, edit it now, still as
 6) Steps 10 to 12: the delivered file is checked and opens in the player, the record lands in `3-work/now/video/`, and the report asks what to change.
 7) Step 13: each note makes the next numbered version from the source.
 
-When the owner is done with the video, or stops, continue at step 9 here. When there was no video in step 4, go straight to step 9.
+The report of step 12 ends with "מה היית משנה?" and ends your turn. Step 9 here is never added to that reply, and never to any reply that asks the owner something: it waits for the owner's answer. Each note goes through step 13 of the skill. When the owner says the video is fine or they are done ("מעולה", "זהו", "סבבה"), or stops, continue at step 9 here, in a reply of its own; it replaces the skill's own last line ("בפעם הבאה פשוט כתוב..."), which is not sent during the install. When there was no video in step 4, go straight to step 9.
 
 ### שלב 9. Close and reopen, and the next time
 
-Send:
+Send this message on its own, word for word, all four lines, the removal line included (it is the only place the owner learns how to remove the gift), in the owner's gender:
 
 ```
 עוד דבר אחד, ואז זה שלך.
