@@ -1,0 +1,79 @@
+# The video editor gift, installed from its runbook and run on real clips, on Windows (Git Bash, the way
+# Claude Code runs commands there) and on Mac. Everything happens in .github/video-editor/ci.sh, which also
+# runs by hand on a Mac: bash .github/video-editor/ci.sh . "<empty folder>"
+# The skill downloads from the commit INSTALL-makers.md pins, as on an owner's computer, so the pinned
+# commit must already be on GitHub when this runs.
+name: video-editor-windows
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'skills/video-editor/**'
+      - 'video-editor/**'
+      - 'skills/style-maker/**'
+      - 'style-maker/**'
+      - '.github/video-editor/**'
+      - '.github/workflows/video-editor-windows.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        shell: bash
+    steps:
+      # Owners never clone this repository, they download single files, so the checkout must be byte for byte
+      # what GitHub serves: no CRLF added to the scripts this job runs.
+      - name: Checkout without CRLF conversion
+        run: git config --global core.autocrlf false
+
+      - uses: actions/checkout@v4
+
+      - name: Cache the small transcription model
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/model-cache
+          key: whisper-small-536b0662-${{ runner.os }}
+
+      - name: Install from the runbook and edit two clips, from a folder with Hebrew letters and a space
+        run: MODEL_CACHE="$(cygpath -u "$RUNNER_TEMP")/model-cache" bash .github/video-editor/ci.sh . "$(cygpath -u "$RUNNER_TEMP")/ci run"
+
+      - name: Keep the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-editor-windows
+          path: |
+            ${{ runner.temp }}/ci run/*.txt
+            ${{ runner.temp }}/ci run/blocks
+          if-no-files-found: ignore
+
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache the small transcription model
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/model-cache
+          key: whisper-small-536b0662-${{ runner.os }}
+
+      - name: Install from the runbook and edit two clips, from a folder with Hebrew letters and a space
+        run: MODEL_CACHE="$RUNNER_TEMP/model-cache" bash .github/video-editor/ci.sh . "$RUNNER_TEMP/ci run"
+
+      - name: Keep the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-editor-macos
+          path: |
+            ${{ runner.temp }}/ci run/*.txt
+            ${{ runner.temp }}/ci run/blocks
+          if-no-files-found: ignore

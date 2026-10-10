@@ -2,6 +2,8 @@
 
 The owner brought a MAKERS gift to install: the video editor. This file is written to you so you do not have to work out what to do. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done; it is not part of their vault. Speak to the owner in Hebrew, as always; the lines in code blocks marked as messages are theirs word for word.
 
+**One form of address, all the way through.** The system speaks to the owner in the second person singular, and the messages here are written in the masculine (מאשר, אשר, סגור, פתח, כתוב). When the owner writes about themself in the feminine ("מאשרת", "אני לא בטוחה"), or `1-me/summary.md` shows they are a woman, every line to them is in the feminine from then on, these messages included: מאשרת, אשרי, סגרי, פתחי, כתבי, גררי, לחצי, הדבקי. Check each reply before it goes: one gender in every sentence, including your own sentences between the messages. Never mix the two and never write both (את/ה). What the owner will write to the Designer ("תערוך לי את הסרטון") stays as it is. The skill carries the same rule for the editing that follows.
+
 ## What it is, in one line
 
 A skill that edits a video the owner filmed by message and not by seconds: it reads the Hebrew transcript, proposes which lines to keep with a reason for every cut, and after one approval renders a finished cut with Hebrew captions and music under the voice, beside the original, which it never touches.
@@ -36,7 +38,7 @@ Do not spend questions on them.
 
 If this is the owner's first session and your own file asks for a first-session line, say it first, in one line, then continue here.
 
-Send this message:
+Send this message, word for word, as the first thing the owner reads. Every sentence they see from here to the end is Hebrew, also the short ones you write while commands run:
 
 ```
 זו עבודה של המעצב שלך. הוא מתקין את עורך הווידאו ועורך איתך כאן, בשיחה הזו.
@@ -80,7 +82,7 @@ Read the result into four facts:
 
 ### שלב 4. One message: what happens, and the questions
 
-Send one message, built from the facts of step 3, before anything is installed, also when the tools were found and nothing big downloads: it is the only place the owner is asked for a video. Step 5 starts only after the answer. The opening, with exactly one of the two first items:
+Send one message, built from the facts of step 3, before anything is installed, also when the tools were found and nothing big downloads, and also on an update, when step 3 found an earlier copy of the editor: it is the only place the owner is asked for a video. Pasting the install message is not the answer to this message. Step 5 starts only after the answer: nothing is downloaded, replaced, backed up or checked before it, however small. The opening, with exactly one of the two first items:
 
 ```
 מתקין לך את עורך הווידאו. ככה זה ילך:
@@ -97,7 +99,7 @@ Then, in the same message, only the questions that apply, numbered in the order 
 
 • Only when no model was found: "איזה מודל תמלול להוריד? א) עברי מדויק, בערך 1.6 ג'יגה (מומלץ) ב) קטן, בערך חצי ג'יגה, מהיר יותר ופחות מדויק בעברית. ומאשר את ההורדה?"
 • Only when the old method was found: "יש אצלך גם שיטת עריכת וידאו ישנה, `video-editing-skill`. להסיר אותה, כדי ששתיהן לא יתבלבלו? (כן / לא)"
-• Always: "יש לך סרטון לנסות עליו? אם כן, גרור אותו לכאן עכשיו, ונערוך אותו מיד אחרי ההתקנה. אם לא, זה לא חובה."
+• Always: "יש לך סרטון לנסות עליו? אם כן, גרור אותו לכאן עכשיו (בתוך VS Code מחזיקים Shift בזמן הגרירה), ונערוך אותו מיד אחרי ההתקנה. אם לא, זה לא חובה."
 
 Then end your turn and wait for the answer, always, also when the video question is the only one: the answer decides whether step 8 runs, and the owner cannot drag a video while you are still working. Never ask the video question again later in place of this wait. No answer to the model question is not a yes: nothing downloads until the owner says so. "לא יודע" on the model is the Hebrew one, after the yes to download.
 
@@ -108,9 +110,9 @@ This one step is yours, Morty, and not the Designer's: `.claude/skills/` is a su
 The commands are the same on Mac and on Windows in Git Bash. This step comes before the tools because the tools step runs the engine that is in these files. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2. They come from one fixed version of the gift, and each file is checked against its fingerprint, so what runs on the owner's computer is exactly what was tested:
 
 ```bash
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/SKILL.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/336c97724aabb6bdb6b44b0b06504c526930ac9c/skills/video-editor/SKILL.md" || echo "PROBLEM SKILL.md did not download"
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/craft.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/336c97724aabb6bdb6b44b0b06504c526930ac9c/skills/video-editor/craft.md" || echo "PROBLEM craft.md did not download"
-D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/edit.py" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/336c97724aabb6bdb6b44b0b06504c526930ac9c/skills/video-editor/edit.py" || echo "PROBLEM edit.py did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/SKILL.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/SKILL.md" || echo "PROBLEM SKILL.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/craft.md" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/craft.md" || echo "PROBLEM craft.md did not download"
+D="$(pwd)/.claude/skills/video-editor"; mkdir -p "$D" && curl -fsSL -o "$D/edit.py" "https://raw.githubusercontent.com/themakers-y-d/makers-bonuses/03a9ab0808b1db75afc8e4ffc49a8da812da2ecb/skills/video-editor/edit.py" || echo "PROBLEM edit.py did not download"
 ```
 
 Claude Code asks the owner to approve writing into `.claude/`. That is expected; it was announced in step 4.
@@ -118,7 +120,7 @@ Claude Code asks the owner to approve writing into `.claude/`. That is expected;
 Check the download:
 
 ```bash
-D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 55710a77756a1bb0dda011869e4c433ca95f5e418057fd9930cecc2e7a2f6c4d SKILL.md f3ba1d064b1e17dfd78fcdc404d108f85b8237277e78b2d57929a56a22a28da8 craft.md 8bcda140f65557e7ab00511da15a0cd9193919043568bc43ce881c37e587fa1f edit.py | $H -c - )
+D="$(pwd)/.claude/skills/video-editor"; if command -v shasum >/dev/null 2>&1; then H="shasum -a 256"; else H="sha256sum"; fi; ( cd "$D" && printf '%s  %s\n' 38d2fab4c82c700c16ed2db289af63684a4d665fcc11f014410cdac4448f3438 SKILL.md f3ba1d064b1e17dfd78fcdc404d108f85b8237277e78b2d57929a56a22a28da8 craft.md 3060976e9d5d99d3c066dbc29705ee072628130ccd5db18418ef4ff573c4fc59 edit.py | $H -c - )
 ```
 
 Expected: three lines, `SKILL.md: OK`, `craft.md: OK`, `edit.py: OK`. `FAILED` on a file: download that file once more with its line above and check again. If it fails again, tell the owner in one line that the download from GitHub does not go through, and stop. Nothing is deleted; pasting the install message again later finishes the job.
@@ -247,11 +249,11 @@ When the owner dragged a video or gave its path in step 4, edit it now, still as
 6) Steps 10 to 12: the delivered file is checked and opens in the player, the record lands in `3-work/now/video/`, and the report asks what to change.
 7) Step 13: each note makes the next numbered version from the source.
 
-When the owner is done with the video, or stops, continue at step 9 here. When there was no video in step 4, go straight to step 9.
+The report of step 12 ends with "מה היית משנה?" and ends your turn. Step 9 here is never added to that reply, and never to any reply that asks the owner something: it waits for the owner's answer. Each note goes through step 13 of the skill. When the owner says the video is fine or they are done ("מעולה", "זהו", "סבבה"), or stops, continue at step 9 here, in a reply of its own; it replaces the skill's own last line ("בפעם הבאה פשוט כתוב..."), which is not sent during the install. When there was no video in step 4, go straight to step 9.
 
 ### שלב 9. Close and reopen, and the next time
 
-Send:
+Send this message on its own, word for word, all four lines, the removal line included (it is the only place the owner learns how to remove the gift), in the owner's gender. On a Mac the Windows half of the second line may go, and on Windows the Mac half; nothing else is dropped:
 
 ```
 עוד דבר אחד, ואז זה שלך.

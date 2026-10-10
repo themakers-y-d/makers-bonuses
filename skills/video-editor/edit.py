@@ -12,6 +12,9 @@ Commands
   info <video>                        duration, size, fps, orientation, audio, and the JOB FOLDER
   transcribe <video> [--model ivrit|medium|small] [--lang he] [--force]
                                       word timings to words.json, numbered lines to transcript.txt
+  fix-word <video> "<as heard>" "<right>" [--line n]
+                                      correct a misheard word or phrase in words.json and transcript.txt;
+                                      times and line numbers stay as they are (every place, or one line)
   silences <video> [--db -30] [--min 0.6] [--pad 0.15]
                                       propose dead-air cuts, cuts-silence.json
   fillers <video>                     propose filler cuts (אממ, אהה, repeats, restarts; כאילו and רגע to confirm), cuts-fillers.json
@@ -1511,6 +1514,113 @@ def cmd_transcribe(a):
     say(f"TRANSCRIBED {len(words)} words in {len(lines)} lines, saved to {wj}")
 
 
+def _edge_punct(w):
+    """The punctuation a word carries before and after its letters: ('"', ',') for '"וורד,'."""
+    s = str(w)
+    i = 0
+    while i < len(s) and unicodedata.category(s[i]).startswith("P"):
+        i += 1
+    j = len(s)
+    while j > i and unicodedata.category(s[j - 1]).startswith("P"):
+        j -= 1
+    return s[:i], s[j:]
+
+
+def cmd_fix_word(a):
+    """A misheard word or phrase, corrected the supported way: the words keep their times, every line keeps its
+    number and its start and end, and transcript.txt is written again from words.json. The captions are built
+    from these words, so this is what reaches the screen."""
+    video = video_arg(a)
+    pos = [x for i, x in enumerate(a[1:], 1) if not x.startswith("--") and a[i - 1] != "--line"]
+    if len(pos) != 2:
+        die('fix-word <video> "<as heard>" "<right>" [--line n]. Both in double quotes, written as transcript.txt shows them')
+    heard, right = pos[0].split(), pos[1].split()
+    if not heard:
+        die("say which word was misheard, as transcript.txt shows it")
+    if not right:
+        die("the correction is empty. Removing a word is a cut and belongs in the cut list, not here")
+    want = [norm_word(w) for w in heard]
+    if not all(want):
+        die("the misheard part needs letters, not only punctuation")
+    only = opt(a, "--line")
+    if only is not None:
+        try:
+            only = int(only)
+        except ValueError:
+            die(f"--line takes a line number from transcript.txt, got {only}")
+    jd = job_dir(video)
+    data = load_words(jd)
+    words, lines = data["words"], data["lines"]
+    line_of_w = {}
+    for L in lines:
+        for i in range(L["w0"], L["w1"] + 1):
+            line_of_w[i] = L["n"]
+    if only is not None and only not in {L["n"] for L in lines}:
+        die(f"there is no line {only}; the transcript has lines 1 to {len(lines)}")
+    nw = [norm_word(w["w"]) for w in words]
+    k = len(want)
+    hits, i = [], 0
+    while i + k <= len(words):
+        if nw[i:i + k] == want:
+            ln = {line_of_w.get(j) for j in range(i, i + k)}
+            if len(ln) > 1:
+                die(f'"{" ".join(heard)}" runs across lines {min(ln)} and {max(ln)}. Fix the part in each line on its own')
+            if only is None or ln == {only}:
+                hits.append(i)
+                i += k
+                continue
+        i += 1
+    if not hits:
+        where = f" in line {only}" if only is not None else ""
+        die(f'"{" ".join(heard)}" is not in the transcript{where}. Write it exactly as transcript.txt shows it, '
+            "word for word, without the line number and the time")
+    changed = sorted({line_of_w[i] for i in hits})
+    shift = 0
+    for i0 in hits:
+        i0 += shift
+        old = words[i0:i0 + k]
+        lead, _ = _edge_punct(old[0]["w"])
+        _, tail = _edge_punct(old[-1]["w"])
+        new_txt = list(right)
+        if lead and not _edge_punct(new_txt[0])[0]:
+            new_txt[0] = lead + new_txt[0]
+        if tail and not _edge_punct(new_txt[-1])[1]:
+            new_txt[-1] = new_txt[-1] + tail
+        s0, e1 = old[0]["s"], old[-1]["e"]
+        base = {key: v for key, v in old[0].items() if key not in ("w", "s", "e", "p")}
+        p = min(float(w.get("p", 1.0)) for w in old)
+        if len(new_txt) == k:
+            new = [dict(base, w=t, s=w["s"], e=w["e"], p=p) for t, w in zip(new_txt, old)]
+        else:
+            # a different number of words: the same span of time, shared by the length of each word
+            lens = [max(1, len(norm_word(t))) for t in new_txt]
+            total, t, new = sum(lens), s0, []
+            for n_, (txt, ln_) in enumerate(zip(new_txt, lens)):
+                e = e1 if n_ == len(new_txt) - 1 else round(t + (e1 - s0) * ln_ / total, 3)
+                new.append(dict(base, w=txt, s=round(t, 3), e=e, p=p))
+                t = e
+        words[i0:i0 + k] = new
+        d = len(new) - k
+        for L in lines:
+            if L["w0"] > i0:
+                L["w0"] += d
+            if L["w1"] >= i0:
+                L["w1"] += d
+        shift += d
+    for L in lines:
+        L["text"] = " ".join(words[j]["w"] for j in range(L["w0"], L["w1"] + 1))
+        for j in range(L["w0"], L["w1"] + 1):
+            words[j]["line"] = L["n"]
+    data["words"], data["lines"] = words, lines
+    save_json(jd / "words.json", data)
+    write_text(jd / "transcript.txt", transcript_text(video, data))
+    say(f'FIXED "{" ".join(heard)}" to "{" ".join(right)}" in {len(hits)} place{"s" if len(hits) != 1 else ""}')
+    for n_ in changed:
+        L = next(L for L in lines if L["n"] == n_)
+        say(f"  {n_:3d}) {L['text']}")
+    say(f"TRANSCRIPT {jd / 'transcript.txt'}")
+
+
 # ----------------------------------------------------------------------------- silences and fillers
 
 def detect_silences(video, db, mind, dur):
@@ -2696,7 +2806,8 @@ def cmd_open(a):
 
 
 COMMANDS = {
-    "doctor": cmd_doctor, "model": cmd_model, "info": cmd_info, "transcribe": cmd_transcribe, "silences": cmd_silences,
+    "doctor": cmd_doctor, "model": cmd_model, "info": cmd_info, "transcribe": cmd_transcribe, "fix-word": cmd_fix_word,
+    "silences": cmd_silences,
     "fillers": cmd_fillers, "edl": cmd_edl, "style": cmd_style, "sheet": cmd_sheet, "frames": cmd_frames,
     "render": cmd_render, "verify": cmd_verify, "wait": cmd_wait, "open": cmd_open,
 }
