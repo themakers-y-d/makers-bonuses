@@ -19,7 +19,7 @@ Talk to the owner in Hebrew, about their video and what they said in it, never a
 
 **Every sentence the owner sees is Hebrew,** also the short lines you write while commands run ("מתחיל", "מריץ את הבדיקה"). An English line in the chat is a line they have to translate.
 
-**How the text looks.** A message in a code block here is sent as plain chat text, never inside a code block: the fence only marks where it starts and ends. Nothing the owner reads is in bold, and no dash of any kind stands between two parts of a sentence (no —, no –, no - with spaces around it): a comma, a colon or a new sentence instead. A hyphen inside a word ("ה-CapCut", "edit-v1") stays.
+**How the text looks.** A message in a code block here is sent as plain chat text, never inside a code block: the fence only marks where it starts and ends. Nothing the owner reads is in bold, and no dash of any kind stands between two parts of a sentence (no —, no –, no - with spaces around it): a comma, a colon or a new sentence instead. A hyphen inside a word ("ה-CapCut", "edit-v1") stays. This holds for every line the owner reads, the closing line `/final-pass` adds included.
 
 **Dates against today.** Before you write "היום", "אתמול" or a weekday about an earlier video, compare the date in its record's file name (`<YYYY-MM-DD>-...`) with today's date (`date +%F`): the same date is "היום", the day before is "אתמול", anything older is the date itself. The step 1 sentence about an earlier video says "בפעם הקודמת" and needs no date.
 
@@ -90,7 +90,7 @@ Send one message:
 אפשר לענות בקיצור, למשל: 1 ריל עד דקה / 2 צרובות, בלי מוזיקה / 3 הסיפור על הלקוחה נשאר
 ```
 
-Keep the original numbers of the questions you do ask, and build the short example only from them. Never more than these three, and never a question about who the owner is: that is in `1-me/`. When all three are answered, send only the first part, without "ועכשיו רק מה שחסר" and the example, start the transcript, and go on to step 4 without waiting: the owner corrects a known line at the cut list just as well.
+Number the questions you do ask again, 1), 2), 3), with no gap: the owner sees continuous numbers, never "2), 3)" alone. Keep for yourself which question each one is, and build the short example only from them, with the new numbers. Never more than these three, and never a question about who the owner is: that is in `1-me/`. When all three are answered, send only the first part, without "ועכשיו רק מה שחסר" and the example, start the transcript, and go on to step 4 without waiting: the owner corrects a known line at the cut list just as well.
 
 The transcript does not depend on the answers, so start it now, in the background exactly as in step 4, and end your turn with the questions as your last message: the owner cannot answer while you are still working. Nothing from step 5 on happens before the answers arrive.
 
