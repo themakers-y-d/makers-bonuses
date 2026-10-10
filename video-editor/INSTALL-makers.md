@@ -38,7 +38,7 @@ Do not spend questions on them.
 
 If this is the owner's first session and your own file asks for a first-session line, say it first, in one line, then continue here.
 
-Send this message:
+Send this message, word for word, as the first thing the owner reads. Every sentence they see from here to the end is Hebrew, also the short ones you write while commands run:
 
 ```
 זו עבודה של המעצב שלך. הוא מתקין את עורך הווידאו ועורך איתך כאן, בשיחה הזו.
@@ -82,7 +82,7 @@ Read the result into four facts:
 
 ### שלב 4. One message: what happens, and the questions
 
-Send one message, built from the facts of step 3, before anything is installed, also when the tools were found and nothing big downloads: it is the only place the owner is asked for a video. Step 5 starts only after the answer. The opening, with exactly one of the two first items:
+Send one message, built from the facts of step 3, before anything is installed, also when the tools were found and nothing big downloads, and also on an update, when step 3 found an earlier copy of the editor: it is the only place the owner is asked for a video. Pasting the install message is not the answer to this message. Step 5 starts only after the answer: nothing is downloaded, replaced, backed up or checked before it, however small. The opening, with exactly one of the two first items:
 
 ```
 מתקין לך את עורך הווידאו. ככה זה ילך:
@@ -253,7 +253,7 @@ The report of step 12 ends with "מה היית משנה?" and ends your turn. St
 
 ### שלב 9. Close and reopen, and the next time
 
-Send this message on its own, word for word, all four lines, the removal line included (it is the only place the owner learns how to remove the gift), in the owner's gender:
+Send this message on its own, word for word, all four lines, the removal line included (it is the only place the owner learns how to remove the gift), in the owner's gender. On a Mac the Windows half of the second line may go, and on Windows the Mac half; nothing else is dropped:
 
 ```
 עוד דבר אחד, ואז זה שלך.
