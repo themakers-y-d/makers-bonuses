@@ -10,9 +10,9 @@ A skill that edits a video the owner filmed by message and not by seconds: it re
 
 Do not spend questions on them.
 
-**Who does the work: the Designer, in the main conversation, from step 2 to the end, install included.** The job is how a video comes out, and the skill is a conversation that stops for the owner's approval of the cut list. A worker in its own window cannot hold that conversation. You say the move line in step 1 and the Designer takes it from there. No chain.
+**Who does the work: the Designer, in the main conversation, from step 2 to the end, install included.** The job is how a video comes out, and the skill is a conversation that stops for the owner's approval of the cut list. A worker in its own window cannot hold that conversation. You say the move line in step 1 and the Designer takes it from there, except step 5, which puts the skill into `.claude/skills/` and is yours because that folder is Morty's to create. No chain.
 
-**The project:** `3-work/now/video/`. If it exists, work inside it. Every video gets a dated record at its top level, its working material in `_process/`, and the caption style the owner settles on is kept there as `caption-style.json`.
+**The project:** `3-work/now/video/`. If it exists, work inside it. Every video gets a dated record at its top level, its working material in `_process/`, and the caption style the owner settles on is kept as `_process/caption-style.json`.
 
 **Where things live.** The skill goes into the system's own `.claude/skills/video-editor/`, so it travels with the system and shows as `/video-editor`. The tools go into `~/reel-studio` in the home folder, the same folder, Python environment and Hebrew transcription model the reel style builder uses: an owner who installed that gift skips the big download. The videos stay beside the originals, never inside the system.
 
@@ -102,6 +102,8 @@ Then, in the same message, only the questions that apply, numbered in the order 
 Then end your turn and wait for the answer, always, also when the video question is the only one: the answer decides whether step 8 runs, and the owner cannot drag a video while you are still working. Never ask the video question again later in place of this wait. No answer to the model question is not a yes: nothing downloads until the owner says so. "לא יודע" on the model is the Hebrew one, after the yes to download.
 
 ### שלב 5. The skill, into the system
+
+This one step is yours, Morty, and not the Designer's: `.claude/skills/` is a surface Morty creates (system.md, "Who may write where"). Take it back for this step without a word to the owner, and hand it to the Designer again at step 6.
 
 The commands are the same on Mac and on Windows in Git Bash. This step comes before the tools because the tools step runs the engine that is in these files. Download the three files of the skill straight into the system's skill folder, from the system folder you checked in step 2. They come from one fixed version of the gift, and each file is checked against its fingerprint, so what runs on the owner's computer is exactly what was tested:
 
@@ -230,7 +232,7 @@ After `ALL GOOD`, send:
 **The old method.** Only when the owner said yes in step 4: `rm -rf .claude/skills/video-editing-skill`, and say in one line that it is removed. On no, leave it, and do not ask again.
 
 **For the Archivist,** at the session debrief, as proposals and not written by you:
-• "designer.md: עריכת וידאו היא של המעצב, בשיחה הראשית, עם הסקיל /video-editor. סגנון הכתוביות של הבעלים שמור בקובץ 3-work/now/video/caption-style.json."
+• "designer.md: עריכת וידאו היא של המעצב, בשיחה הראשית, עם הסקיל /video-editor. סגנון הכתוביות של הבעלים שמור בקובץ 3-work/now/video/_process/caption-style.json."
 • "morty.md, בטבלת הצוות: סרטון לעריכה הולך למעצב."
 
 ### שלב 8. The first video, now

@@ -35,7 +35,7 @@ SK="$(pwd)/.claude/skills/video-editor"; [ -f "$SK/edit.py" ] || { echo "NOT IN 
 • The last line is `ALL GOOD`: continue.
 • Anything else (the Python is missing, a `MISSING` line, `NOT READY`): say "הכלים של העורך לא שלמים במחשב הזה. הדבק למורטי שוב את הודעת ההתקנה מדף המתנה, והוא ישלים רק את מה שחסר, בלי למחוק כלום." and stop. Do not install anything from inside this skill.
 
-Then look, without opening anything else yet, at `3-work/now/video/`: does `caption-style.json` exist there, and what is the newest record. Both are used later. On the first video ever neither exists, and that is the normal state.
+Then look, without opening anything else yet, at `3-work/now/video/`: does `_process/caption-style.json` exist there, and what is the newest record. Both are used later. On the first video ever neither exists, and that is the normal state.
 
 ### Step 2. The video
 
@@ -159,7 +159,7 @@ If `silences` cut into the start of words or left long gaps, follow craft.md, "S
 
 Captions and music, from the step 3 answers. The caption style comes from the first that exists:
 
-1) `3-work/now/video/caption-style.json`, the style saved from an earlier video: `bash ~/reel-studio/editor style "<video>" --format <format> --style "3-work/now/video/caption-style.json"`, which takes it as it is.
+1) `3-work/now/video/_process/caption-style.json`, the style saved from an earlier video: `bash ~/reel-studio/editor style "<video>" --format <format> --style "3-work/now/video/_process/caption-style.json"`, which takes it as it is.
 2) The owner's design brief. Look for it:
 
 ```bash
@@ -169,7 +169,7 @@ grep -rl ':root' --include='*.css' --exclude-dir=.claude --exclude-dir=done --ex
 A CSS file with `:root` and `--` colour variables is the brief's colour file. One found: `bash ~/reel-studio/editor style "<video>" --format <format> --from-css "<that file>"`, and say in one line: "מצאתי את בריף העיצוב שלך. הכתוביות ייקחו ממנו את הצבעים." More than one: ask in one line which, with the paths.
 3) Nothing: `bash ~/reel-studio/editor style "<video>" --format <format>`, the safe default, white letters with a dark outline. Say in one line: "אין לך עדיין בריף עיצוב, אז הכתוביות בסגנון הבטוח, לבן עם קו כהה. כשיהיה בריף, אבנה את הסגנון ממנו."
 
-`style` prints `STYLE <job>/style.json`, the style file from now on, and `PREVIEW`, an image with a frame and five test lines; open it and check every test line reads right to left. Pass that `STYLE` path as `--style` to every `sheet`, `frames` and `render` below, always together with the same `--format`. Copy it to `3-work/now/video/caption-style.json` only when that file does not exist yet (`mkdir -p` the folder, then `cp -n`), so the next video starts from the same look without asking. A brief's fonts are not taken for burned captions unless they have Hebrew letters; the engine's Hebrew font is the safe one.
+`style` prints `STYLE <job>/style.json`, the style file from now on, and `PREVIEW`, an image with a frame and five test lines; open it and check every test line reads right to left. Pass that `STYLE` path as `--style` to every `sheet`, `frames` and `render` below, always together with the same `--format`. Copy it to `3-work/now/video/_process/caption-style.json` only when that file does not exist yet (`mkdir -p` the folder, then `cp -n`). It is working material and not a finished thing, so it lives in `_process/` and never at the top level of the project, so the next video starts from the same look without asking. A brief's fonts are not taken for burned captions unless they have Hebrew letters; the engine's Hebrew font is the safe one.
 
 Music: only a file the owner gave. Before using it, say once which platform it is licensed for if they did not say (craft.md, "Music under speech"), and never download music yourself.
 
@@ -212,7 +212,7 @@ It checks that the file opens, its length against the edit, the video and audio 
 
 In a MAKERS system finished work is recorded in the project folder, and the project here is `3-work/now/video/`. Create it if it does not exist. The video itself stays where the render put it, beside the source: a video weighs tens of megabytes and does not belong inside the system.
 
-Copy the working material, the corrected `transcript.txt` and the approved cut list, into `3-work/now/video/_process/<YYYY-MM-DD>-<video name>/`. Then write the record, `3-work/now/video/<YYYY-MM-DD>-<video name>.md`, plain text with no markup around it. If the name is taken, add `-2`. A record is never overwritten.
+Copy the working material into `3-work/now/video/_process/` as two flat files, with no folder of their own, because `_process/` is the one nesting the system allows: the corrected transcript as `<YYYY-MM-DD>-<video name>-transcript.txt` and the approved cut list as `<YYYY-MM-DD>-<video name>-cut-list.md`. Then write the record, `3-work/now/video/<YYYY-MM-DD>-<video name>.md`, plain text with no markup around it. If the name is taken, add `-2`. A record is never overwritten.
 
 ```
 סרטון: <שם הסרטון>
@@ -252,7 +252,7 @@ Every note makes a new version from the source, never from the previous cut, so 
 
 • Content ("תחזיר את 9", "תוריד את ההתחלה"): update the line list, `edl` again, steps 8 to 11.
 • A time window ("תחתוך 1:20 עד 1:35"): `edl ... --remove "1:20-1:35"` on top of the approved list, steps 8 to 11.
-• The look ("הכתוביות קטנות מדי", "תזיז אותן למעלה"): `bash ~/reel-studio/editor style "<video>" --format <format> --style "<job>/style.json"` with the change, for example `--size 90` (78 is the default), `--position 62` (the bottom edge of the captions in percent of the height, smaller is higher; without it the engine places them clear of the face by itself), `--color`, `--outline`, `--box` or `--font`. Then copy `<job>/style.json` over `3-work/now/video/caption-style.json` (now the owner asked for it, so overwrite is right) and say "נשמר בסגנון שלך, גם לסרטונים הבאים." Steps 8 to 11.
+• The look ("הכתוביות קטנות מדי", "תזיז אותן למעלה"): `bash ~/reel-studio/editor style "<video>" --format <format> --style "<job>/style.json"` with the change, for example `--size 90` (78 is the default), `--position 62` (the bottom edge of the captions in percent of the height, smaller is higher; without it the engine places them clear of the face by itself), `--color`, `--outline`, `--box` or `--font`. Then copy `<job>/style.json` over `3-work/now/video/_process/caption-style.json` (now the owner asked for it, so overwrite is right) and say "נשמר בסגנון שלך, גם לסרטונים הבאים." Steps 8 to 11.
 • Music level, format, captions on or off: the render flags, steps 9 to 11.
 
 Every new version gets its own record, with `-2`, `-3`. The earlier version stays on disk; say its path if the owner wants to compare.
