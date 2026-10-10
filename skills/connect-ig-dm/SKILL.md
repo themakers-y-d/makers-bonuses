@@ -1,17 +1,30 @@
 ---
 name: connect-ig-dm
-description: Sets up the automation where someone replies a keyword on a reel, a post or a story and gets a DM with the link seconds later, optionally only once they follow. Use this whenever the owner says "תגיבו מילה ותקבלו", "אני רוצה מאני צ'אט", "תחבר לי DM אוטומטי באינסטגרם", "אוטומציית תגובות", "מישהו מגיב ומקבל לינק", "set up comment to DM", "replace ManyChat", "תשנה לי את מילת המפתח של אוטומציית ה-DM", "תריץ את הבדיקה של אוטומציית ה-DM", or asks for a word in a comment to send someone a link. Always use this instead of connect-a-tool on its own. That skill covers connecting any account in general, while this one carries the Instagram rules that decide between a system that delivers and one that reports success and delivers nothing.
+description: Sets up the automation where someone replies a keyword on a reel, a post or a story and gets a DM with the link seconds later, optionally only once they follow. Use this whenever the owner says "תגיבו מילה ותקבלו", "אני רוצה מאני צ'אט", "תחבר לי DM אוטומטי באינסטגרם", "אוטומציית תגובות", "מישהו מגיב ומקבל לינק", "set up comment to DM", "replace ManyChat", "תשנה לי את מילת המפתח של אוטומציית ה-DM", "תריץ את הבדיקה של אוטומציית ה-DM", "תמשיך את התקנת אוטומציית ה-DM", or asks for a word in a comment to send someone a link. Always use this instead of connect-a-tool on its own. That skill covers connecting any account in general, while this one carries the Instagram rules that decide between a system that delivers and one that reports success and delivers nothing.
 ---
 
 # Connect Instagram comment-to-DM
 
 Owner: Morty.
 
-Morty runs it with the owner in the main conversation, under `/connect-a-tool`. Connecting an account is no maker's trade, and the owner is needed in the middle several times, so this never goes to a worker in a window of its own.
+**Who runs which part follows the owner's own system, never against it.** Check once: `[ -d 2-makers/vibecoder ] && echo "מצב: עם ווייבקודר" || echo "מצב: בלי ווייבקודר"`.
+
+- **Without a Vibecoder** (current systems): Morty runs all of it with the owner in the main conversation, under `/connect-a-tool`.
+- **With a Vibecoder** (older systems, whose rule sends anything that runs or connects to it): Morty keeps every part that needs the owner in the main conversation (the questions, the signup, the Instagram approval, the copy, the yes on the plan, the friend test). The commands that run without conversation go to the Vibecoder in three handoffs (prove and plan, apply and read back, logs and record), each brief saying the owner already approved that step. Before each handoff Morty tells the owner in one Hebrew line what will run, about how long, and that silence meanwhile is normal. The Vibecoder cannot ask the owner anything, so no question is left for it.
+
+In both, the row in `tools.md` is written only through `/connect-a-tool`, by whoever that system's rule names.
+
+**Everything the owner reads is Hebrew**, including one-line updates before commands and the result of every check. Address the owner in the masculine, or in the feminine when they write about themselves that way, and keep it.
 
 ⚠️ This sends messages to real strangers under the owner's name. Follow the steps in order. Where a step says stop, stop.
 
 This is a specific case of `connect-a-tool`. Everything in that skill applies. What follows is only what Instagram adds.
+
+## Where the kit is, and an install already under way
+
+The kit lives at one fixed place: `~/makers-bonuses/ig-dm-automation` (on Windows `$HOME\makers-bonuses\ig-dm-automation`). ⛔ **Never search the disk for it.** If it is not there, clone it there: `git clone https://github.com/themakers-y-d/makers-bonuses.git ~/makers-bonuses`.
+
+If `3-work/now/ig-dm/_process/install-in-progress.md` exists, an install stopped half way, usually for a restart of Claude Code. Read it, then continue from the step it names in `~/makers-bonuses/ig-dm-automation/INSTALL-makers.md`. Do not start over and do not ask the owner where anything is. Delete that file when the install is finished.
 
 ## Before anything, one check that can end it
 
@@ -19,7 +32,7 @@ The owner needs an Instagram **Business or Creator** account. A personal account
 
 If theirs is personal, stop and send them to switch it in Instagram settings. It is free and takes a minute. Do not continue until they confirm.
 
-They also need the kit: the `ig-dm-automation` folder from the MAKERS bonuses repo, with `kit/zernio.mjs` in it.
+They also need the kit, at `~/makers-bonuses/ig-dm-automation`, with `kit/zernio.mjs` in it. Every `node kit/...` command below runs from that folder.
 
 ## Steps
 
@@ -57,7 +70,7 @@ They also need the kit: the `ig-dm-automation` folder from the MAKERS bonuses re
 
 11) **Record it.** `tools.md` already exists at the root of their system with a table and the rules around it. Add **one row**: Instagram comment-to-DM, access read and write, the date, and the off switch as `node <absolute path of the ig-dm-automation folder>/kit/zernio.mjs pause <real automation id> --apply`, with the real path and id written in, so a later session started from the system root can run it as written. ⛔ Never rewrite that file. The sections around the table are what tell them how to switch things off.
 
-12) **Save the asset.** The keywords and the copy go to `3-work/now/ig-dm/` with a dated name, and the owner is told where it is. Run `/ship-it-live`, because this touched a live account and sent messages to real people. Run `/final-pass` before handing anything back. Anything learned goes to the Archivist as a proposed line, never written directly.
+12) **Save the asset.** The keywords and the copy go to `3-work/now/ig-dm/` with a dated name, and the owner is told where it is. If `3-work/now/ig-dm/_process/install-in-progress.md` exists, delete it now. Run `/ship-it-live`, because this touched a live account and sent messages to real people. Run `/final-pass` before handing anything back. Anything learned goes to the Archivist as a proposed line, never written directly.
 
 ## The one hard rule
 
