@@ -20,9 +20,9 @@ Do not spend questions on them.
 
 **Your questions:** the ones in step 4, word for word, never more than three, in one message. Most owners get one. The skill asks its own questions about a video at the moment it matters.
 
-**The row in `tools.md`** is written by the Designer in step 7, once, after step 6 proved the tools work. If a rule file that loads when you open `tools.md` names another writer for connections, this row is still yours to write: it records a local tool, after proof, with its off switch, which is exactly what that file is for.
+**No row in `tools.md`.** That file registers what the system can reach outside itself, and its rows are written only through `/connect-a-tool`. The editor connects to no account and sends nothing out: it is a skill plus local tools in `reel-studio`. Do not write a row for it. If an earlier install of this gift wrote one, remove that row in step 7.
 
-**What is kept at the end:** the skill, one row in `tools.md`, and, if the owner tried a video, an edited version beside it and a dated record in `3-work/now/video/`.
+**What is kept at the end:** the skill, the tools in `~/reel-studio`, and, if the owner tried a video, an edited version beside it and a dated record in `3-work/now/video/`.
 
 ## Two rules not to work around
 
@@ -225,13 +225,7 @@ After `ALL GOOD`, send:
 
 ### שלב 7. Closing the loop
 
-**The row in `tools.md`.** Open `tools.md` in the system folder and add one row to its existing table, now that step 6 proved the tool works. If the line `*No tools connected.*` is there, remove it, because it is no longer true. If `tools.md` does not exist, create it with the table header `| Tool | What it can do | Connected | How to switch it off |` and its separator line. The row, with today's date:
-
-```
-| עורך וידאו מקומי, בתיקייה `reel-studio` | read + write, על קבצים במחשב בלבד. קורא סרטון שנתת לו ושומר לידו גרסאות חדשות. לא מעלה ולא שולח כלום החוצה | <YYYY-MM-DD> | מוחקים את התיקייה `video-editor` שבתוך `.claude/skills` של המערכת. את `reel-studio` שבתיקיית הבית מוחקים רק אם בונה הסגנון לרילס לא בשימוש, כי שניהם משתמשים בה |
-```
-
-If an earlier install already wrote this row, update its date and do not add a second one.
+**An old row in `tools.md`.** An earlier version of this gift wrote a row for the editor in `tools.md`. If a row that starts with `| עורך וידאו מקומי` is there, delete that one row and nothing else; if the table is then empty, put the line `*No tools connected.*` back under it. If there is no such row, do nothing and say nothing.
 
 **The old method.** Only when the owner said yes in step 4: `rm -rf .claude/skills/video-editing-skill`, and say in one line that it is removed. On no, leave it, and do not ask again.
 
@@ -261,7 +255,7 @@ Send:
 עוד דבר אחד, ואז זה שלך.
 סגור את Claude Code לגמרי ופתח אותו מחדש באותה תיקייה, כדי שהעורך ייטען כמו כל סקיל. במק: Cmd+Q, לא רק סגירת החלון. בווינדוס: Alt+F4 או סגירת כל החלונות של התוכנה. בטרמינל כותבים /exit או לוחצים Ctrl+C פעמיים.
 מאז פשוט כתוב "תערוך לי את הסרטון" וגרור אותו לכאן, או לחץ `/video-editor`. הכלים כבר אצלך, והסגנון של הכתוביות נשמר אחרי הסרטון הראשון.
-להסרה: מוחקים את התיקייה `video-editor` שבתוך `.claude/skills` של המערכת ואת השורה שלו בקובץ `tools.md`. את `reel-studio` שבתיקיית הבית מוחקים רק אם בונה הסגנון לרילס לא בשימוש.
+להסרה: מוחקים את התיקייה `video-editor` שבתוך `.claude/skills` של המערכת. את `reel-studio` שבתיקיית הבית מוחקים רק אם בונה הסגנון לרילס לא בשימוש.
 ```
 
 `/final-pass` adds its closing line after this, as it does everywhere, and the Designer names the files it opened in one short line.
