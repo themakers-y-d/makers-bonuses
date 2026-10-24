@@ -1,0 +1,7 @@
+# הצהרות פטור למדריך הזה. פטור בלי סיבה כתובה הוא פטור שאף אחד לא יבדוק שוב.
+
+[external]
+# קבצי הסקיל עצמו. הם לא בתיקיית המדריך אלא ב-skills/video-editor-solo (SKILL.md, install-editor.sh)
+# וב-skills/video-editor בקומיט הנעול f9d5141 (craft.md, edit.py), וההתקנה מורידה אותם משם.
+craft.md
+install-editor.sh
