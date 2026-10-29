@@ -257,7 +257,8 @@ def render_slide(slide, i, n, handle, photo):
     if st == "night":
         glow = Image.new("RGB", (W, H), bg)
         gd = ImageDraw.Draw(glow)
-        gd.ellipse((W * 0.35, -300, W * 1.4, 500), fill=STYLE["accent2_rgb"])
+        glow_rgb = tuple(min(255, int(c + (255 - c) * 0.12)) for c in bg)  # a lighter shade of the owner's own background
+        gd.ellipse((W * 0.35, -300, W * 1.4, 500), fill=glow_rgb)
         img = Image.blend(img, glow.filter(ImageFilter.GaussianBlur(160)), 0.9)
         d = ImageDraw.Draw(img)
         STYLE["accent2_rgb"] = hexrgb(STYLE["accent"])
