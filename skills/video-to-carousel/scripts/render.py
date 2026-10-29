@@ -296,7 +296,7 @@ def render_slide(slide, i, n, handle, photo):
     if first:
         big = 168 if st == "poster" else 144
         t = fit(title, 800 if st in ("poster", "night") else 700, big, 72, maxw, 6, 1.06, 780)
-        b = fit(text, 400, 56, 36, maxw, 3, 1.36, 270) if text else None
+        b = fit(text.replace("*", ""), 400, 56, 36, maxw, 3, 1.36, 270) if text else None
         gap = 44 if b else 0
         block = height(t) + gap + height(b)
         top = (H - 140 - block) if photo else max(170, (H - block) / 2 - 30)
@@ -310,7 +310,7 @@ def render_slide(slide, i, n, handle, photo):
             draw_block(d, b, y, W - PAD, maxw, "right", soft, acc)
     elif last:
         t = fit(title, 800 if st == "poster" else 700, 120, 60, maxw, 5, 1.1, 580)
-        b = fit(text, 600, 60, 36, maxw, 4, 1.36, 330) if text else None
+        b = fit(text.replace("*", ""), 600, 60, 36, maxw, 4, 1.36, 330) if text else None
         gap = 56 if b else 0
         block = height(t) + gap + height(b)
         top = max(180, (H - block) / 2 - 40)
@@ -322,7 +322,7 @@ def render_slide(slide, i, n, handle, photo):
         big = 124 if st == "poster" else 104
         t = fit(title, 800 if st == "poster" else 700, big, 56, maxw, 4, 1.1, 500)
         room = FLOOR - 230 - height(t) - 48
-        b = fit(text, 400, 58, 34, maxw, 9, 1.45, room) if text else None
+        b = fit(text.replace("*", ""), 400, 58, 34, maxw, 9, 1.45, room) if text else None
         gap = 48 if b else 0
         block = height(t) + gap + height(b)
         top = max(230, (H - block) / 2 - 20)
