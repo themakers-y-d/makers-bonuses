@@ -84,7 +84,8 @@ def tokens(text):
         words = seg.split()
         for k, w in enumerate(words):
             if k == 0 and glue and out and not seg[:1].isspace():
-                out[-1][0] += w  # no space between the star and this text: same word
+                out[-1][0] += w  # no space between the star and this text: same word,
+                out[-1][1] = out[-1][1] or hi  # and marked if any part of it was ('ה"*סוד*"', '(*כך*)')
             else:
                 out.append([w, hi])
         if words:
@@ -95,7 +96,10 @@ def tokens(text):
     merged = []
     for w, h in out:
         # "Claude Code", and also "ו-GPT 5": a Latin run continues into the next Latin word
-        if merged and merged[-1][1] == h and is_ltr(w) and merged[-1][0][-1:].isascii() and merged[-1][0][-1:].isalnum():
+        prev = merged[-1][0] if merged else ""
+        ends_latin = prev[-1:].isascii() and prev[-1:].isalnum()
+        list_comma = prev[-1:] in ",." and prev[-2:-1].isascii() and prev[-2:-1].isalnum() and is_ltr(prev)  # "Claude, ChatGPT"
+        if merged and merged[-1][1] == h and is_ltr(w) and (ends_latin or list_comma):
             merged[-1][0] += " " + w
         else:
             merged.append([w, h])
@@ -450,6 +454,11 @@ def main():
         fail("Cannot read the spec %s: %s" % (spec_path, e))
     if not isinstance(spec, dict):
         fail("The spec must be a JSON object.")
+    if spec.get("colors") is not None and not isinstance(spec.get("colors"), dict):
+        fail('colors must be an object like {"bg": "#121212", "accent": "#FFD34D"}.')
+    for key in ("handle", "swipe", "photo", "style"):
+        if spec.get(key) is not None and not isinstance(spec.get(key), str):
+            spec[key] = str(spec[key])
     bad = [k + "=" + str(v) for k, v in (spec.get("colors") or {}).items() if v and not HEX.match(str(v))]
     if bad:
         fail("Colours must be hex codes like #2C3140. Fix: " + ", ".join(bad))
