@@ -1,0 +1,65 @@
+# makers-bonuses/.github/workflows/music-bed-windows.yml
+# Runs the music skill as a customer would, on a clean Windows machine, in a home folder whose name has a space
+# and Hebrew in it: the install one-liner from INSTALL.md (PowerShell), selftest, setup until SETUP OK (the
+# background worker), then split + mix on generated media, and the same selftest from Git Bash. No YouTube in CI.
+name: music-bed windows
+on:
+  workflow_dispatch:
+  push:
+    paths: ["skills/music-bed/**", "music-bed/**", ".github/workflows/music-bed-windows.yml"]
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: fake home with a space and Hebrew
+        shell: pwsh
+        run: |
+          $h = Join-Path $env:RUNNER_TEMP "בית עם רווח"
+          New-Item -ItemType Directory -Force $h | Out-Null
+          "FAKEHOME=$h" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      - name: install the skill files the way INSTALL.md step 3 does (from this checkout, sha256 checked)
+        shell: pwsh
+        run: |
+          $env:USERPROFILE = $env:FAKEHOME
+          $d = Join-Path $env:FAKEHOME ".claude\skills\music-bed"
+          New-Item -ItemType Directory -Force $d | Out-Null
+          Copy-Item skills/music-bed/SKILL.md, skills/music-bed/music_bed.py $d
+          py -3 -c "import sys;sys.stdout.reconfigure(errors='backslashreplace');import os;print('INSTALLED '+os.path.join(os.path.expanduser('~'),'.claude','skills','music-bed'))"
+      - name: selftest and setup until SETUP OK (PowerShell)
+        shell: pwsh
+        run: |
+          $env:USERPROFILE = $env:FAKEHOME
+          $t = Join-Path $env:FAKEHOME ".claude\skills\music-bed\music_bed.py"
+          py -3 $t selftest
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          $ok = $false
+          for ($i = 0; $i -lt 8; $i++) {
+            py -3 $t setup
+            if ($LASTEXITCODE -eq 0) { $ok = $true; break }
+            if ($LASTEXITCODE -ne 5) { Get-Content (Join-Path $env:FAKEHOME ".music-bed-skill\setup.log") -Tail 40; exit 1 }
+          }
+          if (-not $ok) { exit 1 }
+          py -3 $t status
+      - name: split and mix generated media (PowerShell)
+        shell: pwsh
+        run: |
+          $env:USERPROFILE = $env:FAKEHOME
+          $t = Join-Path $env:FAKEHOME ".claude\skills\music-bed\music_bed.py"
+          $py = Join-Path $env:FAKEHOME ".music-bed-skill\env\Scripts\python.exe"
+          $ff = & $py -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())"
+          $song = Join-Path $env:RUNNER_TEMP "שיר בדיקה.mp3"
+          $clip = Join-Path $env:RUNNER_TEMP "clip עם רווח.mp4"
+          & $ff -v error -y -f lavfi -i "sine=frequency=220:duration=70" -f lavfi -i "sine=frequency=660:duration=70" -filter_complex amix=inputs=2 $song
+          & $ff -v error -y -f lavfi -i "testsrc=size=540x960:rate=30:duration=8" -f lavfi -i "sine=frequency=330:duration=8" -c:v libx264 -pix_fmt yuv420p -c:a aac $clip
+          $out = py -3 $t split $song | Out-String; Write-Output $out
+          if ($out -notmatch "SPLIT_OK") { exit 1 }
+          $out = py -3 $t mix $clip last --start 0:05 | Out-String; Write-Output $out
+          if ($out -notmatch "MIXED") { exit 1 }
+          Get-ChildItem (Join-Path $env:FAKEHOME "מוזיקה לריל")
+      - name: the same selftest from Git Bash
+        shell: bash
+        run: |
+          export USERPROFILE="$FAKEHOME"
+          py -3 "$(cygpath -u "$FAKEHOME")/.claude/skills/music-bed/music_bed.py" selftest
