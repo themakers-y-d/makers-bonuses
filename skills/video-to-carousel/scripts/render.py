@@ -2,6 +2,7 @@
 """Draws an Instagram carousel (1080x1350 PNG per slide) from a JSON spec, right to left.
 
 Usage:  python3 render.py spec.json --out FOLDER
+        python3 render.py spec.json --out FOLDER --preview   (the first slide in all five looks, looks.png)
 
 Needs only Pillow. The bidi code (python-bidi 0.4.2, LGPL, unmodified) and six are in
 vendor/, and the Assistant font (OFL) is in ../fonts/, so nothing is downloaded.
@@ -23,7 +24,7 @@ Prints a JSON report: one line per slide with the font sizes used and any proble
 A slide whose text does not fit even at the smallest size is reported as "too_long";
 the images are still written so the owner can see them, and the caller must shorten it.
 """
-import json, os, sys
+import json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "vendor"))
@@ -47,9 +48,9 @@ STYLES = {
     # poster: huge type that fills the page, background swaps between two colours slide by slide
     "poster": {"bg": "#F2EDE3", "ink": "#111111", "soft": "#3A3A3A", "accent": "#E4472B", "accent2": "#111111"},
     # retro seventies: cream paper, three warm stripes that bend around a corner
-    "retro": {"bg": "#F3E6CC", "ink": "#3B1F12", "soft": "#7A5A44", "accent": "#D9622B", "accent2": "#E3A72F"},
+    "retro": {"bg": "#F3E6CC", "ink": "#3B1F12", "soft": "#7A5A44", "accent": "#C2501A", "accent2": "#E3A72F"},
     # riso print: two inks slightly out of register, halftone dots and paper grain
-    "riso": {"bg": "#F5F0E6", "ink": "#1D3F8C", "soft": "#4A5D8C", "accent": "#FF4D8D", "accent2": "#1D3F8C"},
+    "riso": {"bg": "#F5F0E6", "ink": "#1D3F8C", "soft": "#4A5D8C", "accent": "#E0306F", "accent2": "#1D3F8C"},
 }
 
 
@@ -78,31 +79,40 @@ def is_ltr(word):
 def tokens(text):
     """Words in logical order, each with a highlight flag. Neighbouring Latin words become one
     unit, so "Claude Code" keeps its order inside a right to left line."""
-    out, hi = [], False
+    out, hi, glue = [], False, False
     for seg in str(text).split("*"):
-        for w in seg.split():
-            out.append([w, hi])
+        words = seg.split()
+        for k, w in enumerate(words):
+            if k == 0 and glue and out and not seg[:1].isspace():
+                out[-1][0] += w  # no space between the star and this text: same word
+            else:
+                out.append([w, hi])
+        if words:
+            glue = not seg[-1:].isspace()
+        elif seg:
+            glue = False
         hi = not hi
     merged = []
     for w, h in out:
-        if merged and merged[-1][1] == h and is_ltr(merged[-1][0]) and is_ltr(w):
+        # "Claude Code", and also "ו-GPT 5": a Latin run continues into the next Latin word
+        if merged and merged[-1][1] == h and is_ltr(w) and merged[-1][0][-1:].isascii() and merged[-1][0][-1:].isalnum():
             merged[-1][0] += " " + w
         else:
             merged.append([w, h])
-    return [(get_display(w, base_dir="R"), h) for w, h in merged]
+    return [(get_display(w, base_dir="R"), h, w) for w, h in merged]
 
 
 def wrap(toks, f, maxw):
     sp = f.getlength(" ")
     lines, cur, cw = [], [], 0
-    for vis, hi in toks:
+    for vis, hi, logical in toks:
         wd = f.getlength(vis)
         nw = cw + sp + wd if cur else wd
         if cur and nw > maxw:
             lines.append(cur)
-            cur, cw = [(vis, hi, wd)], wd
+            cur, cw = [(vis, hi, wd, logical)], wd
         else:
-            cur.append((vis, hi, wd))
+            cur.append((vis, hi, wd, logical))
             cw = nw
     if cur:
         lines.append(cur)
@@ -120,6 +130,18 @@ def fit(text, weight, big, small, maxw, max_lines, lh, room):
     f = font(small, weight)
     lines, sp, _ = wrap(toks, f, maxw)
     return {"f": f, "size": small, "lines": lines, "sp": sp, "lh": lh, "ok": False}
+
+
+def bidi_ok(b):
+    """True when every line, drawn word by word, reads exactly like the full bidi algorithm
+    would order it. A mismatch means a mixed Hebrew and Latin line the word layout cannot
+    reproduce; the caller rephrases that line."""
+    for line in b["lines"]:
+        ours = " ".join(t[0] for t in reversed(line))
+        full = get_display(" ".join(t[3] for t in line), base_dir="R")
+        if ours != full:
+            return False
+    return True
 
 
 def height(b):
@@ -140,7 +162,7 @@ def draw_block(d, b, y, x_right, maxw, align, ink, acc, mark=None):
             x = x_right - (maxw - natural) / 2
         top = y + i * s * b["lh"]
         placed, run = [], None
-        for vis, hi, wd in line:
+        for vis, hi, wd, _ in line:
             placed.append((vis, hi, x))
             if hi:
                 run = [x - wd, run[1] if run else x]  # neighbouring marked words share one mark
@@ -214,7 +236,7 @@ def make_mark(kind):
         return mark
     if kind == "under":
         def mark(d, x0, y0, x1, y1, s):
-            d.rectangle((x0, y1 - s * 0.02, x1, y1 + s * 0.07), fill=STYLE["accent_rgb"])
+            d.rectangle((x0, y1 - s * 0.02, x1, y1 + s * 0.07), fill=STYLE.get("mark_rgb", STYLE["accent_rgb"]))
         return mark
     return None
 
@@ -242,11 +264,12 @@ def render_slide(slide, i, n, handle, photo):
         mark = make_mark("glow")
         acc = bg  # the marked word is cut out of the yellow highlighter
     elif st == "poster":
+        STYLE["mark_rgb"] = acc  # on an inverted slide the accent is the background, so the line takes the word's colour
         mark = make_mark("under")
     elif st == "retro":
         stripes(d, [hexrgb(STYLE["accent"]), hexrgb(STYLE["accent2"]), hexrgb(STYLE["ink"])], "tl")
     elif st == "riso":
-        halftone(d, (0, H - 330, W, H - 140), STYLE["accent_rgb"], direction=1)
+        halftone(d, (0, 24, W, 140), STYLE["accent_rgb"], direction=-1)
     elif st == "editorial" and not first and not last:
         gf = font(560, 800)
         d.text((PAD - 30, -70), "%02d" % (i + 1), font=gf, fill=STYLE["accent2_rgb"], anchor="la")
@@ -260,6 +283,7 @@ def render_slide(slide, i, n, handle, photo):
             img = Image.composite(dark, img, shade.point(lambda v: int(min(255, 40 + v * 1.1) * 0.85)))
             d = ImageDraw.Draw(img)
             ink, soft, mark, acc = (255, 255, 255), (230, 230, 230), make_mark("under"), STYLE["accent_rgb"]
+            STYLE["mark_rgb"] = acc
         except Exception as e:  # a bad photo never stops the carousel
             STYLE["photo_error"] = str(e)
             photo = None
@@ -313,6 +337,8 @@ def render_slide(slide, i, n, handle, photo):
     footer(d, i, n, handle, first)
     STYLE["soft"] = saved_soft
     problems = []
+    if not bidi_ok(t) or (b is not None and not bidi_ok(b)):
+        problems.append("mixed_direction: reword the line that mixes Hebrew and English or numbers")
     if not t["ok"]:
         problems.append("title_too_long")
     if b is not None and not b["ok"]:
@@ -341,28 +367,109 @@ def sheet(paths, out):
     s.save(out)
 
 
-def main():
-    if len(sys.argv) < 2:
-        sys.exit(__doc__)
-    spec_path = sys.argv[1]
-    out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else "carousel"
-    with open(spec_path, encoding="utf-8") as fh:
-        spec = json.load(fh)
-    name = spec.get("style", "editorial")
-    if name not in STYLES:
-        sys.exit("Unknown style %r. Use one of: %s" % (name, ", ".join(STYLES)))
+HEX = re.compile(r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
+LOOK_NAMES = {"night": "לילה", "poster": "פוסטר", "editorial": "עורכתי", "retro": "רטרו", "riso": "ריזו"}
+
+
+def fail(msg):
+    """A clear one-line error for the caller, never a traceback."""
+    print(json.dumps({"ok": False, "error": msg}, ensure_ascii=False))
+    sys.exit(2)
+
+
+def setup(name, colors):
     STYLE.clear()
     STYLE.update(STYLES[name])
-    for k, v in (spec.get("colors") or {}).items():
+    for k, v in (colors or {}).items():
         if k in ("bg", "ink", "soft", "accent", "accent2") and v:
             STYLE[k] = v
     STYLE["name"] = name
-    STYLE["swipe"] = spec.get("swipe", "החליקו")
     for k in ("bg", "ink", "soft", "accent", "accent2"):
         STYLE[k + "_rgb"] = hexrgb(STYLE[k])
-    slides = [s for s in spec.get("slides", []) if (s.get("title") or s.get("text"))][:10]
+
+
+def contrast_warnings():
+    """Every colour pair the slides really draw, with the WCAG threshold for its text size."""
+    pairs = [("text on background", STYLE["ink_rgb"], STYLE["bg_rgb"], 4.5),
+             ("soft text on background", STYLE["soft_rgb"], STYLE["bg_rgb"], 3),
+             ("accent on background", STYLE["accent_rgb"], STYLE["bg_rgb"], 3)]
+    if STYLE["name"] == "night":
+        pairs = pairs[:2] + [("marked word on the highlighter", STYLE["bg_rgb"], STYLE["accent_rgb"], 3)]
+    if STYLE["name"] == "poster":
+        pairs += [("text on the inverted slides", STYLE["bg_rgb"], STYLE["accent_rgb"], 3),
+                  ("marked word on the inverted slides", STYLE["accent2_rgb"], STYLE["accent_rgb"], 3)]
+    out = []
+    for label, fg, bg, need in pairs:
+        c = contrast(fg, bg)
+        if c < need:
+            out.append("low_contrast: %s is %.2f, needs %s" % (label, c, need))
+    return out
+
+
+def preview(spec, out):
+    """The owner's own cover slide in all five looks, side by side, so they choose by looking.
+    The owner's colours apply only when the spec has them (a saved brief)."""
+    first = next((s for s in spec.get("slides", []) if isinstance(s, dict) and (s.get("title") or s.get("text"))), None)
+    if not first:
+        fail("No slides in the spec.")
+    handle = (spec.get("handle") or "").strip()
+    if handle and not handle.startswith("@"):
+        handle = "@" + handle
+    tiles = []
+    for name in ("night", "poster", "editorial", "retro", "riso"):
+        setup(name, spec.get("colors"))
+        STYLE["swipe"] = spec.get("swipe", "החליקו")
+        STYLE["accent2_rgb"] = hexrgb(STYLE["accent2"])
+        img, _ = render_slide(first, 0, 8, handle, None)
+        tiles.append((name, img.resize((360, 450), Image.LANCZOS)))
+    sheet_img = Image.new("RGB", (5 * 372 + 12, 450 + 80), (245, 245, 245))
+    d = ImageDraw.Draw(sheet_img)
+    for k, (name, t) in enumerate(tiles):
+        x = 12 + (4 - k) * 372  # number 1 on the right, the way a Hebrew reader scans
+        sheet_img.paste(t, (x, 12))
+        label = "%d  %s" % (k + 1, LOOK_NAMES[name])
+        d.text((x + 180, 450 + 46), get_display(label, base_dir="R"), font=font(34, 700), fill=(20, 20, 20), anchor="mm")
+    os.makedirs(out, exist_ok=True)
+    path = os.path.join(out, "looks.png")
+    sheet_img.save(path, optimize=True)
+    print(json.dumps({"ok": True, "preview": os.path.abspath(path),
+                      "order": ["%d %s" % (k + 1, n) for k, (n, _) in enumerate(tiles)]}, ensure_ascii=False, indent=1))
+
+
+def main():
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        print(__doc__)
+        return
+    spec_path = sys.argv[1]
+    out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv and sys.argv.index("--out") + 1 < len(sys.argv) else "carousel"
+    try:
+        with open(spec_path, encoding="utf-8") as fh:
+            spec = json.load(fh)
+    except Exception as e:
+        fail("Cannot read the spec %s: %s" % (spec_path, e))
+    if not isinstance(spec, dict):
+        fail("The spec must be a JSON object.")
+    bad = [k + "=" + str(v) for k, v in (spec.get("colors") or {}).items() if v and not HEX.match(str(v))]
+    if bad:
+        fail("Colours must be hex codes like #2C3140. Fix: " + ", ".join(bad))
+    raw = spec.get("slides", [])
+    if not isinstance(raw, list) or any(not isinstance(s, dict) for s in raw):
+        fail('slides must be a list of objects like {"title": "...", "text": "..."}.')
+    if "--preview" in sys.argv:
+        preview(spec, out)
+        return
+    name = spec.get("style", "editorial")
+    if name not in STYLES:
+        fail("Unknown style %r. Use one of: %s" % (name, ", ".join(STYLES)))
+    setup(name, spec.get("colors"))
+    STYLE["swipe"] = spec.get("swipe", "החליקו")
+    slides = [s for s in raw if (s.get("title") or s.get("text"))]
+    warnings = []
+    if len(slides) > 10:
+        warnings.append("too_many_slides: Instagram takes 10 at most here, only the first 10 were drawn")
+        slides = slides[:10]
     if not slides:
-        sys.exit("No slides in the spec.")
+        fail("No slides in the spec.")
     handle = (spec.get("handle") or "").strip()
     if handle and not handle.startswith("@"):
         handle = "@" + handle
@@ -373,17 +480,15 @@ def main():
     paths, report = [], []
     for i, s in enumerate(slides):
         STYLE["accent2_rgb"] = hexrgb(STYLE["accent2"])
+        STYLE.pop("mark_rgb", None)
         img, r = render_slide(s, i, len(slides), handle, photo)
         p = os.path.join(out, "slide-%02d.png" % (i + 1))
         img.save(p, optimize=True)
         paths.append(p)
         report.append(r)
     sheet(paths, os.path.join(out, "all-slides.png"))
-    warnings = []
-    if contrast(STYLE["ink_rgb"], STYLE["bg_rgb"]) < 4.5:
-        warnings.append("low_contrast: text on background is %.2f, needs 4.5" % contrast(STYLE["ink_rgb"], STYLE["bg_rgb"]))
-    if contrast(STYLE["soft_rgb"], STYLE["bg_rgb"]) < 3:
-        warnings.append("low_contrast: soft text on background is %.2f, needs 3" % contrast(STYLE["soft_rgb"], STYLE["bg_rgb"]))
+    STYLE["accent2_rgb"] = hexrgb(STYLE["accent2"])
+    warnings += contrast_warnings()
     if STYLE.get("photo_error"):
         warnings.append("photo_error: " + STYLE["photo_error"])
     if spec.get("photo") and not photo:
