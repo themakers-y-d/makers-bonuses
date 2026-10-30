@@ -1,6 +1,6 @@
 ---
 name: receipts
-description: Collects one month of receipts and invoices from the owner's Gmail into a folder on their own computer, one folder per month with clear file names, and lists everything it found, including documents that wait behind a download link. Read only, it never sends, deletes, moves or marks mail. Use whenever the owner says things like "תאסוף לי את הקבלות", "תאסוף לי את הקבלות של ספטמבר", "תאסוף לי את הקבלות של החודש", "תאסוף לי את הקבלות של החודש שעבר", "קבלות", "חשבוניות מהמייל", "תוריד לי את החשבוניות של החודש", "תמצא לי את כל הקבלות במייל", "צריך את הקבלות לרואה החשבון", "תפתח לי את התיקייה של הקבלות", "collect my receipts", "invoices from Gmail", "get this month's receipts". Also when the owner asks how to grow it: "איך מגדילים את סקיל הקבלות", "איך מגדילים את זה", "לחבר את זה לחשבונית ירוקה", "לחבר את זה ל-morning", "שזה ירוץ לבד כל חודש". Always use this instead of searching the mailbox by hand in the chat, because it saves the files themselves, covers a whole month in one run and never marks anything as read. Not for issuing invoices, not for bookkeeping or tax advice, and not for mailboxes outside Gmail.
+description: Saves a month of Gmail receipts and invoices into a folder, read only. Use for "תאסוף לי את הקבלות", "חשבוניות מהמייל", "receipts". Always use instead of searching mail by hand. Not for tax advice.
 ---
 
 # קבלות מהמייל
