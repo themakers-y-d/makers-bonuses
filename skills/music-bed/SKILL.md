@@ -1,6 +1,6 @@
 ---
 name: music-bed
-description: Lays a song without its vocals under the owner's talking video, so the music sits in the background and drops by itself whenever they speak, with a soft start and a fade at the end. Three actions, all on the owner's own computer and free, downloads the song by name or link, removes the vocals with Demucs, and mixes it under the video. Use whenever the owner says things like "תשים לי שיר מתחת לסרטון", "תשים את <שיר> בלי המילים מתחת לריל", "שיר בלי מילים", "מוזיקה לריל", "תוריד לי את השיר", "תוריד את המילים מהשיר", "תפריד את השירה", "גרסה אינסטרומנטלית", "המוזיקה חזקה מדי", "תוריד את המוזיקה קצת", "תתחיל את השיר מהפזמון", "תפתח לי את התיקייה של המוזיקה", "תבדוק אם סקיל המוזיקה מוכן", "תסיר את סקיל המוזיקה", "put a song under my video", "instrumental version", "remove the vocals", "music bed". Always use this instead of writing ffmpeg or Demucs commands yourself in the chat, because it carries a tested mix and a check that knows when to keep the original. Not for cutting or editing the video itself, not for subtitles, and not for publishing.
+description: Lays a song without vocals under the owner's video, ducking under speech. Use for "תשים לי שיר בלי מילים מתחת לסרטון", "מוזיקה לריל", "instrumental". Always use instead of raw ffmpeg. Not for editing.
 ---
 
 # שיר בלי מילים מתחת לריל
