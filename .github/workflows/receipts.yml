@@ -1,0 +1,39 @@
+# The receipts gift, installed from receipts/INSTALL.md the way an owner's agent runs it, on Windows (Git Bash,
+# the way Claude Code runs commands there) and on Mac. Everything happens in .github/receipts/ci.sh, which also
+# runs by hand on a Mac: bash .github/receipts/ci.sh . "<empty folder>"
+# INSTALL.md downloads from the commit it pins, so that commit must already be on GitHub when this runs.
+name: receipts
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'skills/receipts/**'
+      - 'receipts/**'
+      - '.github/receipts/**'
+      - '.github/workflows/receipts.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout without CRLF conversion
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - name: Install from INSTALL.md into a home folder with Hebrew letters and a space
+        run: bash .github/receipts/ci.sh . "$(cygpath -u "$RUNNER_TEMP")/ci run"
+
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install from INSTALL.md into a home folder with Hebrew letters and a space
+        run: bash .github/receipts/ci.sh . "$RUNNER_TEMP/ci run"
