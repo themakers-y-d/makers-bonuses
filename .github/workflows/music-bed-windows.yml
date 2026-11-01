@@ -48,7 +48,9 @@ jobs:
           $env:USERPROFILE = $env:FAKEHOME
           $t = Join-Path $env:FAKEHOME ".claude\skills\music-bed\music_bed.py"
           $py = Join-Path $env:FAKEHOME ".music-bed-skill\env\Scripts\python.exe"
-          $ff = & $py -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())"
+          # the ffmpeg path sits under the Hebrew home: print it as UTF-8 and read it as UTF-8 (a cp1252 console crashed here, 01.11)
+          [Console]::OutputEncoding = [Text.Encoding]::UTF8
+          $ff = & $py -X utf8 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())"
           $song = Join-Path $env:RUNNER_TEMP "שיר בדיקה.mp3"
           $clip = Join-Path $env:RUNNER_TEMP "clip עם רווח.mp4"
           & $ff -v error -y -f lavfi -i "sine=frequency=220:duration=70" -f lavfi -i "sine=frequency=660:duration=70" -filter_complex amix=inputs=2 $song
