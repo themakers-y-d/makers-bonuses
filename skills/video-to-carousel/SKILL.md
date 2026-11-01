@@ -1,6 +1,6 @@
 ---
 name: video-to-carousel
-description: Turns a video the owner already made (a reel, a talking-head clip, a story, a live) into a finished Instagram carousel in the owner's own words and own style. It picks the strongest message the owner already said, writes a hook slide, four to six slides and a closing slide plus the caption, checks every line against what was really said, designs the slides in the owner's saved carousel style (or builds that style with them: draws their own sentence as a cover in five looks, they pick one by number, then three short questions), and hands back the images ready to post, 1080 by 1350. Use whenever the owner says things like "תהפוך את הסרטון הזה לקרוסלה", "תעשה מהסרטון קרוסלה", "קרוסלה מהסרטון", "קרוסלה מהריל", "יש לי סרטון ואני רוצה ממנו קרוסלה", "הנה התמלול של הסרטון", "תבנה לי סגנון לקרוסלות", "turn this video into a carousel", "make a carousel from this reel", "video to carousel". Always use this instead of writing or designing carousel slides freehand, because it keeps the owner's words, cuts to one message, draws the slides with a tested right-to-left renderer, and runs a checker on every slide before the owner sees it. Not for a new post with no video behind it, and it never posts anything by itself.
+description: Turns a video the owner made into an Instagram carousel, as images, in their own style. Use for "תהפוך את הסרטון הזה לקרוסלה", "תבנה לי סגנון לקרוסלות", "תבנה לי בריף עיצוב".
 ---
 
 # קרוסלה מסרטון
@@ -21,6 +21,8 @@ description: Turns a video the owner already made (a reel, a talking-head clip, 
 ליד הקובץ הזה יש:
 
 • `scripts/render.py`: מצייר את השקופיות. מקבל קובץ JSON ומחזיר תמונה לכל שקופית, ועוד דף מקדים של כולן (`all-slides.png`). עם `--preview` הוא מצייר את השער בכל חמשת המראים, בתמונה אחת (`looks.png`). צריך רק Python ו-Pillow. כל השאר (הפונט Assistant וקוד הכיוון מימין לשמאל) כבר בתיקייה, ושום דבר לא יורד מהאינטרנט.
+• `scripts/colors.py`: דוגם את הצבעים שחוזרים בתמונות של הבעלים, ומודד ניגודיות בין כל שני צבעים. משמש רק את הבריף.
+• `design-brief.md`: הבריף המלא, כשהבעלים מבקש סגנון מדויק.
 • `styles.md`: חמשת המראים וצבעי ברירת המחדל שלהם, איך הופכים תשובות לבלוק, והפורמט של "הסגנון שלי".
 
 אם אתה לא מוצא את התיקייה, חפש: `find / -name render.py -path "*video-to-carousel*" 2>/dev/null | head -1`.
@@ -49,7 +51,7 @@ description: Turns a video the owner already made (a reel, a talking-head clip, 
 
 1) בלוק שמתחיל ב-`=== הסגנון שלי ===` בשיחה, בהוראות הפרויקט או בקובץ שצורף.
 2) במחשב של הבעלים (Claude Code או Codex): הקובץ `~/carousels/my-style.md`.
-3) בריף עיצוב שהבעלים כבר כתב לעסק: `brief.md` וקובץ צבעים (`tokens.css`, או כל CSS עם `:root` ומשתנים שמתחילים ב-`--`), שצורפו לשיחה או שנמצאים בתיקייה `5-library/design-brief` בתיקיית העבודה. מבריף כזה לוקחים את הצבעים כמו שהם ואת החוקים והאיסורים שלו, לפי "בריף עיצוב קיים" ב-`styles.md`.
+3) בריף עיצוב שהבעלים כבר כתב לעסק: `brief.md` וקובץ צבעים (`tokens.css`, או כל CSS עם `:root` ומשתנים שמתחילים ב-`--`), שצורפו לשיחה, שנמצאים בקבצים של הפרויקט, או שנמצאים בתיקייה `~/carousels/brief/` או `5-library/design-brief` בתיקיית העבודה. מבריף כזה לוקחים את הצבעים כמו שהם ואת החוקים והאיסורים שלו, לפי "בריף עיצוב קיים" ב-`styles.md`.
 
 נמצא: אמור בשורה אחת "מצאתי את הסגנון שלך, אני עובד לפיו". לא נמצא: אל תשאל עכשיו כלום. סבב הסגנון קורה בשלב 4, על המשפט של הבעלים עצמו.
 
@@ -69,6 +71,8 @@ description: Turns a video the owner already made (a reel, a talking-head clip, 
 הצג לבעלים את המסר שבחרת במשפט אחד, את המסר השני בשורה נוספת, ואת כותרת השער, ושאל אם ללכת על הראשון. אם הבעלים ביקש לעבוד בלי עצירות, המשך עם הראשון בלי לחכות.
 
 ## שלב 4. סבב הסגנון, רק כשאין סגנון שמור
+
+הבעלים ביקש בריף עיצוב, או סגנון מדויק יותר ממה שהסבב הזה נותן: עבוד לפי `design-brief.md` במקום הסבב הזה, ואחריו המשך לשלב 5.
 
 יש סגנון מהשלב 2: דלג על 1 עד 3 כאן. אם בבלוק חסרים שם המשתמש או הסוף, שאל רק עליהם, בהודעה אחת (שאלה 4 למטה), ורשום אותם בבלוק.
 
