@@ -132,6 +132,25 @@ def load(name):
         "to free memory and run again, or use --model small.")
 
 
+def pieces(audio, sr, shortest=12, longest=26):
+    """Sample ranges of at most `longest` seconds, each cut at the quietest 50 ms between `shortest` and
+    `longest` seconds into the piece. Quiet is relative, so a pause still counts under a music bed."""
+    import numpy as np
+    hop = sr // 20
+    n = len(audio) // hop
+    if n == 0:
+        return [(0, len(audio))]
+    energy = np.sqrt(np.mean(audio[: n * hop].reshape(n, hop) ** 2, axis=1))
+    out, start = [], 0
+    while (len(audio) - start) / sr > longest:
+        lo, hi = start // hop + shortest * 20, min(start // hop + longest * 20, n)
+        cut = (lo + int(np.argmin(energy[lo:hi]))) * hop
+        out.append((start, cut))
+        start = cut
+    out.append((start, len(audio)))
+    return out
+
+
 def duration(video):
     import av
     try:
@@ -187,14 +206,18 @@ def main():
     model = load(name)
     threading.Thread(target=beat, daemon=True).start()
     say(f"transcribing {video.name}, {int(dur)} seconds of video, with the {name} model")
-    kw = {"language": lang, "vad_filter": True, "beam_size": 5}
-    if dur > 720:
-        # a long recording drifts and invents text when each piece is fed the text before it, so it is not
-        # (clip_timestamps would turn VAD off in faster-whisper 1.2.1, Romi 01.11)
-        kw["condition_on_previous_text"] = False
+    # the video editor's settings: no silence filter (it dropped speech under a music bed) and no text carried
+    # from piece to piece (long recordings drift). The audio is cut into pieces shorter than the model's
+    # 30-second window, each at the quietest moment, because a sentence crossing a window edge lost words
+    # (avatar episode 1, 01.11: "להשתחררות מזה או להקל על" vanished).
+    kw = {"language": lang, "vad_filter": False, "beam_size": 5, "condition_on_previous_text": False}
     try:
-        segments, _info = model.transcribe(str(video), **kw)
-        lines = [s.text.strip() for s in segments if s.text.strip()]
+        from faster_whisper.audio import decode_audio
+        audio = decode_audio(str(video), sampling_rate=16000)
+        lines = []
+        for a, b in pieces(audio, 16000):
+            segments, _info = model.transcribe(audio[a:b], **kw)
+            lines += [s.text.strip() for s in segments if s.text.strip()]
     except Exception as e:
         done.append(1)
         die(f"transcription failed ({type(e).__name__}: {str(e)[:150]}). Run the same command once more.")
