@@ -1,6 +1,6 @@
 # Morty, this one is for you
 
-The owner wants the skill that shares their work on the MAKERS participants' wall (themakers.co.il/bonus/share). This file installs it. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done. Speak to the owner in Hebrew, as always; the lines in code blocks marked as messages are theirs word for word.
+The owner wants the skill that shares their work on the MAKERS participants' market (שוק של מייקרז) (themakers.co.il/bonus/share). This file installs it. The owner does not need to read it. If you saved this file inside the system folder to read it, delete it when the install is done. Speak to the owner in Hebrew, as always; the lines in code blocks marked as messages are theirs word for word.
 
 ## What gets installed
 

@@ -1,6 +1,6 @@
 ---
 name: share-with-makers
-description: Prepares something the owner built (a skill, a maker, a system, a template, a guide) for the MAKERS participants' wall, cleans every personal and business detail out of a copy, checks it against the standard, and writes the one file the owner drops on themakers.co.il/bonus/share. Use when the owner says "אני רוצה לשתף עם המייקרז", "לשתף את הסקיל", "תכין את זה לקיר", "להעלות לקיר של המייקרז", "share this with the makers", "put it on the wall", or pastes back notes the wall returned about a share file, or notes from people who got stuck installing it. Always use this instead of zipping or copying files by hand, because the wall rejects any file this skill did not build. Not for backing up the system, and not for sending work to a client.
+description: Prepares something the owner built (a skill, a maker, a system, a template, a guide) for the MAKERS participants' market (שוק של מייקרז), cleans every personal and business detail out of a copy, checks it against the standard, and writes the one file the owner drops on themakers.co.il/bonus/share. Use when the owner says "אני רוצה לשתף עם המייקרז", "לשתף את הסקיל", "תכין את זה לשוק", "להעלות לשוק של מייקרז", "share this with the makers", "put it on the makers market", or pastes back notes the market returned about a share file, or notes from people who got stuck installing it. Always use this instead of zipping or copying files by hand, because the market rejects any file this skill did not build. Not for backing up the system, and not for sending work to a client.
 ---
 
 # Share with the makers
@@ -13,7 +13,7 @@ Speak to the owner in Hebrew, as always. The lines in code blocks marked as mess
 
 Another participant's Morty will download what the owner shares and install it in a system that has never seen this owner. Two things must be true before anything leaves this computer: **nothing personal goes with it**, and **a stranger's Morty can install it from the README alone**.
 
-The wall checks the file again on the server and refuses keys, real emails, phone numbers, home paths, secret files and broken skills. Passing the wall is the floor, not the standard. The standard is this file.
+The market checks the file again on the server and refuses keys, real emails, phone numbers, home paths, secret files and broken skills. Passing the market is the floor, not the standard. The standard is this file.
 
 ## Rules not to work around
 
@@ -82,7 +82,7 @@ This is the heart of the skill. Go through every file in `$S/files/`, line by li
 ```
 # <the title>
 
-מורטי, זה אליך. הבעלים הוריד את זה מהקיר של המייקרז.
+מורטי, זה אליך. הבעלים הוריד את זה מ״שוק של מייקרז״.
 
 ## מה זה עושה
 <two or three sentences: the problem and the result>
@@ -116,7 +116,7 @@ Anything that needed something only this system has (a row in `tools.md`, a conn
 
 ### 6. The walk: a stranger installs it, for real
 
-Reading a README never finds what installing from it finds: the file that was left behind, the step that only works on this computer, the sentence that does not wake the skill. So before anything is built, a stranger installs the share into an empty MAKERS system. The wall refuses a file without this step.
+Reading a README never finds what installing from it finds: the file that was left behind, the step that only works on this computer, the sentence that does not wake the skill. So before anything is built, a stranger installs the share into an empty MAKERS system. The market refuses a file without this step.
 
 **6a. The empty system.** Outside the owner's folder, so nothing of theirs is inside it. Only the parts every MAKERS owner has: the eight makers, the built-in skills, the product files. Nothing the owner added, because a stranger will not have it either.
 
@@ -126,7 +126,7 @@ mkdir -p "$W/.claude/skills" "$W/1-me" "$W/2-makers" "$W/3-work/in" "$W/3-work/n
 for m in archivist campaigner designer marketer morty researcher rick writer; do [ -d "2-makers/$m" ] && cp -R "2-makers/$m" "$W/2-makers/"; done
 for k in absorb-the-owner angle-bank build-agent build-skill check-the-system connect-a-tool explain-the-system final-pass page-brief session-debrief sharpen-the-offer ship-it-live spend-plan the-four-points verdict-on-spend where-things-stand; do [ -d ".claude/skills/$k" ] && cp -R ".claude/skills/$k" "$W/.claude/skills/"; done
 for f in CLAUDE.md system.md START-HERE.md; do [ -f "$f" ] && cp "$f" "$W/"; done
-printf '# Who I am\n\nA small business owner who downloaded this from the makers wall. Nothing else is known yet.\n' > "$W/1-me/summary.md"
+printf '# Who I am\n\nA small business owner who downloaded this from the makers market. Nothing else is known yet.\n' > "$W/1-me/summary.md"
 printf '# Connected tools\n\n| Tool | What it can do | Connected | How to switch it off |\n|---|---|---|---|\n' > "$W/tools.md"
 cp -R "3-work/now/share-$ID/files" "$W/Downloads/$ID"
 echo "makers: $(ls "$W/2-makers" | tr '\n' ' ')"; echo "skills: $(ls "$W/.claude/skills" | wc -l | tr -d ' ')"
@@ -138,7 +138,7 @@ Fewer than eight makers or than about sixteen skills: this system names them dif
 **6b. The stranger.** Start a fresh subagent. If you cannot start one, stop and tell the owner in one sentence that this step needs a new conversation with you, and do it there. Give it this brief, with the folder path from 6a written in, and nothing else about the owner or the share:
 
 ```
-You are Morty, in a MAKERS system that has never seen the person who built what you are about to install. The system folder is <W>. The owner downloaded a share from the makers wall into <W>/Downloads/<id>/. Install it exactly as its README.md says, as if the owner had just pasted you the install message.
+You are Morty, in a MAKERS system that has never seen the person who built what you are about to install. The system folder is <W>. The owner downloaded a share from the makers market into <W>/Downloads/<id>/. Install it exactly as its README.md says, as if the owner had just pasted you the install message.
 
 Rules for this walk:
 • Start every command with cd "<W>" && and use absolute paths under <W>. Your shell starts in the owner's own system folder, and a relative path there would overwrite their real files.
@@ -185,7 +185,7 @@ Remember for the card: how many rounds it took, and whether the sentence fired. 
 
 ### 7. The scan
 
-Run it from the system folder. It must print nothing. Anything it prints, fix and run again. It is the same list the wall checks on the server, so a clean scan here means the wall will not stop on a leak.
+Run it from the system folder. It must print nothing. Anything it prints, fix and run again. It is the same list the market checks on the server, so a clean scan here means the market will not stop on a leak.
 
 ```bash
 ID=<id>; S="3-work/now/share-$ID/files"
@@ -229,7 +229,7 @@ checked: share-with-makers v2
 Show the owner the card as it will appear, and wait:
 
 ```
-ככה זה ייראה על הקיר:
+ככה זה ייראה בשוק:
 <title>
 מאת <author>
 <problem>
@@ -253,7 +253,7 @@ ID=<id>; S="3-work/now/share-$ID"; OUT="3-work/done/$(date +%Y-%m-%d)-$ID.makers
 wc -c "$OUT"
 ```
 
-Over 400000 bytes: the wall refuses it. Leave out data files and long examples, and build again.
+Over 400000 bytes: the market refuses it. Leave out data files and long examples, and build again.
 
 ### 10. Final pass
 
@@ -272,20 +272,20 @@ Then:
 
 ```
 הקובץ מוכן ומסומן בתיקייה שנפתחה. נכנסים ל-themakers.co.il/bonus/share, גוללים לצעד 3 וגוררים אותו לשם.
-אם הקיר מחזיר הערות, מדביקים לי אותן ואני מתקן.
+אם השוק מחזיר הערות, מדביקים לי אותן ואני מתקן.
 ```
 
-## When the wall sends notes back
+## When the market sends notes back
 
-The owner pastes them. Fix each one **in `3-work/now/share-<id>/`**, never in the original, run the scan of step 7 again, rebuild with step 9 **with the same `id`**, and open the folder again. The same id updates the card in place; a new id would put a second card on the wall.
+The owner pastes them. Fix each one **in `3-work/now/share-<id>/`**, never in the original, run the scan of step 7 again, rebuild with step 9 **with the same `id`**, and open the folder again. The same id updates the card in place; a new id would put a second card on the market.
 
 ## When people get stuck on it
 
-Participants who installed the share mark it "עבד לי" or "נתקעתי" on the wall, and the owner sees the notes of whoever got stuck on their own card, with a button that copies them to you. Treat them exactly like notes from the wall: fix in `3-work/now/share-<id>/`, walk it again (step 6), rebuild with the same id.
+Participants who installed the share mark it "עבד לי" or "נתקעתי" on the market, and the owner sees the notes of whoever got stuck on their own card, with a button that copies them to you. Treat them exactly like notes from the market: fix in `3-work/now/share-<id>/`, walk it again (step 6), rebuild with the same id.
 
 ## When the owner wants to update or remove a share
 
-To update: change the copy in `3-work/now/share-<id>/`, or start again from the original if it changed, and rebuild with the same id. To remove: the owner presses "להוריד מהקיר" on their own card. You cannot do it from here.
+To update: change the copy in `3-work/now/share-<id>/`, or start again from the original if it changed, and rebuild with the same id. To remove: the owner presses "להוריד מהשוק" on their own card. You cannot do it from here.
 
 ## The signal you see
 
