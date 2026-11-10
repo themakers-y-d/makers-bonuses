@@ -30,6 +30,12 @@ MAKERS/.claude/skills/connect-ig-dm/SKILL.md
 
 המרגל: קורא את האתרים של שלושה מתחרים, ומוצא את ההבטחה שאף אחד מהם לא נותן. לא צריך מערכת MAKERS, והוא מותקן מהקובץ [spy/INSTALL.md](../spy/INSTALL.md).
 
+### share-with-makers
+
+מכין משהו שבניתם לקיר של המייקרז: עותק נקי מכל פרט אישי, README שכתוב למורטי של מישהו אחר, וקובץ אחד שגוררים ל-[themakers.co.il/bonus/share](https://themakers.co.il/bonus/share). מותקן מהקובץ [share/INSTALL-makers.md](../share/INSTALL-makers.md).
+
+אומרים למורטי "אני רוצה לשתף עם המייקרז את" ומה שבניתם.
+
 ## ממי זה
 
 מבית MAKERS, הסדנה שבונה לך צוות סוכנים שעובד בשבילך: [themakers.co.il](https://themakers.co.il)
