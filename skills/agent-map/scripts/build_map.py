@@ -189,9 +189,9 @@ def build(spec):
             save = ('<span class="save">בערך %s בשבוע</span><span class="math">אמרתם: %s. %s, ולכן זו ההערכה. '
                     'היא נגזרת רק מהמספר שלכם.</span>') % (esc(span_words(lo, hi)), esc(a["hours_said"]), esc(m["how"]))
         stations.append(
-            '      <li class="st">\n'
+            '      <li class="st rv">\n'
             '        <div class="pin" aria-hidden="true">%d</div>\n'
-            '        <article class="card">\n%s'
+            '        <article class="card xp %s">\n%s'
             '          <div class="card-head"><h3>%s</h3>'
             '<span class="auto"><span class="meter" data-level="%d"><i></i><i></i><i></i></span>%s</span></div>\n'
             '          <p class="does">%s</p>\n'
@@ -201,7 +201,7 @@ def build(spec):
             '          </dl>\n'
             '          <div class="first"><span class="tag">הצעד הראשון, היום</span><p>%s</p></div>\n'
             '        </article>\n'
-            '      </li>' % (i, ('          <span class="start">מתחילים כאן</span>\n' if i == 1 else ''), display(a["name"]), m["level"], esc(m["label"]), esc(a["does"]),
+            '      </li>' % (i, ('tint-mint', 'tint-sky', 'tint-sand')[i - 1], ('          <span class="start">מתחילים כאן</span>\n' if i == 1 else ''), display(a["name"]), m["level"], esc(m["label"]), esc(a["does"]),
                              esc(a["replaces"]), save, esc(a["first_step"])))
     if counted:
         rng = num(tot_lo) if tot_lo == tot_hi else num(tot_lo) + " עד " + num(tot_hi)
