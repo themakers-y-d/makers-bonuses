@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>{{TITLE}}</title>
+<style>
+/* המפה של בעל העסק, בשפת העיצוב של MAKERS. הקובץ נבנה על ידי scripts/build_map.py.
+   לא עורכים אותו ביד: משנים את map.json ומריצים שוב. */
+{{FONTS}}
+:root{
+  --white:#fffefb; --lumen:#fffbf1; --linen:#f4f0e9; --lumen-dark:#e7e1d8;
+  --vast:#1a1a1a; --vast-soft:#242320; --on-dark:#e2ddd3;
+  --grey-300:#b1b1ae; --grey-700:#484845;
+  --umbra:#4b3085; --dawn:#f0d7ff; --tide:#0b3f6b;
+  /* אקסנט אחד לעמוד: ירוק. עמוק לטקסט, רך למשטח, חי לסימן */
+  --accent:var(--leaf); --accent-soft:#c2f0d2; --accent-ink:#20512c; --leaf:#4fbf6a;
+  --font-display:'Caspomat','Assistant',system-ui,sans-serif;
+  --font-ui:'Assistant',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sp-4:4px; --sp-8:8px; --sp-12:12px; --sp-16:16px; --sp-24:24px; --sp-32:32px; --sp-48:48px; --sp-64:64px;
+  --h1:56px; --h2:32px; --h3:28px; --t-md:19px; --t-sm:15px; --t-xs:13px; --num:56px;
+  --lh-body:1.3; --lh-lead:1.25;
+  --r-btn:4px; --r-card:8px; --r-pill:999px;
+  --border-ink:2px solid var(--vast);
+  --ease-signature:cubic-bezier(.34,1.56,.64,1);
+  --pin:56px; --rail:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--lumen);color:var(--vast);font-family:var(--font-ui);font-size:var(--t-md);
+  line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
+.lat{font-family:var(--font-ui);font-weight:600;letter-spacing:0}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;letter-spacing:-.01em;text-wrap:balance}
+.page{max-width:880px;margin-inline:auto;padding:var(--sp-48) var(--sp-24) var(--sp-64)}
+
+/* הלוגו: ממורכז, סוגריים בקספומט 300, המילה באסיסטנט, הכל בסגול */
+.logo{display:flex;justify-content:center;align-items:baseline;font-size:26px;white-space:nowrap}
+.brk{font-family:var(--font-display);font-weight:300;color:var(--umbra);font-size:.92em}
+.word{font-family:var(--font-ui);font-weight:600;color:var(--umbra);padding-inline:.3em;letter-spacing:0}
+
+.head{text-align:center;margin-block-start:var(--sp-48)}
+.eyebrow{display:inline-block;font-size:var(--t-sm);font-weight:700;background:var(--accent-soft);
+  border:var(--border-ink);border-radius:var(--r-btn);padding:var(--sp-4) var(--sp-12)}
+h1{font-size:var(--h1);line-height:.98;margin-block-start:var(--sp-16);max-width:760px;margin-inline:auto}
+.lead{font-size:22px;line-height:var(--lh-lead);color:var(--grey-700);max-width:640px;margin:var(--sp-16) auto 0}
+
+/* שלוש עובדות */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-16);margin-block-start:var(--sp-48)}
+.fact{background:var(--white);border:var(--border-ink);border-radius:var(--r-card);padding:var(--sp-16) var(--sp-24);text-align:center}
+.fact b{display:block;font-family:var(--font-ui);font-weight:700;font-size:var(--num);line-height:1;letter-spacing:-.03em;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.fact b.words{font-size:34px;line-height:1.1;padding-block:11px}
+.fact span{display:block;margin-block-start:var(--sp-8);font-size:var(--t-sm);line-height:1.3;color:var(--grey-700)}
+
+/* המסלול: קו אחד שמחבר שלוש תחנות, בסדר הבנייה */
+.sec{margin-block-start:var(--sp-64)}
+.sec>h2{font-size:var(--h2);line-height:1;text-align:center;margin-block-end:var(--sp-8)}
+.sec>.sub{text-align:center;color:var(--grey-700);font-size:var(--t-md);max-width:560px;margin:0 auto var(--sp-32)}
+.route{list-style:none;position:relative;padding-inline-start:calc(var(--pin) + var(--sp-24))}
+.route::before{content:"";position:absolute;inset-inline-start:calc(var(--pin)/2 - var(--rail)/2);top:var(--sp-24);bottom:var(--sp-48);
+  width:var(--rail);background:var(--accent-ink);border-radius:var(--r-pill)}
+.st{position:relative;margin-block-end:var(--sp-32)}
+.st:last-child{margin-block-end:0}
+.pin{position:absolute;inset-inline-start:calc(-1 * (var(--pin) + var(--sp-24)));top:var(--sp-16);
+  width:var(--pin);height:var(--pin);border-radius:var(--r-pill);border:var(--border-ink);background:var(--accent-soft);
+  display:grid;place-content:center;font-family:var(--font-ui);font-weight:700;font-size:26px;font-variant-numeric:tabular-nums}
+.st:first-child .pin{background:var(--leaf)}
+.start{display:inline-block;margin-block-end:var(--sp-8);font-size:var(--t-xs);font-weight:700;background:var(--leaf);
+  border:var(--border-ink);border-radius:var(--r-btn);padding:2px var(--sp-8)}
+.card{background:var(--white);border:var(--border-ink);border-radius:var(--r-card);padding:var(--sp-24)}
+.card-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--sp-8) var(--sp-16)}
+.card h3{font-size:var(--h3);line-height:1.05}
+.auto{display:inline-flex;align-items:center;gap:var(--sp-8);font-size:var(--t-sm);font-weight:700;white-space:nowrap}
+.meter{display:inline-flex;gap:3px}
+.meter i{display:block;width:14px;height:10px;border:2px solid var(--vast);border-radius:2px;background:var(--white)}
+.meter[data-level="3"] i,.meter[data-level="2"] i:nth-child(-n+2),.meter[data-level="1"] i:first-child{background:var(--accent-ink);border-color:var(--accent-ink)}
+.does{margin-block-start:var(--sp-12);font-size:20px;line-height:var(--lh-lead)}
+.rows{margin-block-start:var(--sp-16);display:grid;gap:var(--sp-12)}
+.rows div{display:grid;grid-template-columns:150px 1fr;gap:var(--sp-16);align-items:baseline}
+.rows dt{font-size:var(--t-sm);font-weight:700;color:var(--grey-700)}
+.rows dd{font-size:var(--t-md)}
+.rows .save{font-weight:700;color:var(--accent-ink)}
+.rows .math{display:block;margin-block-start:var(--sp-4);font-size:var(--t-sm);color:var(--grey-700);line-height:1.35}
+.first{margin-block-start:var(--sp-16);background:var(--accent-soft);border-radius:var(--r-card);padding:var(--sp-16)}
+.first .tag{display:inline-block;font-size:var(--t-xs);font-weight:700;background:var(--white);border:var(--border-ink);
+  border-radius:var(--r-btn);padding:2px var(--sp-8);margin-block-end:var(--sp-8)}
+.first p{font-size:var(--t-md);line-height:1.35}
+
+/* למה בסדר הזה */
+.why{background:var(--white);border:var(--border-ink);border-radius:var(--r-card);padding:var(--sp-32) var(--sp-24);max-width:720px;margin-inline:auto}
+.why h2{font-size:var(--h2);line-height:1;margin-block-end:var(--sp-16)}
+.why p{font-size:20px;line-height:1.35;color:var(--grey-700)}
+.why p+p{margin-block-start:var(--sp-16)}
+
+/* 48 השעות: הלוח הכהה היחיד בעמוד */
+.slab{background:var(--vast);color:var(--on-dark);border-radius:var(--r-card);padding:var(--sp-32) var(--sp-24)}
+.slab h2{color:var(--lumen);font-size:var(--h2);line-height:1;text-align:center;margin-block-end:var(--sp-24)}
+.steps{list-style:none;display:grid;gap:var(--sp-16);max-width:680px;margin-inline:auto}
+.steps li{display:grid;grid-template-columns:96px 1fr;gap:var(--sp-16);align-items:start}
+.steps .when{display:inline-block;text-align:center;font-size:var(--t-sm);font-weight:700;background:var(--accent-soft);color:var(--vast);
+  border-radius:var(--r-btn);padding:var(--sp-4) var(--sp-8)}
+.steps p{font-size:var(--t-md);line-height:1.35}
+.steps strong{color:var(--lumen)}
+.steps .when:empty{visibility:hidden}
+.copy{margin-block-start:var(--sp-12);background:var(--vast-soft);border-radius:var(--r-card);padding:var(--sp-16)}
+.copy p{color:var(--lumen);font-size:var(--t-md);line-height:1.4;white-space:pre-wrap}
+.copy button{margin-block-start:var(--sp-12);min-height:44px;font-family:var(--font-ui);font-weight:600;font-size:16px;color:var(--vast);
+  background:var(--dawn);border:2px solid var(--dawn);border-radius:var(--r-btn);padding:var(--sp-8) var(--sp-24);cursor:pointer;
+  transition:transform .2s var(--ease-signature)}
+.copy button:hover{transform:translateY(-3px)}
+.copy button:focus-visible{outline:3px solid var(--dawn);outline-offset:3px}
+.copy .done{display:inline-block;margin-inline-start:var(--sp-12);font-size:var(--t-sm);color:var(--lumen)}
+
+/* מה סיפרת לי */
+.told{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-12)}
+.told div{background:var(--linen);border-radius:var(--r-card);padding:var(--sp-16)}
+.told dt{font-size:var(--t-xs);font-weight:700;color:var(--grey-700);margin-block-end:var(--sp-4)}
+.told dd{font-size:17px;line-height:1.35}
+
+.foot{margin-block-start:var(--sp-64);text-align:center;font-size:var(--t-sm);color:var(--grey-700);line-height:1.5}
+.foot a{color:var(--umbra)}
+
+@media (prefers-reduced-motion:no-preference){
+  .st{animation:rise .28s var(--ease-signature) both}
+  .st:nth-child(2){animation-delay:.06s} .st:nth-child(3){animation-delay:.12s}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+}
+@media (max-width:700px){
+  :root{--h1:34px;--h2:26px;--h3:23px;--t-md:17px;--num:44px;--pin:40px}
+  .page{padding:var(--sp-24) var(--sp-16) var(--sp-48)}
+  .logo{font-size:22px}
+  .head{margin-block-start:var(--sp-24)}
+  .lead{font-size:18px}
+  .facts{grid-template-columns:1fr;gap:var(--sp-8);margin-block-start:var(--sp-32)}
+  .fact{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:var(--sp-16);text-align:start;padding:var(--sp-12) var(--sp-16)}
+  .fact span{margin:0}
+  .fact b.words{font-size:24px;padding:0}
+  .sec{margin-block-start:var(--sp-48)}
+  /* בטלפון אין מקום לקו בצד: התחנה עולה מעל הכרטיס, וקו קצר מחבר בין התחנות */
+  .route{padding-inline-start:0}
+  .route::before{display:none}
+  .st{margin-block-end:var(--sp-24)}
+  .st+.st::before{content:"";display:block;width:var(--rail);height:var(--sp-24);margin:calc(-1 * var(--sp-24)) auto 0;background:var(--accent-ink)}
+  .pin{position:relative;inset:auto;top:auto;margin:0 auto calc(var(--pin) / -2);z-index:1;font-size:20px}
+  .card{padding:calc(var(--pin) / 2 + var(--sp-8)) var(--sp-16) var(--sp-16)}
+  .does{font-size:18px}
+  .rows div{grid-template-columns:1fr;gap:var(--sp-4)}
+  .why{padding:var(--sp-24) var(--sp-16)}
+  .why p{font-size:18px}
+  .slab{padding:var(--sp-24) var(--sp-16)}
+  .steps li{grid-template-columns:1fr;gap:var(--sp-8)}
+  .steps .when{justify-self:start}
+  .told{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff}
+  .page{padding:0}
+  .st,.why,.told div{break-inside:avoid}
+  .copy button,.copy .done{display:none}
+  .st{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="logo" aria-label="MAKERS"><span class="brk">[[</span><span class="word">MAKERS</span><span class="brk">]]</span></div>
+
+  <header class="head">
+    <span class="eyebrow">{{EYEBROW}}</span>
+    <h1>{{H1}}</h1>
+    <p class="lead">{{LEAD}}</p>
+  </header>
+
+  <div class="facts">
+    <div class="fact"><b>3</b><span>סוכנים, לפי סדר הבנייה</span></div>
+    <div class="fact">{{TOTAL}}</div>
+    <div class="fact"><b>48</b><span>שעות, עד שסוכן 1 מתחיל להיבנות</span></div>
+  </div>
+
+  <section class="sec" aria-labelledby="route-title">
+    <h2 id="route-title">הסדר</h2>
+    <p class="sub">מתחילים מלמעלה. כל סוכן עושה עבודה אחת, והבא נבנה כשהקודם כבר עובד.</p>
+    <ol class="route">
+{{STATIONS}}
+    </ol>
+  </section>
+
+  <section class="sec">
+    <div class="why">
+      <h2>למה בסדר הזה</h2>
+{{WHY}}
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="slab">
+      <h2><span class="lat">48</span> השעות הקרובות</h2>
+      <ol class="steps">
+{{NEXT}}
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="told-title">
+    <h2 id="told-title">מה סיפרת לי</h2>
+    <p class="sub">המפה נבנתה רק מזה. מה שלא כתוב כאן לא נכנס אליה.</p>
+    <dl class="told">
+{{TOLD}}
+    </dl>
+  </section>
+
+  <p class="foot">{{FOOT}}<br>נבנה בסקיל המפה של <a href="https://themakers.co.il">MAKERS</a>, הסדנה שבונה לכם צוות סוכנים שעובד בשבילכם.</p>
+</div>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-copy')).textContent, ok=b.nextElementSibling;
+    function done(){ ok.textContent='הועתק'; }
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(t).then(done,fb); } else fb();
+    function fb(){ var a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select();
+      try{ document.execCommand('copy'); done(); }catch(e){ ok.textContent='מסמנים את הטקסט ומעתיקים'; } a.remove(); }
+  });
+});
+</script>
+</body>
+</html>

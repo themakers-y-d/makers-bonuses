@@ -1,0 +1,9 @@
+# הצהרות פטור למדריך הזה. פטור בלי סיבה כתובה הוא פטור שאף אחד לא יבדוק שוב.
+
+[external]
+# קבצים שהסקיל עצמו יוצר אצל הקורא, בתיקייה agent-map שבתיקיית העבודה שלו. הם לא אמורים להיות כאן.
+map.json
+agent-map/map.json
+my-agent-map.html
+# התבנית של העמוד: RUNBOOK-skill.md הוא עותק של SKILL.md, והתבנית יושבת ליד המקור, ב-skills/agent-map/assets/map.html.
+assets/map.html
