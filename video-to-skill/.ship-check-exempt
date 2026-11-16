@@ -1,0 +1,18 @@
+# הצהרות פטור למדריך הזה. פטור בלי סיבה כתובה הוא פטור שאף אחד לא יבדוק שוב.
+
+[external]
+# קבצים שהסקיל יוצר אצל הקורא, בתיקיית העבודה שלו. הם לא אמורים להיות כאן.
+source.txt
+meta.json
+SPEC.md
+pasted.txt
+notes/read-1-words.md
+notes/read-2-screen.md
+notes/read-2-second.md
+test/first-run.md
+# RUNBOOK-skill.md הוא עותק של SKILL.md. הסקריפטים יושבים ליד המקור, ב-skills/video-to-skill/scripts/, ונכנסים ל-zip משם.
+scripts/install-tools.sh
+scripts/run.sh
+run.sh
+# build.sh יושב בתיק הראיות בוולט (O-output/makers/magnets/2026-11-16-learn-from-video/), לא בריפו הציבורי.
+build.sh
