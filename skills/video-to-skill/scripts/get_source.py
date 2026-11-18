@@ -250,7 +250,8 @@ def article(url):
             raw, ctype = r.read(), r.headers.get("Content-Type", "")
     except Exception as e:
         die(f"the page did not open ({type(e).__name__}: {str(e)[:120]}). Ask the owner to copy the text of "
-            "the article and paste it, or to save the page as a file.")
+            "the article and paste it, or to save the page as a file. Do not read the link with a web or search "
+            "tool instead: it returns a summary, not the article.")
     if "pdf" in ctype:
         die("this link is a PDF. Download it and read it with your own file reader, then save its text as a "
             ".txt file and run this again on that file.")
@@ -332,7 +333,8 @@ def main():
             words = sum(len(l.split()) for l in lines)
             if words < 150:
                 die("the page has almost no text that can be read from a link (it is closed, or built by scripts). "
-                    "Ask the owner to copy the article text and paste it.")
+                    "Ask the owner to copy the article text and paste it. Do not read it with a web or search tool "
+                    "instead: it returns a summary, not the article.")
             meta.update(kind="article", title=title, how="page text")
             pieces = [(None, l) for l in lines]
     else:

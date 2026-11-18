@@ -6,7 +6,8 @@ Usage:  python3 my_skills.py            (or: bash run.sh my_skills.py)
 
 Looks only in the places skills are loaded from, never across the whole disk:
   this folder's .claude/skills, ~/.claude/skills, ~/.agents/skills, ~/.codex/skills,
-  and in the Claude app /mnt/skills/user.
+  and in the Claude app /mnt/skills/user. In each place it looks up to three folders down,
+  because the Claude app keeps the account's skills in ~/.claude/skills/synced/<id>/<name>.
 Prints one block per skill (name, where, what its description says), then  SKILLS <n>.
 Only the standard library: runs anywhere Python runs.
 """
@@ -51,13 +52,35 @@ def front(text):
     return field("name"), field("description")
 
 
+def skill_dirs(p, depth=3):
+    """Skill folders in p, looking up to `depth` folders down and stopping at the first SKILL.md.
+    The Claude app keeps the account's skills in ~/.claude/skills/synced/<id>/<name>, so a flat
+    look there finds nothing."""
+    try:
+        kids = sorted(p.iterdir())
+    except OSError:
+        return
+    for d in kids:
+        if d.name.startswith(".") or not d.is_dir():
+            continue
+        if (d / "SKILL.md").is_file():
+            yield d
+        elif depth > 1:
+            yield from skill_dirs(d, depth - 1)
+
+
 def skills():
+    seen = set()
     for p in places():
-        for d in sorted(p.iterdir()):
-            f = d / "SKILL.md"
-            if not d.is_dir() or not f.is_file() or d.name.startswith("."):
+        for d in skill_dirs(p):
+            try:
+                r = d.resolve()
+            except OSError:
+                r = d
+            if r in seen:
                 continue
-            text = f.read_text(encoding="utf-8", errors="replace")
+            seen.add(r)
+            text = (d / "SKILL.md").read_text(encoding="utf-8", errors="replace")
             name, desc = front(text)
             yield (name or d.name), d, desc, text.count("\n") + 1
 
