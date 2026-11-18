@@ -9,6 +9,7 @@ Looks only in the places skills are loaded from, never across the whole disk:
   and in the Claude app /mnt/skills/user. In each place it looks up to three folders down,
   because the Claude app keeps the account's skills in ~/.claude/skills/synced/<id>/<name>.
 Prints one block per skill (name, where, what its description says), then  SKILLS <n>.
+A skill Anthropic ships (synced/<id>/manifest.json, source anthropic) is marked as not upgradable.
 Only the standard library: runs anywhere Python runs.
 """
 import os, re, sys
@@ -69,6 +70,23 @@ def skill_dirs(p, depth=3):
             yield from skill_dirs(d, depth - 1)
 
 
+def builtin_names(folder, cache={}):
+    """Names of the skills in this synced folder that Anthropic ships (manifest source 'anthropic...').
+    The owner cannot replace them in the app, and a sync overwrites any local edit."""
+    if folder not in cache:
+        names = set()
+        try:
+            import json
+            data = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+            for sk in data.get("skills") or []:
+                if str(sk.get("source") or "").startswith("anthropic") or sk.get("creatorType") == "anthropic":
+                    names.add(sk.get("name") or sk.get("skillId"))
+        except Exception:
+            pass
+        cache[folder] = names
+    return cache[folder]
+
+
 def skills():
     seen = set()
     for p in places():
@@ -82,7 +100,8 @@ def skills():
             seen.add(r)
             text = (d / "SKILL.md").read_text(encoding="utf-8", errors="replace")
             name, desc = front(text)
-            yield (name or d.name), d, desc, text.count("\n") + 1
+            builtin = d.name in builtin_names(d.parent) or (name or d.name) in builtin_names(d.parent)
+            yield (name or d.name), d, desc, text.count("\n") + 1, builtin
 
 
 def main():
@@ -92,7 +111,7 @@ def main():
         return
     if a and a[0] == "--show":
         want = a[1] if len(a) > 1 else ""
-        for name, d, _desc, _n in skills():
+        for name, d, _desc, _n, _b in skills():
             if name == want or d.name == want:
                 print(f"# {d / 'SKILL.md'}\n")
                 print((d / "SKILL.md").read_text(encoding="utf-8", errors="replace"))
@@ -100,11 +119,12 @@ def main():
         print(f"PROBLEM no skill named {want}")
         sys.exit(1)
     n = 0
-    for name, d, desc, lines in skills():
+    for name, d, desc, lines, builtin in skills():
         if name == SELF:
             continue
         n += 1
-        print(f"{name}\n  where: {d}\n  lines: {lines}\n  does: {desc[:400] or '(no description)'}\n")
+        note = "  built in by Anthropic: not upgradable, a match means a new skill with a boundary line\n" if builtin else ""
+        print(f"{name}\n  where: {d}\n  lines: {lines}\n{note}  does: {desc[:400] or '(no description)'}\n")
     where = ", ".join(str(p) for p in places()) or "none of the usual places exist yet"
     print(f"looked in: {where}")
     print(f"SKILLS {n}")
