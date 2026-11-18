@@ -22,7 +22,15 @@ This is a specific case of `connect-a-tool`. Everything in that skill applies. W
 
 ## Where the kit is, and an install already under way
 
-The kit lives at one fixed place: `~/makers-bonuses/ig-dm-automation` (on Windows `$HOME\makers-bonuses\ig-dm-automation`). ⛔ **Never search the disk for it.** If it is not there, clone it there: `git clone https://github.com/themakers-y-d/makers-bonuses.git ~/makers-bonuses`.
+This skill is only the trigger. The kit with the code (`kit/zernio.mjs` and the rest) is not inside it, and an owner who took this skill from the skills library has the skill without the kit. That is expected, not something missing to report to the owner.
+
+The kit lives at one fixed place: `~/makers-bonuses/ig-dm-automation` (on Windows `$HOME\makers-bonuses\ig-dm-automation`). ⛔ **Never search the disk for it, and never ask the owner for it.** If it is not there, clone it there yourself, then follow `~/makers-bonuses/ig-dm-automation/INSTALL-makers.md` from step 0:
+
+```bash
+git clone https://github.com/themakers-y-d/makers-bonuses.git ~/makers-bonuses
+```
+
+If `~/makers-bonuses` exists but has no `ig-dm-automation` in it, update it with `git -C ~/makers-bonuses pull --ff-only`.
 
 If `3-work/now/ig-dm/_process/install-in-progress.md` exists, an install stopped half way, usually for a restart of Claude Code. Read it, then continue from the step it names in `~/makers-bonuses/ig-dm-automation/INSTALL-makers.md`. Do not start over and do not ask the owner where anything is. Delete that file when the install is finished.
 
@@ -32,7 +40,7 @@ The owner needs an Instagram **Business or Creator** account. A personal account
 
 If theirs is personal, stop and send them to switch it in Instagram settings. It is free and takes a minute. Do not continue until they confirm.
 
-They also need the kit, at `~/makers-bonuses/ig-dm-automation`, with `kit/zernio.mjs` in it. Every `node kit/...` command below runs from that folder.
+They also need the kit, at `~/makers-bonuses/ig-dm-automation`, with `kit/zernio.mjs` in it. If it is missing, clone it as above before going on. Every `node kit/...` command below runs from that folder.
 
 ## Steps
 
