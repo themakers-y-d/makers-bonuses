@@ -164,6 +164,8 @@ def check(spec):
             if not isinstance(h, (int, float)) or isinstance(h, bool) or not (0 < h <= 80):
                 issues.append({"where": w + ".hours_now", "problem": "number_between_0_and_80_or_null"})
             text(w + ".hours_said", a.get("hours_said"), "hours_said")
+        elif a.get("hours_said"):
+            text(w + ".hours_said", a.get("hours_said"), "hours_said")
     text("kickoff", spec.get("kickoff"), "kickoff")
     text("why", spec.get("why"), "why")
     return issues
@@ -177,7 +179,11 @@ def build(spec):
     for i, a in enumerate(spec["agents"], 1):
         m = MODES[a["mode"]]
         h = a.get("hours_now")
-        if h is None:
+        if h is None and a.get("hours_said"):
+            save = ('<span class="save">לא הערכתי</span><span class="math">אמרתם: %s. הסוכן לוקח רק חלק מהמשימה הזאת, '
+                    'ולכן לא חילקתי את המספר.</span>') % esc(a["hours_said"])
+            est.append(None)
+        elif h is None:
             save = '<span class="save">לא הערכתי</span><span class="math">לא נתתם מספר שעות למשימה הזאת, ולכן אין כאן הערכה.</span>'
             est.append(None)
         else:
