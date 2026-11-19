@@ -2,7 +2,7 @@
 
 This file is read only when style-maker runs inside a MAKERS system. It does not replace SKILL.md. It says two things: how to use what the system already knows about the owner and their design brief so that fewer questions are asked, and where to record the result so the rest of the team can find it.
 
-Every path here is relative to the system folder, the folder you are working in. The skill itself and the personal style stay in `~/.claude/skills`, because that is where SKILL.md looks for them. "SKILL.md" means `~/.claude/skills/style-maker/SKILL.md`.
+Every path here is relative to the system folder, the folder you are working in. The skill may sit in `~/.claude/skills` or in this system's `.claude/skills`, and the personal style is saved beside it, wherever that is. "SKILL.md" means the `SKILL.md` beside this file. **When the style is saved inside the system**, add one line naming `reel-style-<name>` to `2-makers/designer/designer.md`, so the team reaches for it, and when `.agents/skills/` exists, give it its Codex door there, in the shape `/add-codex` gives.
 
 **Who runs this: the Designer, in the main conversation.** Open `2-makers/designer/designer.md` and work as that agent, with its hard rule and its `/final-pass`. The job is how a video looks, and the skill is a conversation that stops for the owner several times. A worker in a window of its own could not hold that conversation, so nothing here, the install included, is handed to one. Nothing here touches a live system or money.
 
@@ -148,7 +148,7 @@ Run `/final-pass` once, on the video and this record together. Then write `3-wor
 ```
 סרטון: <שם הסרטון>
 הקובץ: <הנתיב של ה-MP4 ליד המקור>
-הסגנון: reel-style-<שם>. הוא שמור ב-~/.claude/skills/reel-style-<שם>, מחוץ לתיקיית המערכת, כי שם הכלי מחפש אותו.
+הסגנון: reel-style-<שם>. הוא שמור ב-<הנתיב המלא של תיקיית הסגנון>, ליד style-maker.
 מה הוא מספר:
 <3 עד 5 שורות, רגע לכל שורה, כמו בדיווח של שלב 16>
 

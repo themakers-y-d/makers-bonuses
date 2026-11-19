@@ -30,7 +30,7 @@ Do not spend questions on them.
 
 ## Two rules not to work around
 
-**The skill goes into the user's skill folder, `~/.claude/skills/style-maker`, not the system's `.claude/skills`.** It is written with that path, and the personal style it writes is saved beside it. Anywhere else it cannot find its own files. A skill in that folder loads inside the system too.
+**This guide installs the skill into the user's skill folder, `~/.claude/skills/style-maker`.** A skill there loads inside the system too. It also works from the system's own `.claude/skills/style-maker`, the route `/add-a-skill` takes: it finds its files beside itself, and the personal style it writes is saved beside it.
 
 **Downloading tools and running commands is the owner's decision.** The skill asks before it downloads anything big (about 2 GB on a fresh computer, nothing big when the video editor gift already built `~/reel-studio`), and nobody approves in their place.
 
