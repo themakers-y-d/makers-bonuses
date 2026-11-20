@@ -1,119 +1,122 @@
 ---
 name: guide-maker
-description: Writes a finished, high-standard guide or lead magnet for the owner's business and saves it as one designed HTML file ready to send. Use whenever the owner says things like "תכין לי מדריך", "תכתוב מדריך ל...", "מגנט לידים", "צריך מדריך ללקוחות שלי", "רעיון למדריך", "make me a guide", "lead magnet", "write a guide for my clients". Always use this instead of writing a guide freehand in the chat, because it adds the idea step, a stranger-editor that rejects weak drafts, and the designed file. Not for editing an existing long document, and not for social posts.
+description: Writes a finished guide or lead magnet for the owner's business, in the owner's own brand, and saves it as one designed HTML file that can be sent to leads today, plus a phone-sized PDF for WhatsApp. Use whenever the owner says things like "תכין לי מדריך", "תכתוב מדריך ל...", "מגנט לידים", "צריך מדריך ללקוחות שלי", "רעיון למדריך", "make me a guide", "lead magnet", "write a guide for my clients". Always use this instead of writing a guide freehand in the chat, because it collects what is needed to send it today, adds the idea step, a stranger-editor that rejects weak drafts, and the designed file. Not for editing an existing long document, and not for social posts.
 ---
 
-# סוכן המדריכים
+# סקיל המדריכים
 
-אתה מייצר מדריך אחד גמור לעסק של הבעלים: מדריך שהקהל שלו ישמח לקבל, יקרא עד הסוף, ויעשה בו משהו. התוצר הוא קובץ HTML מעוצב אחד שנפתח בדפדפן.
-
-המדריך הוא מגנט לידים. הוא נותן ערך אמיתי בחינם, והקורא מסיים אותו עם תוצאה ביד ועם סיבה טובה לפנות לעסק.
+אתה כותב מדריך אחד גמור לעסק של הבעלים, שהבעלים יכול לשלוח ללקוחות שלו עוד היום. הקורא מסיים אותו עם תוצאה ביד ועם סיבה טובה לפנות לעסק. התוצר הוא קובץ HTML אחד, בצבעים ובשם של העסק, שנראה טוב בטלפון ונשמר כ-PDF.
 
 כתוב לבעלים בשפה שבה הוא כתב אליך. אם הוא כתב בעברית, גם המדריך בעברית ומימין לשמאל.
 
 עבוד לפי השלבים הממוספרים, לפי הסדר. אל תדלג על שלב 5.
 
-## שלב 1. להבין את העסק
+## שלב 1. מה צריך כדי לשלוח היום
 
-אם הבעלים כבר סיפר מה העסק, למי הוא מוכר, ועל מה המדריך, עבור ישר לשלב 3.
+בדוק מה הבעלים כבר סיפר. שאל רק את מה שחסר, הכל בהודעה אחת, ואז חכה לתשובה. זו העצירה היחידה לפני שהמדריך מוכן (חוץ מבחירת רעיון, אם אין נושא).
 
-אחרת, שאל את השאלות האלה בהודעה אחת, ולא אחת אחרי השנייה:
+על העסק, רק מה שלא נאמר:
 
-1. מה העסק שלך עושה, בשני משפטים?
-2. מי הלקוח הטיפוסי שלך, ומה הכי מעסיק אותו לפני שהוא קונה?
-3. מה היית רוצה שקורא המדריך יעשה אחרי שסיים? (למשל לקבוע שיחה, לבוא לשיעור ניסיון, להשאיר פרטים)
-4. יש לך כבר נושא למדריך, או שאציע לך רעיונות?
+1. מה העסק עושה, בשני משפטים, ולמי הוא מוכר?
+2. מה הכי מעסיק את הלקוח לפני שהוא קונה?
+3. מה הקורא צריך לעשות אחרי שסיים? (לקבוע שיחה, לבוא לשיעור ניסיון, לשלוח הודעה)
+4. יש נושא למדריך, או שאציע רעיונות?
 
-אם הבעלים אומר "תחליט אתה" או לא עונה על חלק מהשאלות, הנח הנחה סבירה, כתוב אותה במשפט אחד, והמשך.
+כדי שהקובץ ייצא מוכן לשליחה, תמיד, חוץ ממה שכבר נמסר:
+
+5. השם של העסק כמו שהלקוחות מכירים אותו, והשם שלך.
+6. מספר וואטסאפ או טלפון לפניות, וקישור אם יש (תורים, אתר, אינסטגרם).
+7. שניים או שלושה משפטים עליך: כמה זמן אתה בתחום, ולמי אתה עוזר.
+8. צבע ראשי של העסק, אם יש. ואם יש תמונה שלך או לוגו, שים את הקובץ בתיקייה הזו ותכתוב לי את השם שלו.
+
+הוסף בסוף השאלות: "מה שאין, תכתוב 'אין' ונמשיך. מה שחסר יסומן בצהוב בקובץ, ואמלא אותו בעצמי כשתשלח לי."
+
+אם אין נושא, שלב 2 נכנס לאותה הודעה: קודם הרעיונות, אחריהם השאלות. אם הבעלים אומר "תחליט אתה", הנח הנחה סבירה, כתוב אותה במשפט, והמשך.
 
 ## שלב 2. חמישה רעיונות (רק אם אין נושא)
 
-הצע חמישה רעיונות למדריך. לכל רעיון תן ארבע שורות קצרות:
+לכל רעיון ארבע שורות קצרות: השם כמו על השער, למי בדיוק, מה הקורא יעשה בסוף שלא יכול היה קודם, ולמה זה יביא לקוחות לעסק הזה דווקא.
 
-- שם המדריך, כמו שהוא יופיע על השער
-- למי הוא בדיוק
-- מה הקורא יוכל לעשות בסוף, שלא יכול היה לעשות קודם
-- למה זה יביא לקוחות לעסק הזה דווקא
+רעיון טוב פותר בעיה אחת קטנה, עם תוצאה שהקורא משיג לבד היום או השבוע. הוא ספציפי מספיק שאין לו תשובה של שורה בגוגל, והוא מוביל לשירות של העסק בלי להרגיש כמו פרסומת. פסול "10 טיפים ל..." ו"המדריך המלא ל...". העדף "הצ'קליסט לפני ש...", "תוכנית 7 ימים ל...", "איך לעשות X בלי Y".
 
-רעיון טוב עומד בשלושה מבחנים. יש בו תוצאה שהקורא משיג לבד תוך זמן קצר (ערב, שבוע). הוא ספציפי מספיק שאי אפשר למצוא אותו כתשובה של שורה בגוגל. והוא מוביל באופן טבעי לשירות של העסק, בלי שהמדריך עצמו ירגיש כמו פרסומת.
-
-פסול רעיונות כלליים כמו "10 טיפים ל..." או "המדריך המלא ל...". העדף "תוכנית 7 ימים ל...", "הצ'קליסט לפני ש...", "איך לעשות X בלי Y".
-
-סמן את הרעיון שאתה ממליץ עליו ונמק במשפט. חכה לבחירה. אם הבעלים ביקש שתחליט, בחר את המומלץ והמשך.
+סמן את המומלץ ונמק במשפט.
 
 ## שלב 3. המסע, לפני שכותבים
 
-לפני כל פסקה, תכנן. אל תציג את התכנון הזה לבעלים, חוץ ממשפט ההבטחה.
+תכנן לעצמך, בלי להציג:
 
-1. משפט ההבטחה: "בסוף המדריך הזה תוכל/י ___". משהו שהקורא עושה או מחזיק, לא "תבין" ולא "תכיר".
-2. מי הקורא ומה הוא כבר יודע. אל תסביר מה שהוא יודע, ואל תניח מה שהוא לא יודע.
-3. חמישה עד שבעה שלבים. כל שלב נגמר בדבר שהקורא עשה, ראה, או החזיק ביד. שלב שנגמר ב"עכשיו אתה מבין" אינו שלב.
-4. איפה הקורא עלול להיבהל, להתייאש או לחשוב "זה לא בשבילי". שם צריך משפט הרגעה.
-5. הצעד הבא בסוף: פעולה אחת, שקשורה לעסק ולמה שהקורא בדיוק השיג.
+1. משפט ההבטחה: "בסוף המדריך הזה ___". משהו שהקורא עושה או מחזיק, לא "תבין".
+2. מי הקורא, מה הוא כבר יודע, ואיפה הוא קורא. ברוב המקרים בטלפון, בהפסקה, מתוך וואטסאפ.
+3. ארבעה עד שישה שלבים. כל שלב נגמר בדבר שהקורא עשה, ראה, או מחזיק ביד.
+4. הרווח הראשון מגיע במסך הראשון: קופסת "מה יהיה לך ביד בסוף" ופתיחה שאומרת מה עושים בחמש הדקות הקרובות.
+5. איפה הקורא עלול להיבהל או לחשוב "זה לא בשבילי". שם משפט הרגעה.
+6. הצעד הבא: פעולה אחת, שנובעת ממה שהקורא השיג.
+7. הסגנון. המדריך נראה כמו העסק, לא כמו התבנית. בחר אחד: `mood-calm` לבריאות, תנועה, טיפול, הורות ויופי; `mood-trust` לכסף, משפט, ביטוח, נדל"ן ושירותים לעסקים; `mood-editorial` לצילום, עיצוב, אוכל, אירועים ויצירה. הצבע של העסק נכתב ב-`style` של `body` (`style="--brand: #..."`); בלי צבע מהבעלים, בחר גוון שמתאים לתחום. על `--brand` יושב טקסט לבן, ולכן הוא חייב להיות כהה מספיק: אם הצבע של העסק בהיר (צהוב, ורוד או תכלת פסטל), שים ב-`--brand` גוון כהה שלו, ואת הבהיר עצמו ב-`--accent`.
 
-הצג לבעלים שורה אחת: "המדריך יבטיח: ___", והמשך בלי לחכות.
+הצג לבעלים שתי שורות: "המדריך יבטיח: ___" ו"הסגנון: ___, כי ___". המשך בלי לחכות.
 
-## שלב 4. הטיוטה
+## שלב 4. הטיוטה, ישר לקובץ
 
-כתוב את המדריך המלא לפי המסע. הכללים:
+לפני השמירה אמור לבעלים בשורה: "עכשיו אשמור את המדריך. אם תתבקש לאשר, בחר באפשרות שמאשרת את כל העריכות בשיחה הזו, ולא תישאל שוב." אחר כך כתוב את המדריך המלא לתוך התבנית שבסוף הקובץ הזה, ושמור אותו בתיקייה הנוכחית בשם `guide-<שם-קצר-באנגלית>.html`. זו הטיוטה, והעורך יקרא אותה מהקובץ.
 
-- ספציפי ולא עקרוני. מספרים, דוגמאות, משפטים שאפשר להגיד מילה במילה, זמנים, כמויות. "תשתו מספיק מים" חלש; "כוס לפני כל ארוחה, שלוש ביום" חזק.
-- כל שלב בנוי מ: מה עושים, איך בדיוק, ואיך יודעים שזה עבד.
-- משפטים קצרים. פסקאות של שניים או שלושה משפטים.
-- בקול של העסק, בגוף שני, חם וישיר. בלי מילים מפוצצות, בלי "במדריך זה נלמד", בלי "חשוב לזכור".
-- בלי קו מפריד ארוך (—) באף משפט. בעברית הוא הסימן הכי מוכר לטקסט שנכתב על ידי AI. במקומו פסיק, נקודה או נקודתיים.
-- אל תמציא פרטים על העסק: טלפון, קישור, מחיר, כתובת, המלצות או פרטי שירות. מה שלא נמסר לך נכתב בסוגריים מרובעים, למשל [הטלפון שלך], והקישור נשאר href="#".
-- בתחומי בריאות, תזונה, כושר, מס, משפט, כסף ובעלי חיים: אל תכתוב מספר, סף או מועד שאינך בטוח שהוא עדכני, והוסף במקום אחד בלבד מתי לעצור ולפנות לאיש מקצוע. הסתייגות אחת במקום הנכון, לא בכל פסקה.
-- אורך: מה שנקרא ב-7 עד 12 דקות. מדריך ארוך מדי לא נגמר, ומדריך שלא נגמר לא מביא לקוח.
-- הצעד הבא בסוף הוא הזמנה, לא לחץ. הוא נובע ממה שהקורא השיג ("עכשיו שיש לך ___, השלב הבא הוא ___").
+התבנית היא השלד: מותר לשכפל רכיבים (שלבים, `say`, `tick`, `note`), להשמיט רכיב שלא צריך, לשנות את ה-class ואת ה-`style` של `body`, ולסמן ב-`<em>` מילה אחת או שתיים בכותרת. אל תמציא עיצוב חדש ואל תוסיף קבצים חיצוניים.
 
-אל תציג את הטיוטה לבעלים. היא הולכת לעורך.
+כללי כתיבה:
+
+- ספציפי ולא עקרוני: מספרים, דוגמאות, משפטים שאפשר להגיד מילה במילה, זמנים וכמויות.
+- כל שלב: מה עושים, איך בדיוק, ואיך יודעים שזה עבד.
+- טלפון: פסקה של שניים או שלושה משפטים לכל היותר, רשימה של עד חמישה פריטים. אורך כולל שנקרא ב-5 עד 7 דקות.
+- גוף שני, חם וישיר. בלי "במדריך זה נלמד", בלי "חשוב לזכור", ובלי קו מפריד ארוך (—) באף מקום. במקומו פסיק, נקודה או נקודתיים.
+- אל תפתח באזהרות. בתחומי בריאות, תזונה, כושר, מס, משפט, כסף ובעלי חיים: הסתייגות אחת בקופסת `note`, במקום שבו היא רלוונטית, וכל אזהרה באה עם מה עושים במקום. אל תכתוב מספר, סף או מועד שאינך בטוח שהוא עדכני.
+- אל תמציא פרטים על העסק: מחיר, כתובת, ותק, הסמכות, המלצות. "נעים להכיר" נכתב רק ממה שהבעלים מסר. לא מסר כלום עליו? מחק את הבלוק.
+- כל פרט שחסר נכתב כ-`<mark class="fill">[הטלפון שלך]</mark>`, כדי שיבלוט בצהוב ולא ייעלם.
+- תמונה: אם הבעלים שם קובץ בתיקייה, החלף את ה-`span` של ראשי התיבות ב-`<img class="avatar" src="<שם הקובץ>" alt="<השם>">`. אחרת השאר ראשי תיבות של השם. לעולם לא תמונה מהאינטרנט.
+- הכפתור בסוף הוא קישור וואטסאפ: `https://wa.me/972` ואחריו המספר בלי האפס הראשון ובלי מקפים (050-1234567 הופך ל-972501234567), ואז `?text=` והודעה קצרה שהקורא שולח, שממשיכה את מה שהשיג. רווחים בהודעה נכתבים `%20`. אין וואטסאפ? קישור `tel:` או הקישור שנמסר. מתחת לכפתור כתוב גם את המספר עצמו, למי שקורא מודפס.
+- עדכן את `title` ואת `og:title` ו-`og:description`, כי זה מה שמופיע כשהקישור נשלח בוואטסאפ.
+
+הצעד הבא הוא הזמנה ולא לחץ: "עכשיו שיש לך ___, השלב הבא הוא ___".
 
 ## שלב 5. העורך הזר
 
-עכשיו החלף תפקיד. אתה עורך קשוח שלא מכיר את העסק, קורא את הטיוטה כמו הקורא האמיתי, ותפקידו למצוא למה המדריך הזה ייזנח באמצע.
+קרא את הקובץ ששמרת מהדיסק, לא מהזיכרון, והחלף תפקיד. אתה עורך קשוח שלא מכיר את העסק.
 
-הצג לבעלים את חוות הדעת תחת הכותרת "העורך קרא את הטיוטה", ובדוק את שבעת הדברים האלה:
+הצג לבעלים תחת הכותרת "העורך קרא את הטיוטה":
 
-1. ההבטחה: האם הכותרת והפתיחה מבטיחות משהו שהמדריך באמת נותן עד הסוף?
-2. השלבים: האם כל שלב נגמר בדבר שהקורא עשה או מחזיק? צטט שלב שלא.
-3. פערים: האם יש שלב שדורש ידע, כלי או החלטה שלא ניתנו לקורא?
-4. גנריות: צטט משפטים שיכלו להופיע בכל מדריך של כל עסק. כל אחד מהם צריך להפוך לספציפי.
-5. נקודות נטישה: איפה הקורא יתייאש, ייבהל או ישתעמם?
-6. אורך: מה אפשר למחוק בלי שהקורא יפסיד כלום?
-7. הסיום: האם הצעד הבא ברור, אחד, וקשור למה שהקורא השיג? או שהוא מרגיש כמו פרסומת שהודבקה בסוף?
+1. שורה אחת: מי הקורא ואיפה הוא קורא. למשל "אישה בת 42, גב תפוס, קוראת בטלפון בתור לגן".
+2. הבעיות שמצאת, מהחמורה לקלה. לכל אחת: ציטוט מדויק מהקובץ, מילה במילה; מה יקרה לקורא הזה בדיוק שם; והתיקון.
+3. פסק דין: "נפסל, חוזר לתיקון".
 
-לכל ממצא: ציטוט קצר מהטיוטה, מה הבעיה, ומה התיקון.
+מה מחפשים: הבטחה שהמדריך לא מקיים, שלב שנגמר בהבנה ולא בפעולה, ידע או כלי שחסר לקורא, משפט שמתאים לכל עסק, מקום שבו הוא ייבהל או ישתעמם, מה אפשר למחוק, סיום שמרגיש כמו פרסומת, ומה ימנע מהבעלים לשלוח היום.
 
-העורך חייב למצוא לפחות שלוש בעיות אמיתיות בטיוטה הראשונה. טיוטה ראשונה בלי בעיות לא קיימת; אם לא מצאת, לא קראת מספיק לאט. סיים בפסק דין: "נפסל, חוזר לתיקון".
+שלושה איסורים, כי הם הופכים את העורך לטקס: אל תעבור על הרשימה הזו סעיף אחרי סעיף, דווח רק מה שמצאת. אל תצטט משפט שאינו בקובץ, ואל תמציא גרסה גרועה כדי לבקר אותה. ואל תכתוב בעיה שאין לה תיקון מוחשי.
+
+טיוטה ראשונה תמיד נפסלת, ויש בה לפחות שלוש בעיות אמיתיות. אם החמורות פחות משלוש, גם פסקה ארוכה מדי לטלפון או משפט כללי נחשבים.
 
 ## שלב 6. התיקון
 
-תקן את כל הממצאים. אחר כך העורך קורא שוב, בקצרה: שלוש שורות לכל היותר על מה השתנה, ופסק דין "עובר" או "עוד תיקון".
+תקן בקובץ את כל הממצאים, וקרא אותו שוב מהדיסק. רשום לעצמך את שני התיקונים החשובים, "לפני" בציטוט מהטיוטה ו"אחרי" בציטוט מהקובץ, ופסק דין "עובר" או "עוד תיקון". הם נכנסים לסעיף הראשון בהודעת המסירה. לכל היותר שני סבבים; מה שנשאר, אמור לבעלים במשפט.
 
-לכל היותר שני סבבי תיקון. אם אחרי שניים עדיין יש בעיה, ציין אותה לבעלים במשפט אחד והמשך.
+## שלב 7. בדיקה, פתיחה ומסירה
 
-## שלב 7. הקובץ
+בדוק בקריאת הקובץ, או ב-grep פשוט על הקובץ, פקודה אחת בכל פעם, בלי `|`, בלי `;` ובלי `&&`. פקודה משורשרת מבקשת מהבעלים אישור, ואין סיבה להטריד אותו:
 
-שמור את המדריך כקובץ HTML אחד בתיקייה הנוכחית, בשם `guide-<שם-קצר-באנגלית>.html`. השתמש בתבנית שבסוף הקובץ הזה, והחלף רק את התוכן ואת הצבעים. אל תמציא עיצוב חדש, ואל תשתמש בקבצים חיצוניים חוץ מהפונט שכבר בתבנית.
+- `dir="rtl"` ו-`lang="he"` (באנגלית `ltr` ו-`en`).
+- אפס קווים מפרידים ארוכים (—).
+- לא נשאר טקסט מהתבנית: "שם העסק", "שם המדריך", "___", "מאת השם", "אני השם", `initials">דנ<`, "050-0000000", "972500000000". חפש את המחרוזות האלה בדיוק, לא חלקים מהן.
+- אין `href="#"`. כל סוגריים מרובעים נמצאים בתוך `mark class="fill"`.
+- שלב, `check` בכל שלב, ו-`next` אחד בסוף.
 
-ודא לפני שאתה מסיים:
+אמור "עכשיו אפתח את המדריך בדפדפן. אם תתבקש לאשר, אשר", ופתח: `open <קובץ>` במק, `start <קובץ>` בווינדוס. אם הפתיחה נחסמה, אמור ללחוץ על הקובץ פעמיים.
 
-- `dir="rtl"` ו-`lang="he"` כשהמדריך בעברית (או `dir="ltr"` ו-`lang="en"` באנגלית)
-- כל שלב בתוך `<section class="step">` עם מספר
-- בכל שלב יש קופסת "איך יודעים שזה עבד" (`<div class="check">`)
-- הצעד הבא בקופסה `<div class="next">` בסוף
-- אין טקסט דמה שנשאר מהתבנית. כל סוגריים מרובעים שהשארת מופיעים ברשימה שאתה מוסר לבעלים תחת "למלא לפני ששולחים"
-- אין אף קו מפריד ארוך (—) בקובץ. חפש אותו והחלף
+ואז אמור לבעלים, בקצרה ובסדר הזה:
 
-אחרי השמירה, פתח את הקובץ בדפדפן אם אתה יכול (`open` במק, `start` בווינדוס), ואמור לבעלים:
+1. "קריאה שנייה": שני התיקונים החשובים, כל אחד כ"לפני" ו"אחרי", ופסק הדין.
+2. איפה הקובץ.
+3. מה מסומן בצהוב, אם יש: "תכתוב לי את הפרטים האלה ואכניס אותם. לא צריך לגעת בקוד."
+4. איך שולחים. בוואטסאפ: שומרים כ-PDF (בדפדפן, הדפסה ואז "שמור כ-PDF"). הקובץ יוצא בגודל מסך טלפון, ונוח לקרוא אותו בלי הגדלה. ואם יש לך אתר, אפשר להעלות את קובץ ה-HTML כמו שהוא ולשלוח קישור.
+5. שאלה אחת: "רוצה לשנות משהו לפני ששולחים? צבע, ניסוח או שלב."
 
-1. איפה הקובץ יושב
-2. "למלא לפני ששולחים": כל מה שנשאר בסוגריים מרובעים, אם נשאר
-3. איך שומרים אותו כ-PDF: בדפדפן, הדפסה ואז "שמור כ-PDF"
-4. שאלה אחת: "רוצה שאתאים את הצבעים לעסק שלך? תן לי צבע ראשי אחד, ואם יש, גם צבע משני."
-
-אם הבעלים נותן צבעים, שנה רק את משתני ה-CSS שבראש הקובץ (`--brand`, `--brand-soft`), ודא שהטקסט על הצבע עדיין קריא, ושמור מחדש באותו שם.
+כשהבעלים שולח פרטים או תיקון, עדכן את אותו קובץ ושמור באותו שם.
 
 ## התבנית
 
@@ -123,112 +126,154 @@ description: Writes a finished, high-standard guide or lead magnet for the owner
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>שם המדריך</title>
+<title>שם המדריך | שם העסק</title>
+<meta property="og:title" content="שם המדריך">
+<meta property="og:description" content="משפט ההבטחה">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Rubik:wght@500;700;800&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --brand: #1f4d45;
-    --brand-soft: #e7f0ec;
-    --ink: #1c1c1c;
-    --muted: #5d5d5d;
-    --paper: #fbfaf7;
-    --card: #ffffff;
-    --line: #ecebe6;
+    --ink: #1d1d1b; --muted: #5b5b57; --card: #ffffff; --line: #e8e5de; --fill: #fff1a8;
+    --body: "Heebo", "Arial Hebrew", Arial, sans-serif;
   }
+  /* שלושה סגנונות. הצבע של העסק נכתב ב-style של body ומנצח את ברירת המחדל */
+  .mood-calm { --brand: #2f6f62; --accent: #e9a46a; --paper: #f7f3ec; --head: "Heebo", Arial, sans-serif; --r: 24px; }
+  .mood-trust { --brand: #1d3a5f; --accent: #c9a24a; --paper: #f4f6f9; --head: "Rubik", "Heebo", Arial, sans-serif; --r: 12px; }
+  .mood-editorial { --brand: #2b2622; --accent: #b5552f; --paper: #fbf8f3; --head: "Frank Ruhl Libre", "Times New Roman", serif; --r: 4px; }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: "Heebo", "Arial Hebrew", Arial, sans-serif;
-    font-size: 18px;
-    line-height: 1.75;
-  }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px 80px; }
-  .cover {
-    background: var(--brand);
-    color: #fff;
-    padding: 72px 20px 64px;
-    margin-bottom: 48px;
-  }
-  .cover .inner { max-width: 720px; margin: 0 auto; }
-  .kicker { font-size: 15px; font-weight: 500; opacity: .85; letter-spacing: .02em; margin: 0 0 12px; }
-  h1 { font-size: clamp(32px, 6vw, 46px); line-height: 1.15; font-weight: 800; margin: 0 0 18px; }
-  .promise { font-size: 20px; margin: 0; opacity: .95; max-width: 34em; }
-  .meta { margin-top: 28px; font-size: 15px; opacity: .8; }
-  .intro { font-size: 19px; margin: 0 0 40px; }
-  .step {
-    background: var(--card);
-    border-radius: 18px;
-    padding: 32px 28px;
-    margin: 0 0 24px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
-  }
-  .step-num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 40px; height: 40px; border-radius: 50%;
-    background: var(--brand-soft); color: var(--brand);
-    font-weight: 800; font-size: 18px; margin-bottom: 12px;
-  }
-  h2 { font-size: 26px; line-height: 1.3; margin: 0 0 14px; font-weight: 700; }
-  h3 { font-size: 19px; margin: 24px 0 8px; font-weight: 700; }
+  body { --soft: color-mix(in srgb, var(--brand) 10%, #ffffff); margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.75; }
+  .wrap { max-width: 700px; margin: 0 auto; padding: 0 20px 64px; }
+  h1, h2, h3 { font-family: var(--head); }
+  .cover { background: var(--brand); color: #fff; padding: 56px 20px 84px; position: relative; overflow: hidden; }
+  .cover::before, .cover::after { content: ""; position: absolute; border-radius: 50%; }
+  .cover::before { width: 340px; height: 340px; inset-inline-start: -120px; top: -140px; background: rgba(255,255,255,.07); }
+  .cover::after { width: 180px; height: 180px; inset-inline-start: 40px; bottom: -70px; background: var(--accent); opacity: .35; }
+  .mood-trust .cover::before { border-radius: 40px; transform: rotate(18deg); }
+  .mood-editorial .cover { background: var(--paper); color: var(--brand); border-bottom: 6px solid var(--accent); padding-bottom: 64px; }
+  .mood-editorial .cover::before, .mood-editorial .cover::after { display: none; }
+  .cover .inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
+  .kicker { display: inline-block; font-size: 14px; font-weight: 700; margin: 0 0 18px; padding: 4px 14px; border-radius: 999px; background: rgba(255,255,255,.16); }
+  .mood-editorial .kicker { background: none; padding: 0; color: var(--accent); letter-spacing: .04em; }
+  h1 { font-size: clamp(32px, 7vw, 52px); line-height: 1.12; font-weight: 800; margin: 0 0 18px; }
+  .mood-editorial h1 { font-weight: 900; font-size: clamp(36px, 8vw, 60px); }
+  h1 em { font-style: normal; color: var(--accent); }
+  .mood-calm h1 em { color: #ffd9b3; }
+  .promise { font-size: 20px; margin: 0; max-width: 32em; opacity: .95; }
+  .by { display: flex; align-items: center; gap: 12px; margin-top: 26px; font-size: 15px; }
+  .avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid rgba(255,255,255,.7); }
+  .initials { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: #fff; font-weight: 800; }
+  .get { background: var(--card); border-radius: var(--r); margin: -48px 0 36px; padding: 22px 24px; position: relative; z-index: 2; box-shadow: 0 14px 34px rgba(0,0,0,.08); }
+  .mood-editorial .get { margin-top: 28px; box-shadow: none; border: 1px solid var(--line); }
+  .get strong { display: block; color: var(--brand); font-family: var(--head); font-size: 19px; margin-bottom: 8px; }
+  .get ol { margin: 0; padding: 0; list-style: none; counter-reset: g; }
+  .get li { counter-increment: g; position: relative; padding-inline-start: 38px; margin-bottom: 8px; }
+  .get li::before { content: counter(g); position: absolute; inset-inline-start: 0; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--soft); color: var(--brand); font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .intro { font-size: 19px; margin: 0 0 34px; }
+  .step { background: var(--card); border-radius: var(--r); padding: 30px 24px 26px; margin: 0 0 24px; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 22px rgba(0,0,0,.04); }
+  .mood-editorial .step { box-shadow: none; background: none; border-top: 2px solid var(--brand); border-radius: 0; padding-inline: 0; }
+  .step-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .step-num { width: 44px; height: 44px; border-radius: 50%; background: var(--brand); color: #fff; font-family: var(--head); font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .mood-editorial .step-num { background: none; color: var(--accent); font-size: 44px; width: auto; }
+  .of { color: var(--muted); font-size: 14px; font-weight: 500; }
+  h2 { font-size: 26px; line-height: 1.3; margin: 0 0 12px; font-weight: 800; }
+  h3 { font-size: 19px; margin: 22px 0 6px; }
   p { margin: 0 0 14px; }
   ul, ol { padding-inline-start: 1.3em; margin: 0 0 14px; }
   li { margin-bottom: 6px; }
-  .say {
-    background: var(--paper); border-radius: 12px; padding: 14px 18px; margin: 14px 0;
-    font-weight: 500;
-  }
-  .check {
-    background: var(--brand-soft); border-radius: 12px; padding: 14px 18px; margin-top: 20px;
-  }
-  .check strong { color: var(--brand); display: block; margin-bottom: 4px; }
-  .calm { color: var(--muted); font-size: 17px; margin-top: 14px; }
-  .next {
-    background: var(--brand); color: #fff; border-radius: 18px;
-    padding: 36px 28px; margin-top: 40px;
-  }
+  .say { background: var(--soft); border-radius: 18px; border-start-start-radius: 4px; padding: 14px 18px; margin: 16px 0; font-weight: 500; max-width: 94%; }
+  .calm { color: var(--muted); font-size: 17px; border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; }
+  .note { background: #fff5dc; border-radius: 12px; padding: 12px 16px; font-size: 16px; margin: 14px 0; }
+  .tick { list-style: none; padding: 0; }
+  .tick li { position: relative; padding-inline-start: 34px; margin-bottom: 10px; }
+  .tick li::before { content: ""; position: absolute; inset-inline-start: 0; top: 5px; width: 20px; height: 20px; border: 2px solid var(--brand); border-radius: 6px; background: #fff; }
+  .check { background: var(--soft); border-radius: 14px; padding: 14px 18px 14px 18px; padding-inline-start: 52px; margin-top: 20px; position: relative; }
+  .check::before { content: ""; position: absolute; inset-inline-start: 16px; top: 17px; width: 22px; height: 22px; border-radius: 50%; background: var(--brand); }
+  .check::after { content: ""; position: absolute; inset-inline-start: 23px; top: 21px; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
+  .check strong { color: var(--brand); display: block; }
+  .about { display: flex; gap: 18px; align-items: center; margin: 44px 0 0; background: var(--card); border-radius: var(--r); padding: 22px; }
+  .about .avatar { width: 96px; height: 96px; border: 0; font-size: 28px; }
+  .about h2 { font-size: 22px; margin-bottom: 6px; }
+  .about p { margin: 0; }
+  .next { background: var(--brand); color: #fff; border-radius: var(--r); padding: 34px 26px; margin-top: 28px; position: relative; overflow: hidden; }
+  .next::after { content: ""; position: absolute; width: 160px; height: 160px; border-radius: 50%; background: var(--accent); opacity: .3; inset-inline-end: -50px; top: -60px; }
+  .next > * { position: relative; z-index: 1; }
   .next h2 { color: #fff; }
-  .next a { color: #fff; font-weight: 700; }
-  footer { color: var(--muted); font-size: 14px; text-align: center; margin-top: 48px; }
+  .btn { display: inline-block; background: #fff; color: var(--brand); font-weight: 800; font-size: 18px; text-decoration: none; padding: 15px 30px; border-radius: 999px; margin-top: 6px; box-shadow: 0 6px 16px rgba(0,0,0,.15); }
+  .next .small { font-size: 15px; opacity: .9; margin: 14px 0 0; }
+  .next .small a { color: #fff; }
+  mark.fill { background: var(--fill); color: #1d1d1b; padding: 0 4px; border-radius: 4px; }
+  footer { color: var(--muted); font-size: 14px; text-align: center; margin-top: 40px; }
+  @media (max-width: 520px) {
+    body { font-size: 17px; }
+    .wrap { padding: 0 16px 48px; }
+    .cover { padding: 40px 18px 76px; }
+    .step { padding: 24px 18px 20px; }
+    .about { flex-direction: column; align-items: flex-start; }
+  }
+  /* PDF בגודל מסך טלפון, כי שולחים אותו בוואטסאפ */
   @media print {
-    body { background: #fff; font-size: 14px; }
-    .cover, .next, .check, .step-num { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .step { box-shadow: none; border: 1px solid var(--line); break-inside: avoid; }
+    @page { size: 100mm 178mm; margin: 7mm; }
+    body { background: #fff; font-size: 11.5pt; line-height: 1.6; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cover { padding: 18px 16px 22px; border-radius: 8px; }
+    .cover::before, .cover::after, .next::after { display: none; }
+    h1 { font-size: 22pt; } h2 { font-size: 16pt; } .promise { font-size: 12.5pt; }
+    .get { margin: 12px 0 14px; box-shadow: none; border: 1px solid var(--line); padding: 12px 14px; }
+    .wrap { padding: 0; max-width: none; }
+    .intro { font-size: 12pt; margin-bottom: 14px; }
+    .step { break-inside: auto; box-shadow: none; border: 0; border-top: 2px solid var(--soft); border-radius: 0; padding: 12px 0 4px; margin: 0 0 8px; }
+    h2, h3, .step-head { break-after: avoid; }
+    .say, .check, .note, .about, .next, .tick li { break-inside: avoid; }
+    .about { flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 18px; padding: 0; }
+    .next { padding: 16px; }
   }
 </style>
 </head>
-<body>
+<body class="mood-calm" style="--brand: #2f6f62">
   <header class="cover">
     <div class="inner">
       <p class="kicker">שם העסק · מדריך חינמי</p>
-      <h1>שם המדריך</h1>
-      <p class="promise">משפט ההבטחה: בסוף המדריך הזה תוכלו ___.</p>
-      <p class="meta">זמן קריאה: כ-10 דקות</p>
+      <h1>שם המדריך עם <em>מילה אחת מודגשת</em></h1>
+      <p class="promise">בסוף המדריך הזה ___.</p>
+      <div class="by"><span class="avatar initials">דנ</span><span>מאת השם, התפקיד · כ-6 דקות קריאה</span></div>
     </div>
   </header>
 
   <main class="wrap">
-    <p class="intro">פתיחה של שניים או שלושה משפטים: למי זה, ולמה עכשיו.</p>
+    <div class="get">
+      <strong>מה יהיה לך ביד בסוף</strong>
+      <ol><li>תוצאה מוחשית אחת</li><li>תוצאה מוחשית שנייה</li></ol>
+    </div>
+
+    <p class="intro">שניים או שלושה משפטים: למי זה, ומה עושים כבר ב-5 הדקות הקרובות.</p>
 
     <section class="step">
-      <div class="step-num">1</div>
+      <div class="step-head"><span class="step-num">1</span><span class="of">מתוך 5</span></div>
       <h2>כותרת השלב, כפעולה</h2>
       <p>מה עושים ואיך בדיוק.</p>
-      <div class="say">משפט או דוגמה שאפשר להעתיק מילה במילה.</div>
+      <div class="say">משפט שאפשר להגיד או להעתיק מילה במילה.</div>
+      <ul class="tick"><li>פריט שמסמנים כשהוא מוכן</li></ul>
       <p class="calm">משפט הרגעה, רק איפה שהקורא עלול להיבהל.</p>
-      <div class="check"><strong>איך יודעים שזה עבד</strong>מה הקורא רואה או מחזיק עכשיו.</div>
+      <div class="check"><strong>איך יודעים שזה עבד</strong>מה רואים או מחזיקים עכשיו.</div>
+    </section>
+
+    <section class="about">
+      <span class="avatar initials">דנ</span>
+      <div>
+        <h2>נעים להכיר, אני השם</h2>
+        <p>שניים או שלושה משפטים שהבעלים מסר: מה הוא עושה, כמה זמן, ולמי.</p>
+      </div>
     </section>
 
     <div class="next">
       <h2>הצעד הבא</h2>
       <p>עכשיו שיש לך ___, השלב הבא הוא ___.</p>
-      <p><a href="#">הפעולה האחת, עם הקישור או הטלפון של העסק</a></p>
+      <a class="btn" href="https://wa.me/972500000000?text=היי,%20סיימתי%20את%20המדריך">הפעולה האחת</a>
+      <p class="small">או בטלפון 050-0000000</p>
     </div>
 
-    <footer>שם העסק</footer>
+    <footer>שם העסק · כתובת או אתר</footer>
   </main>
 </body>
 </html>
